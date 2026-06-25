@@ -107,7 +107,7 @@ const Home = () => {
             <div className="lg:col-span-7 space-y-6 text-navy-200 font-light leading-relaxed">
               <p>
                 ELIJAY'S Men's Wear is Nairobi's destination for luxury fashion in Kenya, bringing together premium menswear,
-                designer shoes, refined linen, tailored suits and polished accessories for wardrobes with presence.
+                refined linen, tailored suits and polished accessories for wardrobes with presence.
               </p>
               <p>
                 Our edit is built for discerning Kenyan professionals, diaspora clients and East African style enthusiasts
@@ -115,7 +115,7 @@ const Home = () => {
               </p>
               <p>
                 Every collection is selected with a careful eye for fabric, silhouette and finish. From luxury suits in
-                Nairobi to designer shoes and elegant casualwear, ELIJAY'S Men's Wear offers a composed shopping experience with
+                From tailored suits and executive shirts to refined casualwear, ELIJAY&apos;S offers a composed shopping experience with
                 delivery across Kenya and attentive customer care.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">

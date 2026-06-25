@@ -39,6 +39,13 @@ npm run seed:admin
 
 Default admin comes from `ADMIN_EMAIL` / `ADMIN_PASSWORD` in `.env`.
 
+**Local credentials (already seeded):**
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | `admin@elijays.co.ke` | `elijays2026` |
+| POS Seller | `seller@elijays.co.ke` | `elijays2026` |
+
 ## 3. Seed POS inventory (Excel)
 
 Bundled file: `backend/data/eljays-inventory-stock-june16.xlsx`

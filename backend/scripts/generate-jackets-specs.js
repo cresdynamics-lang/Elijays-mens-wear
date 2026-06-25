@@ -50,46 +50,46 @@ const make = (name, color, brand, price, featured = false, intro, style = 'jacke
 });
 
 const OVERRIDES = {
-  '6b62af19': make('BLACK QUILTED PUFFER JACKET', 'Black', 'ELIJAY'S Men's Wear', STANDARD_PRICE, true, 'Black horizontal-quilted puffer jacket with stand collar and zip pockets.'),
-  fa8874f5: make('NAVY BOMBER JACKET', 'Navy', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Navy bomber jacket with ribbed collar, cuffs, and zip front closure.'),
-  '4ee4a2c4': make('OLIVE GREEN QUILTED PUFFER JACKET', 'Olive', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Olive green geometric-quilted puffer with orange lining and chest zip pocket.'),
-  '104d451c': make('OLIVE HOODED WINDPROOF JACKET', 'Olive', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Olive hooded windbreaker with mustard drawstrings and storm-flap zip closure.'),
-  '1a9fbefd': make('NAVY HYBRID KNIT-BOMBER JACKET', 'Navy', 'ELIJAY'S Men's Wear', PREMIUM_PRICE, true, 'Navy hybrid jacket combining quilted front panel with knitted sleeves and funnel collar.'),
-  d52067b2: make('BLACK MA-1 BOMBER JACKET', 'Black', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Classic black MA-1 bomber with ribbed trim and sleeve utility zip pocket.'),
-  '87803ff4': make('OLIVE GEOMETRIC QUILTED PUFFER JACKET', 'Olive', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Olive geometric-quilted puffer with orange interior lining and drawcord hem.'),
-  '0f3bff27': make('BLACK KBIAODN QUILTED PUFFER JACKET', 'Black', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Black lightweight quilted puffer with stand collar and side zip pockets.'),
-  '1728e606': make('TEAL GEOMETRIC QUILTED JACKET', 'Teal', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Teal geometric-quilted jacket with tan zipper tape and fleece-lined collar.'),
+  '6b62af19': make('BLACK QUILTED PUFFER JACKET', 'Black', "ELIJAY'S Men's Wear", STANDARD_PRICE, true, 'Black horizontal-quilted puffer jacket with stand collar and zip pockets.'),
+  fa8874f5: make('NAVY BOMBER JACKET', 'Navy', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Navy bomber jacket with ribbed collar, cuffs, and zip front closure.'),
+  '4ee4a2c4': make('OLIVE GREEN QUILTED PUFFER JACKET', 'Olive', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Olive green geometric-quilted puffer with orange lining and chest zip pocket.'),
+  '104d451c': make('OLIVE HOODED WINDPROOF JACKET', 'Olive', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Olive hooded windbreaker with mustard drawstrings and storm-flap zip closure.'),
+  '1a9fbefd': make('NAVY HYBRID KNIT-BOMBER JACKET', 'Navy', "ELIJAY'S Men's Wear", PREMIUM_PRICE, true, 'Navy hybrid jacket combining quilted front panel with knitted sleeves and funnel collar.'),
+  d52067b2: make('BLACK MA-1 BOMBER JACKET', 'Black', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Classic black MA-1 bomber with ribbed trim and sleeve utility zip pocket.'),
+  '87803ff4': make('OLIVE GEOMETRIC QUILTED PUFFER JACKET', 'Olive', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Olive geometric-quilted puffer with orange interior lining and drawcord hem.'),
+  '0f3bff27': make('BLACK KBIAODN QUILTED PUFFER JACKET', 'Black', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Black lightweight quilted puffer with stand collar and side zip pockets.'),
+  '1728e606': make('TEAL GEOMETRIC QUILTED JACKET', 'Teal', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Teal geometric-quilted jacket with tan zipper tape and fleece-lined collar.'),
   '0ea53e55': make('NAVY POLO RALPH LAUREN PACKABLE DOWN VEST', 'Navy', 'Polo Ralph Lauren', BRANDED_PRICE, true, 'Polo Ralph Lauren navy packable down vest with signature pony embroidery.', 'vest'),
   '8ee2da10': make('BLACK TOM FORD HYBRID DOWN JACKET', 'Black', 'Tom Ford', BRANDED_PRICE, true, 'Tom Ford black hybrid down jacket with quilted front and ribbed knit sleeves.'),
-  f1275045: make('BLACK TACVASEN BOMBER JACKET', 'Black', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Black zip-up bomber jacket with ribbed collar, cuffs, and side pockets.'),
-  '993fe030': make('BLACK DIAMOND-QUILT BOMBER JACKET', 'Black', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Black diamond-quilted bomber with silver zip closure and ribbed trim.'),
-  '28de5921': make('BLACK HORIZONTAL QUILT PUFFER JACKET', 'Black', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Black horizontal-quilted puffer jacket with stand collar and zip pockets.'),
-  '450ec5d1': make('CHARCOAL HYBRID KNIT PUFFER JACKET', 'Charcoal', 'ELIJAY'S Men's Wear', PREMIUM_PRICE, false, 'Charcoal hybrid puffer with black ribbed knit sleeves and button-zip front.'),
-  '66de7ca8': make('BLACK LITE PADDED JACKET', 'Black', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Black lightweight padded jacket with clean quilted silhouette.'),
-  '7a6261c2': make('NAVY CHECKERED-LINED BOMBER JACKET', 'Navy', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Navy bomber jacket with checkered interior lining and ribbed waistband.'),
-  '3d111aa0': make('NAVY DIAMOND-QUILT BOMBER JACKET', 'Navy', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Navy diamond-quilt bomber with striped rib trim at collar and cuffs.'),
-  a4383320: make('NAVY DIAMOND-QUILT FIELD JACKET', 'Navy', 'ELIJAY'S Men's Wear', PREMIUM_PRICE, false, 'Navy diamond-quilt field jacket with chest flap pockets and buckle collar detail.'),
+  f1275045: make('BLACK TACVASEN BOMBER JACKET', 'Black', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Black zip-up bomber jacket with ribbed collar, cuffs, and side pockets.'),
+  '993fe030': make('BLACK DIAMOND-QUILT BOMBER JACKET', 'Black', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Black diamond-quilted bomber with silver zip closure and ribbed trim.'),
+  '28de5921': make('BLACK HORIZONTAL QUILT PUFFER JACKET', 'Black', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Black horizontal-quilted puffer jacket with stand collar and zip pockets.'),
+  '450ec5d1': make('CHARCOAL HYBRID KNIT PUFFER JACKET', 'Charcoal', "ELIJAY'S Men's Wear", PREMIUM_PRICE, false, 'Charcoal hybrid puffer with black ribbed knit sleeves and button-zip front.'),
+  '66de7ca8': make('BLACK LITE PADDED JACKET', 'Black', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Black lightweight padded jacket with clean quilted silhouette.'),
+  '7a6261c2': make('NAVY CHECKERED-LINED BOMBER JACKET', 'Navy', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Navy bomber jacket with checkered interior lining and ribbed waistband.'),
+  '3d111aa0': make('NAVY DIAMOND-QUILT BOMBER JACKET', 'Navy', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Navy diamond-quilt bomber with striped rib trim at collar and cuffs.'),
+  a4383320: make('NAVY DIAMOND-QUILT FIELD JACKET', 'Navy', "ELIJAY'S Men's Wear", PREMIUM_PRICE, false, 'Navy diamond-quilt field jacket with chest flap pockets and buckle collar detail.'),
   d6982e98: make('OLIVE FILSON QUILTED PACK JACKET', 'Olive', 'Filson', BRANDED_PRICE, true, 'Filson olive quilted pack jacket with snap storm flap and tan interior lining.'),
   '9cf2dfe8': make('BLUE CORNELIANI ZIP BOMBER JACKET', 'Blue', 'Corneliani', BRANDED_PRICE, false, 'Corneliani blue zipped bomber jacket with refined winter outerwear styling.'),
   '14b2cbb3': make('BLUE RALPH LAUREN PURPLE LABEL HYBRID JACKET', 'Blue', 'Polo Ralph Lauren', BRANDED_PRICE, true, 'Ralph Lauren Purple Label blue zip-front hybrid jacket with padded knit panels.'),
   ac6ed5ef: make('NAVY POLO RALPH LAUREN HYBRID JACKET', 'Navy', 'Polo Ralph Lauren', BRANDED_PRICE, false, 'Polo Ralph Lauren navy hybrid quilted-knit jacket with premium outerwear finish.'),
-  '1c521745': make('NAVY RIBBED WOOL & QUILTED DOWN JACKET', 'Navy', 'ELIJAY'S Men's Wear', PREMIUM_PRICE, false, 'Slim-fit panelled jacket combining ribbed wool and quilted shell down insulation.'),
+  '1c521745': make('NAVY RIBBED WOOL & QUILTED DOWN JACKET', 'Navy', "ELIJAY'S Men's Wear", PREMIUM_PRICE, false, 'Slim-fit panelled jacket combining ribbed wool and quilted shell down insulation.'),
   '92ceb880': make('NAVY HELLY HANSEN INSULATOR JACKET', 'Navy', 'Helly Hansen', BRANDED_PRICE, false, 'Helly Hansen navy crew insulator jacket with technical lightweight warmth.'),
   '75f10b6d': make('BLUE WOOLRICH INSULATED JACKET', 'Blue', 'Woolrich', BRANDED_PRICE, false, 'Woolrich blue insulated jacket with heritage outdoor construction.'),
   a0c847a2: make('BLUE PEUTEREY INSULATED JACKET', 'Blue', 'Peuterey', BRANDED_PRICE, false, 'Peuterey blue insulated jacket with Italian outerwear craftsmanship.'),
   '8fd8d4de': make('BLUE GRAN SASSO QUILTED VEST', 'Blue', 'Gran Sasso', BRANDED_PRICE, false, 'Gran Sasso blue quilted vest for refined layering over shirts and knitwear.', 'vest'),
-  '9f5e273e': make('BLACK HOODED NYLON BOMBER PUFFER', 'Black', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Black nylon bomber puffer with integrated hood and padded insulation.'),
-  '4ee16e69': make('NAVY DIAMOND-QUILT BUSINESS PUFFER JACKET', 'Navy', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Navy diamond-quilted lightweight puffer for business-casual winter layering.'),
-  '7e6f3d3f': make('NAVY DOWN PUFFER JACKET', 'Navy', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Navy down-style puffer jacket with stand collar and clean quilted body.'),
-  '379d8ae2': make('BLUE STAND-COLLAR DOWN PUFFER JACKET', 'Blue', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Blue stand-collar quilted down jacket with streamlined winter profile.'),
-  '80385b68': make('BLACK HOODED COTTON-PADDED WINTER COAT', 'Black', 'ELIJAY'S Men's Wear', PREMIUM_PRICE, false, 'Black hooded windproof cotton-padded coat for thickened cold-weather warmth.'),
-  '37b2cda7': make('BLACK STAND-COLLAR ZIP PARKA JACKET', 'Black', 'ELIJAY'S Men's Wear', PREMIUM_PRICE, false, 'Black stand-collar zip parka with padded insulation for winter wear.'),
-  ca00a07b: make('NAVY SIRDAL INSULATED JACKET', 'Navy', 'ELIJAY'S Men's Wear', STANDARD_PRICE, false, 'Navy Sirdal-style insulated jacket with outdoor-ready warmth.'),
-  ae5fa116: make('GREY SOFTSHELL TRANSITION JACKET', 'Grey', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Grey softshell transition jacket for spring and autumn layering.'),
-  fb9107f1: make('BLACK THERMAL-LINED PADDED VEST', 'Black', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Black thermal-lined padded vest for autumn and winter layering.', 'vest'),
-  '94c2e58b': make('BLACK STAND-COLLAR PADDED VEST', 'Black', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Black stand-collar warm padded vest for fall and winter.', 'vest'),
-  a024f144: make('OLIVE FLEECE OUTDOOR VEST JACKET', 'Olive', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Olive stand-collar fleece outdoor vest jacket for transitional weather.', 'vest'),
-  '93e076cb': make('BLACK MEN\'S QUILTED JACKET', 'Black', 'ELIJAY'S Men's Wear', VALUE_PRICE, false, 'Black men\'s quilted jacket with clean casual outerwear styling.'),
+  '9f5e273e': make('BLACK HOODED NYLON BOMBER PUFFER', 'Black', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Black nylon bomber puffer with integrated hood and padded insulation.'),
+  '4ee16e69': make('NAVY DIAMOND-QUILT BUSINESS PUFFER JACKET', 'Navy', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Navy diamond-quilted lightweight puffer for business-casual winter layering.'),
+  '7e6f3d3f': make('NAVY DOWN PUFFER JACKET', 'Navy', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Navy down-style puffer jacket with stand collar and clean quilted body.'),
+  '379d8ae2': make('BLUE STAND-COLLAR DOWN PUFFER JACKET', 'Blue', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Blue stand-collar quilted down jacket with streamlined winter profile.'),
+  '80385b68': make('BLACK HOODED COTTON-PADDED WINTER COAT', 'Black', "ELIJAY'S Men's Wear", PREMIUM_PRICE, false, 'Black hooded windproof cotton-padded coat for thickened cold-weather warmth.'),
+  '37b2cda7': make('BLACK STAND-COLLAR ZIP PARKA JACKET', 'Black', "ELIJAY'S Men's Wear", PREMIUM_PRICE, false, 'Black stand-collar zip parka with padded insulation for winter wear.'),
+  ca00a07b: make('NAVY SIRDAL INSULATED JACKET', 'Navy', "ELIJAY'S Men's Wear", STANDARD_PRICE, false, 'Navy Sirdal-style insulated jacket with outdoor-ready warmth.'),
+  ae5fa116: make('GREY SOFTSHELL TRANSITION JACKET', 'Grey', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Grey softshell transition jacket for spring and autumn layering.'),
+  fb9107f1: make('BLACK THERMAL-LINED PADDED VEST', 'Black', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Black thermal-lined padded vest for autumn and winter layering.', 'vest'),
+  '94c2e58b': make('BLACK STAND-COLLAR PADDED VEST', 'Black', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Black stand-collar warm padded vest for fall and winter.', 'vest'),
+  a024f144: make('OLIVE FLEECE OUTDOOR VEST JACKET', 'Olive', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Olive stand-collar fleece outdoor vest jacket for transitional weather.', 'vest'),
+  '93e076cb': make('BLACK MEN\'S QUILTED JACKET', 'Black', "ELIJAY'S Men's Wear", VALUE_PRICE, false, 'Black men\'s quilted jacket with clean casual outerwear styling.'),
 };
 
 const BATCH_UUIDS = [
@@ -134,7 +134,7 @@ const inferBrand = (label) => {
   if (/peuterey/.test(l)) return { brand: 'Peuterey', price: BRANDED_PRICE };
   if (/helly hansen/.test(l)) return { brand: 'Helly Hansen', price: BRANDED_PRICE };
   if (/gran sasso/.test(l)) return { brand: 'Gran Sasso', price: BRANDED_PRICE };
-  return { brand: 'ELIJAY'S Men's Wear', price: STANDARD_PRICE };
+  return { brand: "ELIJAY'S Men's Wear", price: STANDARD_PRICE };
 };
 
 const inferColor = (label) => {
@@ -183,7 +183,7 @@ for (const uuid of BATCH_UUIDS) {
   const style = /vest|gilet|sans manches/i.test(label) ? 'vest' : 'jacket';
   const name = labelToName(label);
   const price =
-    brand === 'ELIJAY'S Men's Wear'
+    brand === "ELIJAY'S Men's Wear"
       ? VALUE_PRICE + (idx % 3) * 200 // 4500, 4700, 4900
       : brandPrice;
   SPECS[uuid] = make(name, color, brand, price, false, undefined, style);

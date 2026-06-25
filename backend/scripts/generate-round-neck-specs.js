@@ -22,7 +22,7 @@ const SPECS = {
   camisa_masculina: {
     name: 'BLACK LOS ANGELES LA GRAPHIC ROUND-NECK T-SHIRT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4200,
     featured: true,
     description: rich(
@@ -41,7 +41,7 @@ const SPECS = {
   Men_s_Summer_T_Shirt_PARIS: {
     name: 'WHITE PARIS EIFFEL TOWER GRAPHIC T-SHIRT',
     color: 'White',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 3800,
     description: rich(
       'Classic white round-neck tee featuring a Paris Eiffel Tower graphic — timeless travel-inspired style for everyday wear.',
@@ -59,7 +59,7 @@ const SPECS = {
   Oversized_Black_Spider: {
     name: 'BLACK SPIDER-MAN MASK GRAPHIC T-SHIRT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4500,
     featured: true,
     description: rich(
@@ -96,7 +96,7 @@ const SPECS = {
   Men_s_Letter_And_Mountain_Pattern_Printed_Casual_Short_Sleeve_T_Shirt: {
     name: 'NAVY LIFE IS AN ADVENTURE MOUNTAIN T-SHIRT',
     color: 'Navy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4000,
     description: rich(
       'Navy oversized round-neck tee with mountain explorer graphic — inspirational outdoor style with a relaxed modern fit.',
@@ -114,7 +114,7 @@ const SPECS = {
   '868491109409733438': {
     name: 'GREEN BROOKLYN NEW YORK GRAPHIC T-SHIRT',
     color: 'Green',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 3900,
     description: rich(
       'Forest green round-neck tee with arched BROOKLYN NEW YORK collegiate print — classic American streetwear graphic styling.',
@@ -132,7 +132,7 @@ const SPECS = {
   Manfinity_Homme_Plus_Size_Men_s_Letter_Print_Round_Neck_Short_Sleeve_Casual_T_Shirt: {
     name: 'TAN LIFESTYLE GOTHIC LETTER ROUND-NECK T-SHIRT',
     color: 'Tan',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4100,
     description: rich(
       'Tan oversized round-neck tee with bold Gothic Lifestyle chest print — heavyweight streetwear piece with structured boxy drape.',
@@ -150,7 +150,7 @@ const SPECS = {
   Men_Letter_Graphic_Contrast_Trim_Tee: {
     name: 'NAVY BIG MOVES CONTRAST PANEL T-SHIRT',
     color: 'Navy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4300,
     description: rich(
       'Navy sporty round-neck tee with white contrast side panels and BIG MOVES chest logo — athletic-inspired casual style.',
@@ -168,7 +168,7 @@ const SPECS = {
   'Next_REGULAR_FIT_-_RINGER_-_T_Shirt_basic_-_navy_white_neutral_stone': {
     name: 'NAVY RINGER CREW NECK T-SHIRT — GOTHIC B',
     color: 'Navy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 3600,
     description: rich(
       'Navy ringer round-neck tee with white contrast collar and cuffs plus Gothic B chest emblem — retro sportswear with modern street appeal.',
@@ -186,7 +186,7 @@ const SPECS = {
   men_s_fashion_lightning_bolt_print_t_shirt_casual_: {
     name: 'LIGHT BLUE LIGHTNING BOLT ROUND-NECK T-SHIRT',
     color: 'Blue',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 3700,
     description: rich(
       'Light blue round-neck tee with minimalist white lightning bolt chest graphic — clean streetwear essential with a relaxed fit.',
@@ -204,7 +204,7 @@ const SPECS = {
   Tween_Boys__Casual_Round_Neck_Knit_Spider_Printed_T__Shirt__Fashionable: {
     name: 'BLACK RED SPIDER GRAPHIC ROUND-NECK T-SHIRT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 3800,
     description: rich(
       'Black round-neck tee with bold red spider chest graphic — edgy minimalist streetwear with sharp graphic contrast.',
@@ -222,7 +222,7 @@ const SPECS = {
   Clover_heavy_weight: {
     name: 'WHITE TREFOIL STRIPE ROUND-NECK T-SHIRT',
     color: 'White',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4200,
     description: rich(
       'White round-neck tee with trefoil-inspired logo and bold vertical side stripes — athletic streetwear with asymmetrical graphic placement.',
@@ -240,7 +240,7 @@ const SPECS = {
   Men_s_Casual_Vintage_Washed_Solid_Color_Round_Neck_Short_Sleeve_T_Shirt__Summer__Emo: {
     name: 'ACID WASH BLACK OVERSIZED ROUND-NECK T-SHIRT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4400,
     featured: true,
     description: rich(
@@ -259,7 +259,7 @@ const SPECS = {
   Men_Solid_Round_Neck_Tee: {
     name: 'NAVY SOLID ROUND-NECK ESSENTIAL T-SHIRT',
     color: 'Navy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 3200,
     description: rich(
       'Navy solid round-neck essential tee — heavyweight relaxed fit blank perfect for layering or everyday minimal style.',
@@ -277,7 +277,7 @@ const SPECS = {
   Homens_Camiseta_S_lido_Gola_Redonda: {
     name: 'WHITE SOLID ROUND-NECK ESSENTIAL T-SHIRT',
     color: 'White',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 3000,
     description: rich(
       'White solid round-neck essential tee — crisp everyday staple with a clean regular fit and soft cotton comfort.',

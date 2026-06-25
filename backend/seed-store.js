@@ -3,7 +3,6 @@ const catalog = require('./seed/catalogData');
 
 const CATEGORY_STRUCTURE = [
   { name: 'Polo T-shirts', sub: ['Knitted Polos', 'Polos'] },
-  { name: 'Shoes', sub: ['Formal shoes', 'Casual', 'Boots', 'Sandals', 'Loafers'] },
   { name: 'Shirts', sub: ['Formal shirts', 'Casual', 'Presidential'] },
   { name: 'Suits', sub: ['Two piece', 'Three piece'] },
   { name: 'Blazers', sub: [] },

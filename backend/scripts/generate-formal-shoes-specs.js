@@ -67,7 +67,7 @@ const makeSpec = ({ name, color, style, type, featured = false, intro }) => {
     isBoot ? bootFeatures(color) : officialFeatures(style, color),
     isBoot ? bootFit : officialFit
   );
-  return { name, color, brand: 'ELIJAY'S Men's Wear', price, style, type, featured, description };
+  return { name, color, brand: "ELIJAY'S Men's Wear", price, style, type, featured, description };
 };
 
 /** uuid -> product metadata */

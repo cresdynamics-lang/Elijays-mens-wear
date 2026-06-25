@@ -91,7 +91,7 @@ const OVERRIDES = {
   bb4a7d2c: make(
     'CREAM RIBBED KNITTED POLO',
     'Cream',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     true,
     'Cream ribbed knitted polo with textured vertical knit pattern and concealed placket styling.'
@@ -99,7 +99,7 @@ const OVERRIDES = {
   '803da50b': make(
     'CREAM VERTICAL RIBBED KNITTED POLO',
     'Cream',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Cream vertical ribbed knitted polo with clean popover placket and summer-ready comfort.'
@@ -107,7 +107,7 @@ const OVERRIDES = {
   '736d27dc': make(
     'OFF-WHITE RIBBED KNITTED POLO',
     'Off-White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Off-white ribbed knitted polo with classic collar and lightweight breathable knit.'
@@ -115,7 +115,7 @@ const OVERRIDES = {
   '63dd1d80': make(
     'WHITE & BROWN COLOR-BLOCK WAFFLE KNIT POLO',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'White waffle-knit polo with brown contrast collar, zip placket, and dual chest pockets.'
@@ -123,7 +123,7 @@ const OVERRIDES = {
   '39fa897e': make(
     'WHITE PLAID COLOR-BLOCK ZIP KNIT POLO',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Summer casual plaid color-block knitted polo with stand collar and zip double-pocket front.'
@@ -131,7 +131,7 @@ const OVERRIDES = {
   eb22f602: make(
     'OLIVE GREEN STRIPE-TRIM KNITTED POLO',
     'Olive',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Olive green knitted polo with tan stripe-trim collar and cuffs â€” structured casual polish.'
@@ -139,7 +139,7 @@ const OVERRIDES = {
   d9268f60: make(
     'WHITE TAN-COLLAR KNITTED POLO',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'White knitted polo with contrasting tan collar and cuffs and subtle chest emblem detail.'
@@ -155,7 +155,7 @@ const OVERRIDES = {
   '86c3e5f5': make(
     'MAROON NEONOMAD LOGO KNIT POLO',
     'Maroon',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Maroon ribbed knitted polo with quarter-zip closure and clean logo chest detail.'
@@ -163,7 +163,7 @@ const OVERRIDES = {
   '411a8754': make(
     'BLUE NEONOMAD REGULAR-FIT KNIT POLO',
     'Blue',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     VALUE_PRICE,
     false,
     'Blue regular-fit knitted polo with breathable fabric and everyday smart-casual versatility.'
@@ -171,7 +171,7 @@ const OVERRIDES = {
   bc0bbbf2: make(
     'CREAM CLASSIC RIBBED KNIT POLO',
     'Cream',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Classic cream ribbed knit polo with timeless collar and refined warm-weather styling.'
@@ -179,7 +179,7 @@ const OVERRIDES = {
   ac692159: make(
     'NAVY RIBBED POLO COLLAR KNIT POLO',
     'Navy',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Navy casual ribbed polo-collar knit shirt with regular fit and half-sleeve comfort.'
@@ -187,7 +187,7 @@ const OVERRIDES = {
   '5cc2b05b': make(
     'BLACK CONTRAST-COLLAR KNIT POLO',
     'Black',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Black short-sleeve knitted polo with contrast collar detailing and clean modern lines.'
@@ -203,7 +203,7 @@ const OVERRIDES = {
   '96564944': make(
     'CHOCOLATE BROWN VERTICAL RIB KNIT POLO',
     'Brown',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Chocolate brown vertical rib-knit polo with classic collar and warm earthy tone.'
@@ -211,7 +211,7 @@ const OVERRIDES = {
   ce69c6db: make(
     'BLACK QUARTER-ZIP RIB KNIT POLO',
     'Black',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Black ribbed knitted polo with quarter-zip placket and sleek smart-casual silhouette.'
@@ -219,7 +219,7 @@ const OVERRIDES = {
   de7614ae: make(
     'WHITE PATCHWORK FRONT-BUTTON KNIT POLO',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     VALUE_PRICE,
     false,
     'White patchwork front-button knitted polo with modern color-block casual styling.'
@@ -227,7 +227,7 @@ const OVERRIDES = {
   a5f13ab1: make(
     'SOLID BUSINESS CASUAL KNIT POLO',
     'Navy',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     VALUE_PRICE,
     false,
     'Solid-color business-casual knitted polo with soft malha knit and office-ready comfort.'
@@ -274,7 +274,7 @@ const inferBrand = (label) => {
   if (/lacoste|camisa_d/.test(l)) return { brand: 'Lacoste', price: BRANDED_PRICE };
   if (/percival|perci/.test(l)) return { brand: 'Percival', price: BRANDED_PRICE };
   if (/donatto/.test(l)) return { brand: 'Donatto', price: BRANDED_PRICE };
-  return { brand: 'ELIJAY'S Men's Wear', price: DEFAULT_PRICE };
+  return { brand: "ELIJAY'S Men's Wear", price: DEFAULT_PRICE };
 };
 
 const inferColor = (label) => {
@@ -324,7 +324,7 @@ for (const uuid of BATCH_UUIDS) {
   const { brand, price: brandPrice } = inferBrand(label);
   const color = inferColor(label);
   const name = labelToName(label, color);
-  const price = brand === 'ELIJAY'S Men's Wear' ? VALUE_PRICE + (idx % 3) * 250 : brandPrice;
+  const price = brand === "ELIJAY'S Men's Wear" ? VALUE_PRICE + (idx % 3) * 250 : brandPrice;
   SPECS[uuid] = make(name, color, brand, price);
 }
 

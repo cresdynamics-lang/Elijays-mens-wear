@@ -976,7 +976,7 @@ const DESCRIPTIVE = {
     price: 10500,
     description: fmt(
       'Royal Luxury formal shirt with opulent pattern work and premium finish — a high-end long-sleeve piece for gala events and VIP occasions.',
-      ['Luxury-grade fabric with rich lustre.', 'Ornate pattern befitting royal occasion wear.', 'Long-sleeve formal tailoring.', 'Statement piece for weddings and galas.', 'ELIJAY'S Men's Wear premium formal collection.'],
+      ['Luxury-grade fabric with rich lustre.', 'Ornate pattern befitting royal occasion wear.', 'Long-sleeve formal tailoring.', 'Statement piece for weddings and galas.', "ELIJAY'S Men's Wear premium formal collection."],
     ),
   },
   'Men_s_Rust_Orange_Plaid_Shirt___Stylish_Casual_Check_Shirt_for_Men___T': {

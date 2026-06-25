@@ -94,7 +94,7 @@ const main = () => {
       name,
       slug,
       price: spec.price,
-      brand: spec.brand || 'ELIJAY'S Men's Wear',
+      brand: spec.brand || "ELIJAY'S Men's Wear",
       color: spec.color || 'Black',
       style: spec.style || 'Oxford',
       type: spec.type || 'official',

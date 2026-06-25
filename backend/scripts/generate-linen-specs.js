@@ -79,7 +79,7 @@ const OVERRIDES = {
   fbd933a8: make(
     'NATURAL CAPE TOWN 100% LINEN SHIRT',
     'Natural',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     true,
     'Cape Town 100% linen shirt in natural tone — pure breathable linen for coastal and summer wear.',
@@ -88,7 +88,7 @@ const OVERRIDES = {
   '0230ad3c': make(
     'BROWN GEOMETRIC JACQUARD CUBAN COLLAR LINEN SHIRT',
     'Brown',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Brown geometric jacquard Cuban collar shirt with textured weave and relaxed vacation silhouette.',
@@ -97,7 +97,7 @@ const OVERRIDES = {
   '7e15e7df': make(
     'STRIPED LINEN RELAXED COLLAR SHIRT',
     'Stripe',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Linen-rich striped shirt with relaxed collar and easy warm-weather drape.',
@@ -106,7 +106,7 @@ const OVERRIDES = {
   b867c111: make(
     'NAVY BLUE CLASSIC LINEN LONG-SLEEVE SHIRT',
     'Navy',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     true,
     'Classic navy blue linen long-sleeve shirt — premium summer essential with clean minimalist styling.',
@@ -115,7 +115,7 @@ const OVERRIDES = {
   '903d5ea0': make(
     'WHITE MARBELLA LINEN SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     true,
     'Marbella white linen shirt with crisp resort tailoring and breathable Mediterranean finish.',
@@ -124,7 +124,7 @@ const OVERRIDES = {
   '5a5b8528': make(
     'WHITE LINEN BUTTON-DOWN SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Crisp white linen button-down shirt — timeless summer staple with clean camp-collar styling.',
@@ -133,7 +133,7 @@ const OVERRIDES = {
   '571b4c1f': make(
     'BEIGE LINEN BUTTON-UP SHIRT',
     'Beige',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Beige linen button-up shirt with soft natural texture and relaxed everyday fit.',
@@ -142,7 +142,7 @@ const OVERRIDES = {
   '6d2a4913': make(
     'WHITE SLIM LINEN-BLEND SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Slim-fit white linen-blend shirt with refined structure and breathable hand-feel.',
@@ -151,7 +151,7 @@ const OVERRIDES = {
   bf0178c8: make(
     'NATURAL PURE LINEN LOOSE-FIT LONG-SLEEVE SHIRT',
     'Natural',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Pure linen loose-fit long-sleeve shirt with airy drape and effortless warm-weather comfort.',
@@ -160,7 +160,7 @@ const OVERRIDES = {
   fcfd4807: make(
     'WHITE SUMMER LINEN SQUARE-COLLAR SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'White summer linen shirt with distinctive square collar and lightweight vacation styling.',
@@ -169,7 +169,7 @@ const OVERRIDES = {
   '999402f1': make(
     'BLUE BAGGY COTTON-LINEN LONG-SLEEVE SHIRT',
     'Blue',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Blue baggy cotton-linen long-sleeve shirt with relaxed oversized silhouette.',
@@ -178,7 +178,7 @@ const OVERRIDES = {
   '2c34b07d': make(
     'WHITE HOLLOW-OUT KNIT LINEN SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'White hollow-out knit linen shirt with open texture and breezy resort character.',
@@ -187,7 +187,7 @@ const OVERRIDES = {
   e786e919: make(
     'WHITE KNITTED LINEN CAMP COLLAR SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'White knitted linen camp collar shirt with textured vertical stripe knit pattern.',
@@ -196,7 +196,7 @@ const OVERRIDES = {
   d2e992ad: make(
     'BEIGE OLD MONEY LINEN LONG-SLEEVE SHIRT',
     'Beige',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Beige linen long-sleeve shirt with classic lapel collar — refined old-money casual elegance.',
@@ -205,7 +205,7 @@ const OVERRIDES = {
   '7afc5429': make(
     'WHITE REVERE COLLAR LINEN SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'White revere collar linen shirt with clean minimalist lines and resort-ready styling.',
@@ -214,7 +214,7 @@ const OVERRIDES = {
   '8f19cb15': make(
     'WHITE NOTCHED NECK LINEN SHIRT',
     'White',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'White notched neck linen shirt with modern collar detail and breathable summer weave.',
@@ -223,7 +223,7 @@ const OVERRIDES = {
   '58b387e4': make(
     'BEIGE STAND-COLLAR COTTON-LINEN SHIRT',
     'Beige',
-    'ELIJAY'S Men's Wear',
+    "ELIJAY'S Men's Wear",
     DEFAULT_PRICE,
     false,
     'Beige cotton-linen stand-collar shirt for casual beach and streetwear summer looks.',
@@ -270,8 +270,8 @@ const inferBrand = (label) => {
   if (/fendi/.test(l)) return { brand: 'Fendi', price: PREMIUM_PRICE };
   if (/burberry/.test(l)) return { brand: 'Burberry', price: PREMIUM_PRICE };
   if (/zara/.test(l)) return { brand: 'Zara', price: BRANDED_PRICE };
-  if (/abercrombie|alex.?mill|shein/.test(l)) return { brand: 'ELIJAY'S Men's Wear', price: BRANDED_PRICE };
-  return { brand: 'ELIJAY'S Men's Wear', price: DEFAULT_PRICE };
+  if (/abercrombie|alex.?mill|shein/.test(l)) return { brand: "ELIJAY'S Men's Wear", price: BRANDED_PRICE };
+  return { brand: "ELIJAY'S Men's Wear", price: DEFAULT_PRICE };
 };
 
 const inferColor = (label) => {

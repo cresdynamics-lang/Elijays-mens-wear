@@ -1,6 +1,7 @@
 /**
  * Format product descriptions for rich PDP display.
  */
+import { BRAND_NAME } from '../lib/brand';
 
 const BULLET_RE = /^[\s*\-•]+/;
 const SECTION_HEADERS = [
@@ -137,7 +138,7 @@ const CATEGORY_FEATURES = {
     'Versatile styling for casual and formal looks',
   ],
   default: [
-    'Curated by ELIJAY'S Men's Wear for quality, style, and lasting value',
+    `Curated by ${BRAND_NAME} for quality, style, and lasting value`,
     'Premium construction with attention to detail in every stitch',
     'Designed for the modern Kenyan wardrobe with versatile and refined styling',
     'Easy care and built for repeat wear season after season',
@@ -179,7 +180,7 @@ export const buildRichDescription = (product, variantMeta = {}, parentCategoryNa
     product?.category_name,
     parentCategoryName || product?.parent_category_name
   );
-  const brand = product?.brand_name || 'ELIJAY'S Men's Wear';
+  const brand = product?.brand_name || "ELIJAY'S Men's Wear";
   const name = product?.name || 'This piece';
 
   if (!isBriefDescription(raw, parsed)) {
@@ -230,7 +231,7 @@ export const buildRichDescription = (product, variantMeta = {}, parentCategoryNa
     'Delivery and Service',
     ...deliveryNote,
     '',
-    'Why ELIJAY'S Men's Wear',
+    `Why ${BRAND_NAME}`,
     '• Curated luxury fashion with transparent pricing',
     '• Fast, reliable delivery across Kenya',
     '• In store availability at our Nairobi location',

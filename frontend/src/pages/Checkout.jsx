@@ -1,3 +1,4 @@
+import { BRAND_NAME } from '../lib/brand';
 import { useState, useEffect } from 'react';
 import { Truck, ChevronLeft, ShoppingBag } from 'lucide-react';
 import MpesaCheckoutSection from '../components/MpesaCheckoutSection';
@@ -113,7 +114,7 @@ const Checkout = () => {
         phone: effectivePhone,
         fulfillment_method: fulfillmentMethod,
         delivery_zone: needsDeliveryLocation ? deliveryZone : 'pickup',
-        line1: needsDeliveryLocation ? address.trim() : 'Pickup at ELIJAY'S Men's Wear shop',
+        line1: needsDeliveryLocation ? address.trim() : `Pickup at ${BRAND_NAME} shop`,
         city: needsDeliveryLocation ? 'Nairobi' : 'Pickup',
         country: 'Kenya',
         payment_choice: paymentChoice,

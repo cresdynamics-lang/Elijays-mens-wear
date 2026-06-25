@@ -334,7 +334,7 @@ module.exports = [
   { 
     name: 'Black Leather Belt Set', 
     slug: 'black-leather-belt-set', 
-    brandName: 'ELIJAY'S Men's Wear', 
+    brandName: "ELIJAY'S Men's Wear", 
     categorySlug: 'belts-ties', 
     price: 2400, 
     featured: true, 
@@ -345,7 +345,7 @@ module.exports = [
   { 
     name: 'Dark Brown Leather Belt Set', 
     slug: 'dark-brown-leather-belt-set', 
-    brandName: 'ELIJAY'S Men's Wear', 
+    brandName: "ELIJAY'S Men's Wear", 
     categorySlug: 'belts-ties', 
     price: 2400, 
     featured: true, 

@@ -1,3 +1,4 @@
+import { BRAND_NAME } from './brand';
 import { CONTACT_PHONE, SITE_URL } from '../seo/seoData';
 
 /** E.164 without + — default ELIJAY'S Men's Wear WhatsApp */
@@ -45,7 +46,7 @@ export const buildWhatsAppOrderUrl = ({ order, items = [], trackUrl }) => {
     : ['- (see order link)'];
 
   const lines = [
-    'Hello ELIJAY'S Men's Wear, I would like to confirm my order:',
+    `Hello ${BRAND_NAME}, I would like to confirm my order:`,
     '',
     `Order #${shortId}`,
     `Total: KSh ${total.toLocaleString()}`,

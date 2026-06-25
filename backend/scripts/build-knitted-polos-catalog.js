@@ -85,7 +85,7 @@ const main = () => {
       name,
       slug: `${slugify(name)}-${uuid.slice(0, 8)}`,
       price: spec.price,
-      brand: spec.brand || 'ELIJAY'S Men's Wear',
+      brand: spec.brand || "ELIJAY'S Men's Wear",
       color: spec.color || 'Natural',
       subCategory: 'Knitted Polos',
       featured: Boolean(spec.featured),

@@ -7,7 +7,7 @@ export const DUMMY_PRODUCTS = [
     category_name: 'polo-t-shirts',
     subcategory: 'Polos',
     price: 6500,
-    brand_name: 'ELIJAY'S Men's Wear',
+    brand_name: "ELIJAY'S Men's Wear",
     slug: 'classic-pique-polo-black',
     thumbnail: '/polo black.jpeg'
   },
@@ -17,7 +17,7 @@ export const DUMMY_PRODUCTS = [
     category_name: 'polo-t-shirts',
     subcategory: 'Polos',
     price: 6500,
-    brand_name: 'ELIJAY'S Men's Wear',
+    brand_name: "ELIJAY'S Men's Wear",
     slug: 'knitted-polo-dark-black',
     thumbnail: '/polo dark black.jpeg'
   },
@@ -27,7 +27,7 @@ export const DUMMY_PRODUCTS = [
     category_name: 'polo-t-shirts',
     subcategory: 'Polos',
     price: 6500,
-    brand_name: 'ELIJAY'S Men's Wear',
+    brand_name: "ELIJAY'S Men's Wear",
     slug: 'classic-polo-brown',
     thumbnail: '/polo brown.jpeg'
   },
@@ -37,7 +37,7 @@ export const DUMMY_PRODUCTS = [
     category_name: 'polo-t-shirts',
     subcategory: 'Polos',
     price: 6500,
-    brand_name: 'ELIJAY'S Men's Wear',
+    brand_name: "ELIJAY'S Men's Wear",
     slug: 'premium-cotton-polo-light-blue',
     thumbnail: '/polo light blue.jpeg'
   },
@@ -47,7 +47,7 @@ export const DUMMY_PRODUCTS = [
     category_name: 'polo-t-shirts',
     subcategory: 'Polos',
     price: 6500,
-    brand_name: 'ELIJAY'S Men's Wear',
+    brand_name: "ELIJAY'S Men's Wear",
     slug: 'contrast-collar-polo-red',
     thumbnail: '/polo red.jpeg'
   },
@@ -57,7 +57,7 @@ export const DUMMY_PRODUCTS = [
     category_name: 'polo-t-shirts',
     subcategory: 'Polos',
     price: 6500,
-    brand_name: 'ELIJAY'S Men's Wear',
+    brand_name: "ELIJAY'S Men's Wear",
     slug: 'signature-polo-white',
     thumbnail: '/polo white.jpeg'
   },
@@ -319,7 +319,7 @@ export const DUMMY_PRODUCTS = [
     category_name: 'more', 
     subcategory: 'Half jackets', 
     price: 12500, 
-    brand_name: 'ELIJAY'S Men's Wear', 
+    brand_name: "ELIJAY'S Men's Wear", 
     slug: 'black-puffer-vest',
     thumbnail: '/WhatsApp Image 2026-05-12 at 8.07.33 PM.jpeg'
   },

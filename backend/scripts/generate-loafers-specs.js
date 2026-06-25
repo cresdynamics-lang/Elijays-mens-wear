@@ -14,7 +14,7 @@ const SPECS = {
     color: 'Brown',
     style: 'penny',
     fit: 'classic',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 118000,
     featured: true,
     description: fmt(
@@ -33,7 +33,7 @@ const SPECS = {
     color: 'Black',
     style: 'horsebit',
     fit: 'classic',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 112000,
     featured: true,
     description: fmt(
@@ -52,7 +52,7 @@ const SPECS = {
     color: 'Black',
     style: 'horsebit',
     fit: 'classic',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 108000,
     description: fmt(
       'Gucci horsebit loafers in black suede — gold interlocking hardware on a refined slip-on profile.',
@@ -70,7 +70,7 @@ const SPECS = {
     color: 'Black',
     style: 'horsebit',
     fit: 'classic',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 125000,
     featured: true,
     description: fmt(
@@ -199,7 +199,7 @@ const SPECS = {
         'Gold-tone horsebit ornament.',
         'Apron toe moccasin construction.',
         'Formal and casual versatility.',
-        'ELIJAY'S Men's Wear signature loafer.',
+        "ELIJAY'S Men's Wear signature loafer.",
       ]
     ),
   },

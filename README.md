@@ -8,26 +8,16 @@ Luxury menswear platform — full stack clone of Prince Esquire **without footwe
 
 ## Quick start (local)
 
+**Already set up on this machine.** Open:
+
+- Shop: [http://localhost:5173](http://localhost:5173)
+- API: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+- Admin: [http://localhost:5173/admin/login](http://localhost:5173/admin/login) → `admin@elijays.co.ke` / `elijays2026`
+- POS: [http://localhost:5173/pos/login](http://localhost:5173/pos/login) → `seller@elijays.co.ke` / `elijays2026`
+
+To reset from scratch: `node scripts/eljays-setup-local.js`
+
 See **[ELJAYS_SETUP.md](./ELJAYS_SETUP.md)** for the full guide.
-
-```bash
-# 1. Database
-cd backend && cp .env.example .env   # set DB_NAME=eljays_db
-node create_db.js
-npm ci && npm run db:migrate && npm run seed:admin
-
-# 2. Inventory from Excel (June 16 sheet bundled in backend/data/)
-npm run seed:eljays-inventory
-
-# 3. Website catalog (uses Prince image/data folders — no shoe imports)
-node scripts/eljays-import-catalog.js --run
-npm run link:products
-
-# 4. Frontend
-cd ../frontend && cp .env.example .env && npm ci && npm run dev
-```
-
-Backend API: `http://localhost:8000` · Frontend: `http://localhost:5173`
 
 ## What is different from Prince Esquire
 

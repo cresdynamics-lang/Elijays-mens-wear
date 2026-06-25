@@ -71,7 +71,7 @@ SELECT
   '/WhatsApp Image 2026-05-12 at 8.07.22 PM.jpeg',
   '[]'::jsonb
 FROM categories c
-LEFT JOIN brands b ON b.name = 'ELIJAY'S Men's Wear'
+LEFT JOIN brands b ON b.name = 'ELIJAY''S Men''s Wear'
 WHERE c.slug = 'belts-ties'
 ON CONFLICT (slug) DO UPDATE SET
   description = EXCLUDED.description,

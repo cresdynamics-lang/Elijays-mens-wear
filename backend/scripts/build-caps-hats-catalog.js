@@ -148,7 +148,7 @@ const inferBrand = (label) => {
   if (/american.eagle/i.test(t)) return 'American Eagle';
   if (/regitwow/i.test(t)) return 'Regitwow';
   if (/dodgers|yankees|mlb/i.test(t)) return 'New Era';
-  return 'ELIJAY'S Men's Wear';
+  return "ELIJAY'S Men's Wear";
 };
 
 const inferHatType = (label) => {

@@ -83,7 +83,7 @@ const SPECS = {
   '1023865296538593401': {
     name: 'WHITE NEW YORK USA GRAPHIC SWEATSHIRT',
     color: 'White',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 9800,
     description: fmt(
       'White crewneck sweatshirt with distressed New York USA graphic print.',
@@ -93,7 +93,7 @@ const SPECS = {
   '756956649884521747': {
     name: 'GREY WHITE BLACK COLORBLOCK SWEATSHIRT',
     color: 'Grey',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 9200,
     description: fmt(
       'Grey, white and black horizontal colorblock crewneck sweatshirt.',
@@ -103,7 +103,7 @@ const SPECS = {
   '730709108319522200': {
     name: 'BEIGE LOS ANGELES GRAPHIC SWEATSHIRT',
     color: 'Beige',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 8900,
     description: fmt(
       'Beige crewneck sweatshirt with Los Angeles chest lettering.',
@@ -113,7 +113,7 @@ const SPECS = {
   '738379301439125897': {
     name: 'BURGUNDY LAYERED COLLAR SWEATSHIRT',
     color: 'Burgundy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 10500,
     description: fmt(
       'Burgundy crewneck sweatshirt styled with white shirt-collar layering.',
@@ -123,7 +123,7 @@ const SPECS = {
   Men_Letter_Patched_Detail_Cable_Knit_Sweatshirt: {
     name: 'WHITE CABLE KNIT TEXTURED SWEATSHIRT',
     color: 'White',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 10200,
     description: fmt(
       'White textured cable-knit sweatshirt with diamond argyle pattern.',
@@ -133,7 +133,7 @@ const SPECS = {
   '882564858203587713': {
     name: 'BLACK ATHLETES FLAME GRAPHIC SWEATSHIRT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 9500,
     description: fmt(
       'Black crewneck sweatshirt with Athletes gothic script and flame hem print.',
@@ -143,7 +143,7 @@ const SPECS = {
   Men_s_Knitted_Casual_Patchwork_Round_Neck_Sweatshirt: {
     name: 'TAN WHITE OMBRE FUZZY KNIT SWEATSHIRT',
     color: 'Tan',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 11200,
     description: fmt(
       'Tan-to-white ombre fuzzy knit sweatshirt with bold letter graphic.',
@@ -153,7 +153,7 @@ const SPECS = {
   '1144829167802529640': {
     name: 'NAVY RELAXED CREWNECK SWEATSHIRT',
     color: 'Navy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 8800,
     description: fmt(
       'Navy blue relaxed-fit crewneck sweatshirt with dropped shoulders.',
@@ -163,7 +163,7 @@ const SPECS = {
   Classic_Casual_Crew_Neck_Sweatshirt: {
     name: 'BLACK CLASSIC CREWNECK SWEATSHIRT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 7500,
     description: fmt(
       'Black classic crewneck sweatshirt — plain essential pullover.',

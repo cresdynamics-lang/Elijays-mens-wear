@@ -27,7 +27,7 @@ The first step to achieving the perfect fit is getting properly measured. Whethe
 Remember, fit is everything. Invest time in finding pieces that work with your body, and don't settle for anything less than perfect.
     `,
     category: 'Style Tips',
-    author_name: 'ELIJAY'S Men's Wear Team',
+    author_name: "ELIJAY'S Men's Wear Team",
     featured_image_url: 'https://res.cloudinary.com/cresdynamics/image/upload/v1/elijays-mens-wear/blog/fit-matters',
     is_published: true,
     views: 0,
@@ -72,7 +72,7 @@ While trends come and go, certain pieces remain forever stylish:
 Stay fashionable while maintaining your personal style!
     `,
     category: 'Trends',
-    author_name: 'ELIJAY'S Men's Wear Team',
+    author_name: "ELIJAY'S Men's Wear Team",
     featured_image_url: 'https://res.cloudinary.com/cresdynamics/image/upload/v1/elijays-mens-wear/blog/seasonal-trends',
     is_published: true,
     views: 0,
@@ -121,7 +121,7 @@ Then add accent colors that complement your skin tone and personal style.
 Mastering color coordination elevates your entire wardrobe!
     `,
     category: 'Style Tips',
-    author_name: 'ELIJAY'S Men's Wear Team',
+    author_name: "ELIJAY'S Men's Wear Team",
     featured_image_url: 'https://res.cloudinary.com/cresdynamics/image/upload/v1/elijays-mens-wear/blog/color-coordination',
     is_published: true,
     views: 0,
@@ -179,7 +179,7 @@ Invest in professional tailoring for:
 Your suit will thank you with years of reliable service!
     `,
     category: 'Maintenance',
-    author_name: 'ELIJAY'S Men's Wear Team',
+    author_name: "ELIJAY'S Men's Wear Team",
     featured_image_url: 'https://res.cloudinary.com/cresdynamics/image/upload/v1/elijays-mens-wear/blog/suit-care',
     is_published: true,
     views: 0,

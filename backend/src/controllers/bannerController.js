@@ -42,7 +42,7 @@ const HERO_COPY = {
 const buildHeroSlidesFromBanners = (rows) =>
   rows.map((b) => ({
     image: optimizeCloudinaryUrl(b.image, { width: 1600, height: 900, crop: 'fill' }),
-    subtitle: b.subtitle || 'ELIJAY'S Men's Wear',
+    subtitle: b.subtitle || "ELIJAY'S Men's Wear",
     title: b.title,
     desc: b.subtitle || '',
     cta: 'Shop Now',

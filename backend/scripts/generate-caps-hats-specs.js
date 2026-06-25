@@ -129,7 +129,7 @@ const SPECS = {
   Brooklyn_Hat_Vintage_Brooklyn_1947_Dad_Hat: {
     name: 'VINTAGE WASHED BROOKLYN 1947 DAD HAT',
     color: 'Charcoal',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2800,
     hatType: 'Dad Hat',
     description: rich(
@@ -148,7 +148,7 @@ const SPECS = {
   Bon__Brooklyn_Beisebol_Retr__Bordado_Algod_o_Regulagem_Macio_Estiloso___Marinho: {
     name: 'NAVY BROOKLYN EST 1631 BASEBALL CAP',
     color: 'Navy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2600,
     hatType: 'Baseball Cap',
     description: rich(
@@ -167,7 +167,7 @@ const SPECS = {
   Men_Letter_Graphic_Baseball_Cap: {
     name: 'BLACK SEATTLE 1994 GRAPHIC BASEBALL CAP',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2500,
     hatType: 'Baseball Cap',
     description: rich(
@@ -186,7 +186,7 @@ const SPECS = {
   AR_Men_Letter_Embroidered_Baseball_Cap_Street: {
     name: 'NAVY VARSITY "A" BASEBALL CAP',
     color: 'Navy',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2700,
     hatType: 'Baseball Cap',
     description: rich(
@@ -205,7 +205,7 @@ const SPECS = {
   Lesmart_Smile_Baseball_Cap___Khaki: {
     name: 'KHAKI SMILEY FACE EMBROIDERED BASEBALL CAP',
     color: 'Khaki',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2200,
     hatType: 'Baseball Cap',
     description: rich(
@@ -245,7 +245,7 @@ const SPECS = {
   mrosto__Handwoven_Ecuador_Panama_Hat: {
     name: 'HANDWOVEN ECUADOR CLASSIC PANAMA HAT',
     color: 'Natural',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 8500,
     featured: true,
     hatType: 'Panama Hat',
@@ -403,7 +403,7 @@ const SPECS = {
   '1pc_Porkpie_Fedora_Hat__Vintage_Style_100__Pure_': {
     name: 'BLACK VINTAGE PORKPIE FEDORA HAT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 4200,
     hatType: 'Porkpie',
     description: rich(
@@ -480,7 +480,7 @@ const SPECS = {
   Men_Thorn_Print_Trucker_Hat: {
     name: 'BLACK THORN PRINT TRUCKER HAT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2400,
     hatType: 'Trucker Hat',
     description: rich(
@@ -499,7 +499,7 @@ const SPECS = {
   Men_Expression_Print_Trucker_Hat: {
     name: 'BLACK EXPRESSION PRINT TRUCKER HAT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2400,
     hatType: 'Trucker Hat',
     description: rich(
@@ -518,7 +518,7 @@ const SPECS = {
   Unique_Military_Design_Cotton_Cap___01_Khaki_Brown___One_Size: {
     name: 'KHAKI MILITARY DESIGN COTTON CAP',
     color: 'Khaki',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2300,
     hatType: 'Military Cap',
     description: rich(
@@ -537,7 +537,7 @@ const SPECS = {
   Homens_Chap_u_de_caminhoneiro_Gr_fico_de_slogan: {
     name: 'BLACK TRUCKER SLOGAN GRAPHIC CAP',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2300,
     hatType: 'Trucker Hat',
     description: rich(
@@ -556,7 +556,7 @@ const SPECS = {
   Bon__de_beisebol_masculino_de_cor_s_lida_com_veda_o_traseira: {
     name: 'SOLID MAROON PERFORMANCE BASEBALL CAP',
     color: 'Maroon',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     hatType: 'Baseball Cap',
     description: rich(

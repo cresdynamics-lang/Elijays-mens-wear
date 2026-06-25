@@ -146,7 +146,7 @@ const inferBrand = (label) => {
   if (/nike/i.test(t)) return 'Nike';
   if (/adidas|trefoil|clover/i.test(t)) return 'Adidas';
   if (/shein/i.test(t)) return 'SHEIN';
-  return 'ELIJAY'S Men's Wear';
+  return "ELIJAY'S Men's Wear";
 };
 
 const inferStyle = (label) => {

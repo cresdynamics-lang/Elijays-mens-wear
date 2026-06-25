@@ -2,10 +2,12 @@
 import { jsPDF } from 'jspdf';
 import { formatKES } from '../lib/format';
 
+import { BRAND_NAME } from '../lib/brand';
+
 export const downloadReceiptPdf = (sale, sellerName = 'Staff') => {
   const doc = new jsPDF();
   doc.setFontSize(16);
-  doc.text('ELIJAY'S Men's Wear', 20, 20);
+  doc.text(BRAND_NAME, 20, 20);
   doc.setFontSize(10);
   doc.text(`Receipt: ${sale.receipt_number}`, 20, 30);
   doc.text(`Date: ${new Date(sale.created_at).toLocaleString()}`, 20, 36);
@@ -27,6 +29,6 @@ export const downloadReceiptPdf = (sale, sellerName = 'Staff') => {
   doc.text(`Payment: ${sale.payment_method}`, 20, y + 12);
   if (sale.mpesa_ref) doc.text(`M-Pesa Ref: ${sale.mpesa_ref}`, 20, y + 18);
   if (sale.is_voided) doc.text(`VOIDED: ${sale.void_reason || ''}`, 20, y + 26);
-  doc.text('Thank you for shopping at ELIJAY'S Men's Wear', 20, y + 36);
+  doc.text(`Thank you for shopping at ${BRAND_NAME}`, 20, y + 36);
   doc.save(`${sale.receipt_number}.pdf`);
 };

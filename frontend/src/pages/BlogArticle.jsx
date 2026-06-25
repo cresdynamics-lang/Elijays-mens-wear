@@ -75,7 +75,7 @@ export default function BlogArticle() {
         description={blog.excerpt || blog.title}
         path={`/blog/${blog.slug}`}
         image={imageUrl}
-        keywords={[blog.title, blog.category, 'ELIJAY'S Men's Wear blog', 'menswear Kenya'].filter(Boolean)}
+        keywords={[blog.title, blog.category, "ELIJAY'S Men's Wear blog", 'menswear Kenya'].filter(Boolean)}
         schema={[
           buildBreadcrumbSchema([
             { name: 'Home', path: '/' },

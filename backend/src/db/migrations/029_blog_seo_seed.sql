@@ -24,7 +24,7 @@ Footwear changes the mood immediately. Loafers make khaki trousers feel polished
 
 For Nairobi wardrobes, the safest styling formula is this: one clean trouser, one strong shirt, one pair of dependable shoes. That formula sells because it is easy to repeat and easy to trust.$$,
       'Style Guide',
-      'ELIJAY'S Men's Wear Editorial',
+      'ELIJAY''S Men''s Wear Editorial',
       'black-smart-series-flex-waistband-khakis-showroom',
       0
     ),
@@ -40,7 +40,7 @@ For men building a wardrobe in Kenya, a dark suit is not a special occasion item
 
 If you want a wardrobe that feels complete, start with one suit that fits well, then build outward with shirts, shoes, and trousers that support it.$$,
       'Style Guide',
-      'ELIJAY'S Men's Wear Editorial',
+      'ELIJAY''S Men''s Wear Editorial',
       'fabio-bironin-dark-navy-wool-two-piece-suit-pg0003-3-03',
       1
     ),
@@ -56,7 +56,7 @@ For Nairobi weather and pace, both styles are useful. A derby works for days whe
 
 The easiest rule is to buy the shoe you will reach for most. A useful shoe rotation is always better than a perfect shoe that stays in the box.$$,
       'Style Guide',
-      'ELIJAY'S Men's Wear Editorial',
+      'ELIJAY''S Men''s Wear Editorial',
       'clarks-black-casual-derby-sneaker',
       2
     ),
@@ -72,7 +72,7 @@ The real trick is proportion. Choose a shirt that sits clean on the shoulders an
 
 Statement shirts are useful because they let a man bring energy into a wardrobe without rebuilding everything else around them.$$,
       'Fashion Tips',
-      'ELIJAY'S Men's Wear Editorial',
+      'ELIJAY''S Men''s Wear Editorial',
       'presidential-blue-paisley-p6-6',
       3
     ),
@@ -88,7 +88,7 @@ This is also where texture matters. A better fabric drapes properly and keeps it
 
 The best off-duty wardrobes are not the ones with the most clothes. They are the ones with pieces that can be repeated without losing their edge.$$,
       'Lifestyle',
-      'ELIJAY'S Men's Wear Editorial',
+      'ELIJAY''S Men''s Wear Editorial',
       'prada-black-tracksuit-753',
       4
     ),
@@ -104,7 +104,7 @@ There is also a visual reason they work. Neutral colors look calm in photographs
 
 If you are starting from scratch, build around one neutral trouser, one dark shoe, one crisp shirt, and one clean jacket. Those four pieces will do more than a crowded closet.$$,
       'Trends',
-      'ELIJAY'S Men's Wear Editorial',
+      'ELIJAY''S Men''s Wear Editorial',
       'taupe-tapered-fit-khaki-showroom',
       5
     )

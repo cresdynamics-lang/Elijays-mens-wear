@@ -226,7 +226,7 @@ const main = () => {
       name,
       slug: resolvedSlug,
       price: spec?.price || priceFor(style, fit, idx),
-      brand: spec?.brand || 'ELIJAY'S Men's Wear',
+      brand: spec?.brand || "ELIJAY'S Men's Wear",
       color,
       subCategory: 'Jeans',
       style,

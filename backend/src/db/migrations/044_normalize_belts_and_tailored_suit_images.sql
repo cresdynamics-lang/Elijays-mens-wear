@@ -28,7 +28,7 @@ SELECT
 FROM categories c
 CROSS JOIN brands b
 WHERE c.slug = 'belts-ties'
-  AND b.name = 'ELIJAY'S Men's Wear'
+  AND b.name = 'ELIJAY''S Men''s Wear'
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,
   description = EXCLUDED.description,
@@ -70,7 +70,7 @@ SELECT
 FROM categories c
 CROSS JOIN brands b
 WHERE c.slug = 'belts-ties'
-  AND b.name = 'ELIJAY'S Men's Wear'
+  AND b.name = 'ELIJAY''S Men''s Wear'
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,
   description = EXCLUDED.description,

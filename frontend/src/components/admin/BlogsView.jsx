@@ -114,7 +114,7 @@ export default function BlogsView() {
     try {
       const payload = {
         ...formData,
-        author_name: formData.author_name || 'ELIJAY'S Men's Wear',
+        author_name: formData.author_name || "ELIJAY'S Men's Wear",
       };
 
       const response = editingBlog

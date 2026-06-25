@@ -1,12 +1,12 @@
 -- Normalize inflated stock values and make the two belt products visible in POS inventory.
 INSERT INTO categories (name, slug, description)
-VALUES ('Belts & Ties', 'belts-ties', 'Belts and ties from ELIJAY'S Men's Wear')
+VALUES ('Belts & Ties', 'belts-ties', 'Belts and ties from ELIJAY''S Men''s Wear')
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,
   description = COALESCE(categories.description, EXCLUDED.description);
 
 INSERT INTO brands (name, slug, description)
-VALUES ('ELIJAY'S Men's Wear', 'elijays-mens-wear', 'ELIJAY'S Men's Wear')
+VALUES ('ELIJAY''S Men''s Wear', 'elijays-mens-wear', 'ELIJAY''S Men''s Wear')
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,
   description = COALESCE(brands.description, EXCLUDED.description);

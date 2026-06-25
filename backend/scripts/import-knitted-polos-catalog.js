@@ -54,7 +54,7 @@ async function ensureKnittedPolosCategory() {
 }
 
 async function ensureBrand(name) {
-  const brandName = name || 'ELIJAY'S Men's Wear';
+  const brandName = name || "ELIJAY'S Men's Wear";
   const slug = slugify(brandName);
   const found = await db.query('SELECT id FROM brands WHERE slug = $1', [slug]);
   if (found.rows.length) return found.rows[0].id;

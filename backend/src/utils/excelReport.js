@@ -8,7 +8,7 @@ const initWorkbook = (title, colCount) => {
   const wb = new ExcelJS.Workbook();
   const ws = wb.addWorksheet('Report');
   ws.mergeCells(1, 1, 1, colCount);
-  ws.getCell('A1').value = 'ELIJAY'S Men's Wear';
+  ws.getCell('A1').value = "ELIJAY'S Men's Wear";
   ws.getCell('A1').font = { bold: true, size: 14 };
   ws.mergeCells(2, 1, 2, colCount - 1);
   ws.getCell('A2').value = title;

@@ -126,7 +126,7 @@ const inferBrand = (label) => {
   if (/adidas/i.test(t)) return 'Adidas';
   if (/vans/i.test(t)) return 'Vans';
   if (/shein/i.test(t)) return 'SHEIN';
-  return 'ELIJAY'S Men's Wear';
+  return "ELIJAY'S Men's Wear";
 };
 
 const buildName = (color, idx, label, spec) => {

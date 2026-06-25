@@ -155,7 +155,7 @@ async function ensureBrand() {
   const found = await db.query("SELECT id FROM brands WHERE slug = 'elijays-mens-wear'");
   if (found.rows.length) return found.rows[0].id;
   const r = await db.query(
-    `INSERT INTO brands (name, slug, description) VALUES ('ELIJAY'S Men's Wear', 'elijays-mens-wear', 'ELIJAY'S Men's Wear') RETURNING id`
+    `INSERT INTO brands (name, slug, description) VALUES ("ELIJAY'S Men's Wear", 'elijays-mens-wear', "ELIJAY'S Men's Wear") RETURNING id`
   );
   return r.rows[0].id;
 }

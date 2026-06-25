@@ -3,7 +3,7 @@
  * Generates order message and sends via WhatsApp
  */
 
-export const WHATSAPP_BUSINESS_NUMBER = '254724494089'; // ELIJAY'S Men's Wear business number
+export const WHATSAPP_BUSINESS_NUMBER = '254700000000';
 
 /**
  * Format order items for WhatsApp message

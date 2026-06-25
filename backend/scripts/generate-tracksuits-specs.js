@@ -86,15 +86,15 @@ const OVERRIDES = {
     'BOSS Hugo Boss navy tracksuit with white shoulder panels and logo chest branding.'),
   af76bd39: make('LIGHT BLUE PUMA MARSEILLE TRACKSUIT SET', 'Light Blue', 'Puma', BRANDED_PRICE,
     'Puma Olympique de Marseille light blue and navy tracksuit with club crest detailing.'),
-  f823efc0: make('BLACK REFLECTIVE STRIPE TRACKSUIT SET', 'Black', 'ELIJAY'S Men's Wear', DEFAULT_PRICE,
+  f823efc0: make('BLACK REFLECTIVE STRIPE TRACKSUIT SET', 'Black', "ELIJAY'S Men's Wear", DEFAULT_PRICE,
     'Black high-visibility tracksuit with reflective ladder-stripe detailing on sleeves and legs.'),
-  '5ad392cd': make('NAVY RIVIERA STRIPE TRACKSUIT SET', 'Navy', 'ELIJAY'S Men's Wear', DEFAULT_PRICE,
+  '5ad392cd': make('NAVY RIVIERA STRIPE TRACKSUIT SET', 'Navy', "ELIJAY'S Men's Wear", DEFAULT_PRICE,
     'Navy Riviera track set with bold white side stripes and ribbed jogger cuffs.'),
-  ce41d544: make('BLACK RED CHEVRON TRACKSUIT SET', 'Black', 'ELIJAY'S Men's Wear', DEFAULT_PRICE,
+  ce41d544: make('BLACK RED CHEVRON TRACKSUIT SET', 'Black', "ELIJAY'S Men's Wear", DEFAULT_PRICE,
     'Black athletic tracksuit with red sleeve panels and grey chevron chest graphic.'),
-  b5fe088a: make('ARMY GREEN STRIPED TRACKSUIT SET', 'Green', 'ELIJAY'S Men's Wear', DEFAULT_PRICE,
+  b5fe088a: make('ARMY GREEN STRIPED TRACKSUIT SET', 'Green', "ELIJAY'S Men's Wear", DEFAULT_PRICE,
     'Army green zip-up tracksuit with contrast stripe panels on jacket and pants.'),
-  '0899b5bd': make('GREY CASUAL RYAN TRACKSUIT SET', 'Grey', 'ELIJAY'S Men's Wear', DEFAULT_PRICE,
+  '0899b5bd': make('GREY CASUAL RYAN TRACKSUIT SET', 'Grey', "ELIJAY'S Men's Wear", DEFAULT_PRICE,
     'Grey casual two-piece tracksuit with relaxed fit for everyday comfort and style.'),
 };
 
@@ -109,7 +109,7 @@ const inferBrand = (label) => {
   if (/lacoste/.test(l)) return { brand: 'Lacoste', price: BRANDED_PRICE };
   if (/boss|hugo/.test(l)) return { brand: 'Hugo Boss', price: BRANDED_PRICE };
   if (/corteiz/.test(l)) return { brand: 'Corteiz', price: BRANDED_PRICE };
-  return { brand: 'ELIJAY'S Men's Wear', price: DEFAULT_PRICE };
+  return { brand: "ELIJAY'S Men's Wear", price: DEFAULT_PRICE };
 };
 
 const inferColor = (label) => {

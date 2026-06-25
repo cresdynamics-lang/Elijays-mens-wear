@@ -89,7 +89,7 @@ const buildStockWorkbook = async (rows, title = 'Stock Report') => {
   const ws = wb.addWorksheet('Sheet1');
 
   ws.mergeCells(1, 1, 1, HEADERS.length);
-  ws.getCell('A1').value = 'ELIJAY'S Men's Wear';
+  ws.getCell('A1').value = "ELIJAY'S Men's Wear";
   ws.getCell('A1').font = { bold: true, size: 14 };
   ws.getCell(2, HEADERS.length).value = `Generated: ${new Date().toLocaleString()}`;
 

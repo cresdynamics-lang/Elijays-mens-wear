@@ -45,7 +45,7 @@ BEGIN
     '/belt-001.jpeg',
     '[{"url":"/belt-001.jpeg","alt":"Black Leather Belt Set"}]'::jsonb
   FROM brands b
-  WHERE b.name = 'ELIJAY'S Men's Wear'
+  WHERE b.name = 'ELIJAY''S Men''s Wear'
   ON CONFLICT (slug) DO UPDATE SET
     name = EXCLUDED.name,
     description = EXCLUDED.description,
@@ -85,7 +85,7 @@ BEGIN
     '/belt-002.jpeg',
     '[{"url":"/belt-002.jpeg","alt":"Dark Brown Leather Belt Set"}]'::jsonb
   FROM brands b
-  WHERE b.name = 'ELIJAY'S Men's Wear'
+  WHERE b.name = 'ELIJAY''S Men''s Wear'
   ON CONFLICT (slug) DO UPDATE SET
     name = EXCLUDED.name,
     description = EXCLUDED.description,

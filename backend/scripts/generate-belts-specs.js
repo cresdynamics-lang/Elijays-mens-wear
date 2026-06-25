@@ -22,7 +22,7 @@ const SPECS = {
   fa8cb090: {
     name: 'BROWN ITALIAN LEATHER RATCHET DRESS BELT',
     color: 'Brown',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2100,
     featured: true,
     description: rich(
@@ -41,7 +41,7 @@ const SPECS = {
   '4a5ef43a': {
     name: 'BLACK RECTANGLE BUCKLE LEATHER BELT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     description: rich(
       'Classic black leather belt with a rectangular pin buckle - timeless formal accessory for trousers, denim, and chinos.',
@@ -59,7 +59,7 @@ const SPECS = {
   '8016d7f1': {
     name: 'BLACK GENUINE LEATHER RATCHET DRESS BELT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2050,
     featured: true,
     description: rich(
@@ -78,7 +78,7 @@ const SPECS = {
   bd1da189: {
     name: 'BROWN VINTAGE SQUARE BUCKLE LEATHER BELT',
     color: 'Brown',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     description: rich(
       'Brown vintage-style leather belt with an antique square buckle - rugged heritage accessory for denim and casual tailoring.',
@@ -96,7 +96,7 @@ const SPECS = {
   d92b57ea: {
     name: 'BLACK GENUINE LEATHER DRESS BELT - 130CM',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     description: rich(
       'Black genuine leather dress belt in 130cm length - essential formal accessory with a classic pin buckle and smooth polished strap.',
@@ -169,7 +169,7 @@ const SPECS = {
   eb0578f5: {
     name: 'COGNAC CHEVRON EMBOSSED LEATHER BELT',
     color: 'Cognac',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2100,
     featured: true,
     description: rich(
@@ -188,7 +188,7 @@ const SPECS = {
   '5abca4ed': {
     name: 'BROWN VINTAGE DISTRESSED LEATHER BELT',
     color: 'Brown',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     description: rich(
       'Vintage distressed brown leather belt with antique brass square buckle - rugged full-grain accessory for denim and casual wear.',
@@ -242,7 +242,7 @@ const SPECS = {
   c4dd74b8: {
     name: 'BROWN CASUAL GENUINE LEATHER BELT - 130CM',
     color: 'Brown',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     description: rich(
       'Brown casual genuine leather belt with classic pin buckle - versatile 130cm accessory for everyday chinos and denim.',
@@ -278,7 +278,7 @@ const SPECS = {
   '8346800b': {
     name: 'TAN HORIZONTAL STRIPE TEXTURED LEATHER BELT',
     color: 'Tan',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     description: rich(
       'Tan leather belt with horizontal stripe texture and brushed silver buckle - modern casual accessory with a sleek stitchless profile.',
@@ -314,7 +314,7 @@ const SPECS = {
   e27421c0: {
     name: 'BLACK METAL BUCKLE LEATHER BELT',
     color: 'Black',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2000,
     description: rich(
       'Black leather belt with a bold metal frame buckle - clean formal-casual essential for trousers and denim.',
@@ -332,7 +332,7 @@ const SPECS = {
   '58326744': {
     name: 'DARK BROWN HERRINGBONE TEXTURED LEATHER BELT',
     color: 'Brown',
-    brand: 'ELIJAY'S Men's Wear',
+    brand: "ELIJAY'S Men's Wear",
     price: 2100,
     description: rich(
       'Dark brown herringbone-textured leather belt with silver buckle and monogram-lined interior - refined formal accessory with premium hidden detailing.',

@@ -12,7 +12,6 @@ const path = require('path');
 
 const IMPORTS = [
   'import:belts-catalog',
-  'import:presidential-shirts',
   'import:shirts-catalog',
   'import:suits-catalog',
   'import:three-piece-catalog',

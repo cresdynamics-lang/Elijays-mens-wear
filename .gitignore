@@ -31,7 +31,8 @@ backend/data/products-export.json
 backend/data/catalog-snapshots/*.json
 !backend/data/catalog-snapshots/README.md
 
-# Logs
-npm-debug.log*
+# Deploy archives
+*.tar.gz
+deploy-*.tar.gz
 yarn-debug.log*
 yarn-error.log*

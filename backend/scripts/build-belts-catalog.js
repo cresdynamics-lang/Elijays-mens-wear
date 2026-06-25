@@ -91,7 +91,7 @@ const main = () => {
       name,
       slug: `${slugify(spec.name)}-${uuid.slice(0, 8)}`,
       price: spec.price || 2000 + (idx % 2) * 100,
-      brand: spec.brand || 'ELIJAY'S Men's Wear',
+      brand: spec.brand || "ELIJAY'S Men's Wear",
       color: spec.color || 'Brown',
       featured: Boolean(spec.featured),
       description: spec.description,
