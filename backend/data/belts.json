@@ -1,0 +1,22 @@
+[
+  {
+    "image": "belt-001.jpeg",
+    "name": "BLACK LEATHER BELT SET",
+    "slug": "black-leather-belt-set",
+    "price": 2400,
+    "brand": "ELIJAY'S Men's Wear",
+    "color": "Black",
+    "featured": true,
+    "description": "A clean black leather belt set with mixed buckle shapes and smooth-to-textured finishes for formal and smart-casual dressing. Adjustable and easy to pair with trousers, suits, and weekend tailoring."
+  },
+  {
+    "image": "belt-002.jpeg",
+    "name": "DARK BROWN LEATHER BELT SET",
+    "slug": "dark-brown-leather-belt-set",
+    "price": 2400,
+    "brand": "ELIJAY'S Men's Wear",
+    "color": "Dark Brown",
+    "featured": true,
+    "description": "A refined dark brown leather belt set with polished metal buckles and balanced grain for office and evening dressing. Versatile with navy, charcoal, and tan tailoring."
+  }
+]

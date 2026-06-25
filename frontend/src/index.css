@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-50: #fffef5;
+  --color-gold-100: #fff9d6;
+  --color-gold-200: #fff0a8;
+  --color-gold-300: #fce76f;
+  --color-gold-400: #f7dc4a;
+  --color-gold-500: #F7D138;
+  --color-gold-600: #d4ad1f;
+  --color-gold-700: #a88616;
+  --color-gold-800: #7a610f;
+  --color-gold-900: #4c3c09;
+  --color-gold-950: #261e04;
+
+  --color-navy-50: #f5f5f5;
+  --color-navy-100: #e8e8e8;
+  --color-navy-200: #cfcfcf;
+  --color-navy-300: #a8a8a8;
+  --color-navy-400: #737373;
+  --color-navy-500: #525252;
+  --color-navy-600: #3a3a3a;
+  --color-navy-700: #262626;
+  --color-navy-800: #141414;
+  --color-navy-900: #0a0a0a;
+  --color-navy-950: #050505;
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "DM Sans", sans-serif;
+}
+
+:root {
+  background-color: #0a0a0a;
+  color: #fafafa;
+  font-family: "DM Sans", sans-serif;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+}
+
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display", Georgia, serif;
+  line-height: 1.15;
+  margin-bottom: 0.5em;
+  color: #fafafa;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { font-size: 1.05rem; font-weight: 500; }
+h5 { font-size: 1rem; font-weight: 500; }
+h6 { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.04em; }
+
+.hero-section h1,
+.hero-section h2,
+.hero-section h3,
+.hero-section h4,
+.hero-section h5,
+.hero-section h6 {
+  font-size: unset;
+  letter-spacing: unset;
+  margin-bottom: unset;
+  font-weight: unset;
+  line-height: unset;
+}
+
+p {
+  line-height: 1.7;
+  color: #c1c8da;
+}
+
+/* Custom Utilities */
+.glass {
+  background: rgba(25, 41, 87, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(238, 214, 47, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(25, 41, 87, 0.5); /* Harsh, grounded studio shadow */
+  border-radius: 1rem;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(to right, #f6ecb1, #EED62F, #f6ecb1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border {
+  border: 1px solid rgba(238, 214, 47, 0.4);
+}
+
+.gold-border-focus:focus {
+  border-color: #EED62F;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(238, 214, 47, 0.25);
+}
+
+/* Button Overhaul */
+button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #192957;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #EED62F;
+  border-radius: 999px;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(238, 214, 47, 0.8) rgba(25, 41, 87, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d6be20;
+}

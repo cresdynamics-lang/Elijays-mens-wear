@@ -1,0 +1,112 @@
+/** Curated homepage content — ELIJAY'S Men's Wear (no footwear) */
+
+export const HERO_SLIDES = [
+  {
+    image: '/WhatsApp Image 2026-05-12 at 8.07.30 PM.jpeg',
+    subtitle: 'Bespoke Craftsmanship',
+    title: 'THE PRESIDENTIAL COLLECTION',
+    desc: 'Presidential shirts cut for clean collars, confident structure, and a polished finish that reads well in boardrooms and formal settings.',
+    cta: 'Discover Collection',
+    link: '/products?category=shirts',
+  },
+  {
+    image: '/WhatsApp Image 2026-05-12 at 8.07.17 PM.jpeg',
+    subtitle: 'Tailored Excellence',
+    title: 'LUXURY SUITS NAIROBI',
+    desc: 'Tailored two piece and three piece suits selected for weddings, boardrooms, and evening occasions where sharp presentation matters.',
+    cta: 'Shop Suits',
+    link: '/suits',
+  },
+  {
+    image: '/WhatsApp Image 2026-05-12 at 8.07.33 PM.jpeg',
+    subtitle: 'Layered Luxury',
+    title: 'THE JACKET EDIT',
+    desc: 'Structured jackets and lightweight layers chosen for Nairobi evenings, travel, and smart casual dressing with presence.',
+    cta: 'Shop Jackets',
+    link: '/products?category=jackets',
+  },
+  {
+    image: '/WhatsApp Image 2026-05-12 at 8.07.21 PM.jpeg',
+    subtitle: 'Summer Elegance',
+    title: 'LINEN MASTERY',
+    desc: 'Breathable linen sets and trousers built for warm weather dressing with ease, texture, and a clean silhouette.',
+    cta: 'View Linen',
+    link: '/products?category=linen',
+  },
+  {
+    image: '/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg',
+    subtitle: 'Premium Tracksuits',
+    title: 'CASUAL LUXURY',
+    desc: 'Relaxed tracksuits in elevated fabrics for relaxed hours, travel days, and polished casual dressing.',
+    cta: 'Shop Tracksuits',
+    link: '/products?category=track-suits',
+  },
+  {
+    image: '/WhatsApp Image 2026-05-12 at 8.07.41 PM.jpeg',
+    subtitle: 'Modern Gentlemen',
+    title: 'SIGNATURE POLOS',
+    desc: 'Signature polos with a neat shape and premium hand feel for smart weekends, lunches, and everyday wear.',
+    cta: 'View Polos',
+    link: '/polo-t-shirts',
+  },
+];
+
+export const CATEGORY_TILES = [
+  {
+    title: 'Executive Shirts',
+    subtitle: 'The Presidential Series',
+    image: '/WhatsApp Image 2026-05-12 at 8.07.30 PM.jpeg',
+    span: 'md:col-span-1 md:row-span-2',
+    category: 'shirts',
+  },
+  {
+    title: 'Luxury Tracksuits',
+    subtitle: 'Elevated Casual',
+    image: '/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg',
+    span: 'md:col-span-1 md:row-span-1',
+    category: 'track-suits',
+  },
+  {
+    title: 'Tailored Suits',
+    subtitle: 'Two & Three Piece',
+    image: '/WhatsApp Image 2026-05-12 at 8.07.17 PM.jpeg',
+    span: 'md:col-span-1 md:row-span-1',
+    category: 'suits',
+  },
+  {
+    title: 'Tailored Essentials',
+    subtitle: 'Khakis & Smart Trousers',
+    image: '/WhatsApp Image 2026-05-12 at 8.07.20 PM.jpeg',
+    span: 'md:col-span-2 md:row-span-1',
+    category: 'trousers',
+  },
+  {
+    title: 'The Polo Salon',
+    subtitle: 'Weekend Elegance',
+    image: '/polo light blue.jpeg',
+    span: 'md:col-span-2 md:row-span-1',
+    category: 'polo-t-shirts',
+    path: '/polo-t-shirts',
+  },
+  {
+    title: 'Outerwear Gallery',
+    subtitle: 'Layered Jackets',
+    image: '/WhatsApp Image 2026-05-12 at 8.07.33 PM.jpeg',
+    span: 'md:col-span-1 md:row-span-1',
+    category: 'jackets',
+  },
+  {
+    title: 'Leisure House',
+    subtitle: 'Relaxed Luxury',
+    image: '/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg',
+    span: 'md:col-span-1 md:row-span-1',
+    category: 'track-suits',
+  },
+  {
+    title: 'The Finishing Room',
+    subtitle: 'Belts, Ties & Final Details',
+    image: '/belt-001.jpeg',
+    span: 'md:col-span-2 md:row-span-1',
+    category: 'belts-ties',
+  },
+];
