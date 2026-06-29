@@ -53,9 +53,15 @@ exports.getCatalogue = async (req, res, next) => {
 
         let products = productsResult.rows.map((product) => {
             const thumb = product.thumbnail;
-            const gridImage = thumb
-                ? optimizeCloudinaryUrl(thumb, { width: 400 })
-                : null;
+            let gridImage = null;
+            try {
+                gridImage = thumb
+                    ? optimizeCloudinaryUrl(thumb, { width: 400 })
+                    : null;
+            } catch (error) {
+                console.error('Error optimizing catalogue product image:', error);
+                gridImage = thumb;
+            }
             return {
                 id: product.id,
                 slug: product.slug,
@@ -77,7 +83,12 @@ exports.getCatalogue = async (req, res, next) => {
             };
         });
 
-        products = await attachVariantAvailability(products);
+        try {
+            products = await attachVariantAvailability(products);
+        } catch (error) {
+            console.error('Error attaching variant availability:', error);
+            // Continue without variant availability enrichment
+        }
 
         const ads = products
             .filter((product) => product.is_featured || product.online_in_stock)
