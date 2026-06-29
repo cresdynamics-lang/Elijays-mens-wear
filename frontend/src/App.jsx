@@ -16,7 +16,6 @@ import AdminLogin from './pages/AdminLogin';
 import SEO from './components/SEO';
 import { useAuthStore } from './store/useAuthStore';
 import { useCartStore } from './store/useCartStore';
-import { useTheme } from './contexts/ThemeContext';
 
 const NoIndexPage = ({ title, children }) => (
   <>
@@ -36,7 +35,6 @@ function App() {
   );
 
   useEffect(() => {
-    // Drop legacy localStorage auth — staff must enter password each browser session
     try {
       localStorage.removeItem('eljays-auth');
     } catch {
@@ -97,35 +95,7 @@ function App() {
         <Route path="/admin/dashboard" element={<NoIndexPage title="Admin Dashboard"><AdminDashboard /></NoIndexPage>} />
         <Route path="/admin" element={<NoIndexPage title="Staff Login"><AdminLogin /></NoIndexPage>} />
       </Routes>
-      <ThemeDebugBadge />
     </Router>
-  );
-}
-
-function ThemeDebugBadge() {
-  const { theme, toggleTheme } = useTheme();
-  return (
-    <div
-      onClick={toggleTheme}
-      style={{
-        position: 'fixed',
-        bottom: '16px',
-        right: '16px',
-        zIndex: 9999,
-        padding: '8px 16px',
-        borderRadius: '999px',
-        fontSize: '11px',
-        fontWeight: 700,
-        letterSpacing: '0.1em',
-        cursor: 'pointer',
-        backgroundColor: theme === 'dark' ? '#1a1a1a' : '#000000',
-        color: theme === 'dark' ? '#ffffff' : '#ffffff',
-        border: `2px solid ${theme === 'dark' ? '#D4AF37' : '#D4AF37'}`,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-      }}
-    >
-      {theme === 'dark' ? '🌙 DARK' : '☀️ LIGHT'} — CLICK TO SWITCH
-    </div>
   );
 }
 

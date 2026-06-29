@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag, Search, User, LogOut, ChevronRight, Sun, Moon } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search, User, LogOut, ChevronRight, Phone, Globe } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { userInitials } from '../lib/format';
-import { useTheme } from '../contexts/ThemeContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +13,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const getItemCount = useCartStore((state) => state.getItemCount);
   const { user, isAuthenticated, logout } = useAuthStore();
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -27,9 +25,10 @@ const Navbar = () => {
   }, [isOpen]);
 
   const menuItems = [
-    { name: 'New Arrivals', href: '/products?sort=newest' },
+    { name: 'Home', href: '/' },
+    { name: 'Products', href: '/products' },
     {
-      name: 'Clothing',
+      name: 'Collections',
       subItems: [
         { name: 'Suits & Blazers', href: '/suits' },
         { name: 'Shirts', href: '/shirts' },
@@ -39,35 +38,29 @@ const Navbar = () => {
         { name: 'Sweaters', href: '/products?category=sweaters' },
       ],
     },
-    {
-      name: 'Accessories',
-      subItems: [
-        { name: 'Shoes', href: '/shoes' },
-        { name: 'Belts & Ties', href: '/products?category=belts-ties' },
-        { name: 'Caps & Hats', href: '/products?category=caps-hats' },
-      ],
-    },
-    { name: 'The Journal', href: '/blog' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Pages', href: '#' },
   ];
 
   const handleLinkClick = (href) => {
+    if (href === '#') return;
     navigate(href);
     setIsOpen(false);
     setOpenDropdown(null);
   };
-  
+
   const NavLink = ({ item }) => {
     const hasSubItems = item.subItems && item.subItems.length > 0;
-  
+
     return (
-      <div 
+      <div
         className="relative"
         onMouseEnter={() => hasSubItems && setOpenDropdown(item.name)}
         onMouseLeave={() => hasSubItems && setOpenDropdown(null)}
       >
         <button
           onClick={() => !hasSubItems && handleLinkClick(item.href)}
-          className="font-sans tracking-widest text-sm uppercase text-accent hover:text-accent/80 transition-colors duration-300"
+          className="font-sans text-[11px] font-medium tracking-[0.2em] uppercase text-white/80 hover:text-accent transition-colors duration-300"
         >
           {item.name}
         </button>
@@ -78,15 +71,15 @@ const Navbar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-4"
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-4 z-[60]"
             >
-              <div className="bg-primary shadow-2xl rounded-md border border-utility-gray/50 p-5 w-56">
+              <div className="bg-utility-gray border border-white/15 rounded-md shadow-2xl p-5 w-56">
                 <div className="space-y-3">
                   {item.subItems.map((sub) => (
                     <button
                       key={sub.name}
                       onClick={() => handleLinkClick(sub.href)}
-                      className="block w-full text-left font-sans text-base text-secondary hover:text-accent transition-colors"
+                      className="block w-full text-left font-sans text-sm text-white/80 hover:text-accent transition-colors"
                     >
                       {sub.name}
                     </button>
@@ -102,56 +95,77 @@ const Navbar = () => {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-xl border-b border-white/10' : 'bg-black backdrop-blur-sm'}`}>
-        <div className="container mx-auto px-6 h-28 flex justify-between items-center">
-          <div className="xl:hidden">
-            <button onClick={() => setIsOpen(true)} className="text-secondary dark:text-secondary hover:text-accent">
-              <Menu size={28} />
-            </button>
+      {/* Announcement Bar */}
+      <div className="bg-utility-gray border-b border-white/10 relative z-[55]">
+        <div className="container mx-auto px-6 flex justify-between items-center py-2.5">
+          <div className="flex items-center gap-2 text-white/80 text-[11px] font-medium">
+            <Phone size={12} className="text-accent" />
+            <span className="tracking-wide">0700000000</span>
           </div>
+          <p className="hidden md:block text-center text-white/70 text-[11px] tracking-wide font-medium">
+            FREE SHIPPING ON ORDERS OVER KES 5,000 | USE CODE: ESQUIRE10
+          </p>
+          <div className="flex items-center gap-2 text-white/70 text-[11px] cursor-pointer hover:text-accent transition-colors font-medium">
+            <Globe size={12} className="text-accent" />
+            <span className="tracking-wide">KES</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="text-white/70">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
 
-          <Link to="/" className="absolute left-1/2 -translate-x-1/2 xl:static xl:translate-x-0">
-            <div className="h-12 md:h-14 w-12 md:w-14 rounded-full border-2 border-accent bg-white flex items-center justify-center overflow-hidden">
+      {/* Navigation Bar */}
+      <header
+        className={`relative w-full z-[50] transition-all duration-500 ${
+          scrolled
+            ? 'bg-black/95 backdrop-blur-xl border-b border-white/10'
+            : 'bg-black/80 backdrop-blur-md'
+        }`}
+      >
+        <div className="container mx-auto px-6 h-[72px] flex justify-between items-center">
+          {/* Logo on the LEFT */}
+          <Link to="/" className="flex-shrink-0">
+            <div className="h-12 w-12 md:h-14 md:w-14 rounded-full border-2 border-accent bg-primary flex items-center justify-center overflow-hidden">
               <img src="/elijays-logo.png" alt="ELIJAY'S Men's Wear" className="h-10 md:h-12 w-auto object-contain" />
             </div>
           </Link>
 
+          {/* Center nav links */}
           <nav className="hidden xl:flex items-center gap-12">
             {menuItems.map((item) => (
               <NavLink key={item.name} item={item} />
             ))}
           </nav>
 
-          <div className="flex items-center gap-8 text-secondary">
-            <button 
-              onClick={toggleTheme} 
-              className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-accent/40 hover:border-accent hover:bg-accent/10 transition-all"
-              aria-label="Toggle theme"
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {theme === 'dark' ? <Sun size={18} className="text-accent" /> : <Moon size={18} className="text-primary" />}
-            </button>
-            <button className="hidden md:block hover:text-accent">
-              <Search size={24} />
+          {/* Right icons */}
+          <div className="flex items-center gap-7 text-white/80">
+            <div className="xl:hidden">
+              <button onClick={() => setIsOpen(true)} className="text-white/80 hover:text-accent">
+                <Menu size={24} />
+              </button>
+            </div>
+            <button className="hidden md:flex hover:text-accent transition-colors">
+              <Search size={20} />
             </button>
             <div className="relative group">
-              <Link to={isAuthenticated ? "/profile" : "/login"} className="block hover:text-accent">
+              <Link to={isAuthenticated ? "/profile" : "/login"} className="block hover:text-accent transition-colors">
                 {isAuthenticated ? (
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full border border-utility-gray text-sm font-semibold text-secondary bg-utility-gray/50">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-xs font-semibold text-white">
                     {userInitials(user)}
                   </span>
                 ) : (
-                  <User size={24} />
+                  <User size={20} />
                 )}
               </Link>
               {isAuthenticated && (
-                <div className="absolute top-full right-0 mt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                  <div className="bg-primary border border-utility-gray/50 rounded-md shadow-2xl p-4 w-48">
-                    <p className="font-sans text-sm text-secondary/70 mb-3 border-b border-utility-gray/50 pb-2">{user?.name || 'Profile'}</p>
+                <div className="absolute top-full right-0 mt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[60]">
+                  <div className="bg-utility-gray border border-white/15 rounded-md shadow-2xl p-4 w-48">
+                    <p className="font-sans text-sm text-white/70 mb-3 border-b border-white/10 pb-2">{user?.name || 'Profile'}</p>
                     <div className="space-y-2">
-                      <Link to="/profile" className="block font-sans text-base text-secondary hover:text-accent">My Account</Link>
-                      <button onClick={logout} className="flex items-center gap-2 font-sans text-base text-red-500/80 hover:text-red-500">
-                        <LogOut size={16} />
+                      <Link to="/profile" className="block font-sans text-sm text-white/80 hover:text-accent">My Account</Link>
+                      <button onClick={logout} className="flex items-center gap-2 font-sans text-sm text-red-400/90 hover:text-red-400">
+                        <LogOut size={14} />
                         <span>Sign Out</span>
                       </button>
                     </div>
@@ -159,10 +173,10 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            <Link to="/cart" className="relative hover:text-accent">
-              <ShoppingBag size={24} />
+            <Link to="/cart" className="relative hover:text-accent transition-colors">
+              <ShoppingBag size={20} />
               {getItemCount() > 0 && (
-                <span className="absolute -top-2 -right-3 bg-accent text-primary text-xs h-5 w-5 rounded-full flex items-center justify-center font-bold">
+                <span className="absolute -top-2 -right-2.5 bg-accent text-primary text-[10px] h-4 w-4 rounded-full flex items-center justify-center font-bold">
                   {getItemCount()}
                 </span>
               )}
@@ -182,22 +196,22 @@ const MobileMenu = ({ setIsOpen, menuItems, handleLinkClick }) => {
   const [openSubMenu, setOpenSubMenu] = useState(null);
 
   const SubMenu = ({ item, onBack }) => (
-    <motion.div 
+    <motion.div
       initial={{ x: '100%' }}
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
       transition={{ type: 'spring', damping: 30, stiffness: 200 }}
       className="absolute inset-0 bg-primary p-6"
     >
-      <button onClick={onBack} className="font-sans text-base text-secondary/70 mb-8">
+      <button onClick={onBack} className="font-sans text-sm text-white/70 mb-8">
         &larr; Back to Main Menu
       </button>
-      <div className="space-y-4">
+      <div className="space-y-5">
         {item.subItems.map(sub => (
           <button
             key={sub.name}
             onClick={() => handleLinkClick(sub.href)}
-            className="block w-full text-left font-sans text-2xl text-secondary hover:text-accent"
+            className="block w-full text-left font-sans text-2xl text-white/80 hover:text-accent"
           >
             {sub.name}
           </button>
@@ -222,33 +236,35 @@ const MobileMenu = ({ setIsOpen, menuItems, handleLinkClick }) => {
         className="relative w-[85%] max-w-md h-full bg-primary p-6 shadow-2xl"
       >
         <div className="flex justify-between items-center mb-12">
-            <img src="/elijays-logo.png" alt="ELIJAY'S Men's Wear" className="h-12 w-12 rounded-full object-contain p-1" />
-           <button onClick={() => setIsOpen(false)} className="text-secondary hover:text-accent">
-             <X size={28} />
+            <div className="h-10 w-10 rounded-full border-2 border-accent bg-primary flex items-center justify-center overflow-hidden">
+              <img src="/elijays-logo.png" alt="ELIJAY'S Men's Wear" className="h-8 w-auto object-contain" />
+            </div>
+           <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-accent">
+             <X size={24} />
            </button>
         </div>
-        
+
         <div className="relative">
           <AnimatePresence>
             {openSubMenu ? (
               <SubMenu item={openSubMenu} onBack={() => setOpenSubMenu(null)} />
             ) : (
-              <motion.div className="space-y-5">
+              <motion.div className="space-y-6">
                 {menuItems.map(item =>
                   item.subItems ? (
                     <button
                       key={item.name}
                       onClick={() => setOpenSubMenu(item)}
-                      className="flex justify-between items-center w-full text-left font-sans text-3xl text-secondary hover:text-accent"
+                      className="flex justify-between items-center w-full text-left font-sans text-3xl text-white/80 hover:text-accent"
                     >
                       {item.name}
-                      <ChevronRight size={28} />
+                      <ChevronRight size={24} />
                     </button>
                   ) : (
                     <button
                       key={item.name}
                       onClick={() => handleLinkClick(item.href)}
-                      className="block w-full text-left font-sans text-3xl text-secondary hover:text-accent"
+                      className="block w-full text-left font-sans text-3xl text-white/80 hover:text-accent"
                     >
                       {item.name}
                     </button>

@@ -1,22 +1,95 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import HeroSlider from '../components/HeroSlider';
-import ProductShowcase from '../components/ProductShowcase';
-import CategoryGrid from '../components/CategoryGrid';
-import BlogShowcase from '../components/BlogShowcase';
+import { ArrowRight, Truck, Tag, Clock, CreditCard } from 'lucide-react';
 import SEO from '../components/SEO';
-import { bannerAPI } from '../services/api';
-import { localBusinessSchema, organizationSchema, routeSeo, websiteSchema } from '../seo/seoData';
 import Layout from '../components/Layout';
+import ProductShowcase from '../components/ProductShowcase';
+import { bannerAPI } from '../services/api';
+import { routeSeo } from '../seo/seoData';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.15, duration: 0.8, ease: 'easeOut' },
+  }),
+};
 
 const Home = () => {
   const [homepageData, setHomepageData] = useState(null);
-  const [featuredBlogs, setFeaturedBlogs] = useState([]);
+  const features = [
+    { icon: Truck, label: 'Free Shipping', desc: 'Orders over KES 5,000' },
+    { icon: Tag, label: 'Big Savings', desc: 'Up to 30% off first order' },
+    { icon: Clock, label: '24/7 Support', desc: 'Always here for you' },
+    { icon: CreditCard, label: 'Flexible Payment', desc: 'M-Pesa, Visa, Cash on Delivery' },
+  ];
+
+  const collections = [
+    {
+      title: 'Tailored Suits',
+      subtitle: 'THE ESSENTIALS',
+      count: 24,
+      image: '/WhatsApp Image 2026-05-12 at 8.07.17 PM.jpeg',
+      link: '/suits',
+    },
+    {
+      title: 'Streetwear',
+      subtitle: 'MODERN EDGE',
+      count: 38,
+      image: '/WhatsApp Image 2026-05-12 at 8.07.33 PM.jpeg',
+      link: '/products?category=jackets',
+    },
+    {
+      title: "Men's Accessories",
+      subtitle: 'FINISHING TOUCHES',
+      count: 19,
+      image: '/belt-001.jpeg',
+      link: '/products?category=belts-ties',
+    },
+  ];
+
+  const bentoPanels = [
+    {
+      title: 'The Statement Blazer',
+      subtitle: 'LIMITED EDITION',
+      image: '/WhatsApp Image 2026-05-12 at 8.07.17 PM.jpeg',
+      span: 'lg:row-span-2',
+      link: '/products?category=suits',
+    },
+    {
+      title: 'World-Class Suit Collection',
+      subtitle: 'CLASSIC TAILORING',
+      image: '/WhatsApp Image 2026-05-12 at 8.07.30 PM.jpeg',
+      span: '',
+      link: '/suits',
+    },
+    {
+      title: 'Premium Outerwear',
+      subtitle: 'NEW SEASON',
+      image: '/WhatsApp Image 2026-05-12 at 8.07.33 PM.jpeg',
+      span: '',
+      link: '/products?category=jackets',
+    },
+    {
+      title: 'Relaxed Linen Shirts',
+      subtitle: 'CASUAL ESSENTIALS',
+      image: '/polo light blue.jpeg',
+      span: '',
+      link: '/shirts',
+    },
+    {
+      title: 'New Luxury Menswear',
+      subtitle: 'SEASON SALE',
+      image: '/WhatsApp Image 2026-05-12 at 8.07.20 PM.jpeg',
+      span: '',
+      link: '/products',
+    },
+  ];
 
   useEffect(() => {
     let cancelled = false;
-
     bannerAPI
       .getHomepageData()
       .then((res) => {
@@ -25,34 +98,6 @@ const Home = () => {
       .catch((error) => {
         console.error('Home: homepage data unavailable', error);
       });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const fetchFeaturedBlogs = async () => {
-      try {
-        const response = await fetch('/api/blog?limit=3', {
-          credentials: 'include',
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch featured blogs');
-        const data = await response.json();
-
-        if (!cancelled) {
-          setFeaturedBlogs(Array.isArray(data.posts) ? data.posts : []);
-        }
-      } catch (error) {
-        console.error('Home: featured blogs unavailable', error);
-      }
-    };
-
-    fetchFeaturedBlogs();
-
     return () => {
       cancelled = true;
     };
@@ -62,171 +107,228 @@ const Home = () => {
     <Layout>
       <SEO
         {...routeSeo.home}
-        schema={[organizationSchema, localBusinessSchema, websiteSchema]}
+        schema={[]}
       />
 
-      <HeroSlider heroSlides={homepageData?.heroSlides} />
-
-      <ProductShowcase categoryRows={homepageData?.categoryRows} />
-
-      {/* Quote Section */}
-      <section className="relative py-20 md:py-24 text-center overflow-hidden border-y border-utility-gray/50">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url("/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg")', backgroundSize: 'cover', backgroundPosition: 'center' }} />
-        <div className="absolute inset-0 bg-primary/70" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-28 bg-gradient-to-b from-accent/50 to-transparent" />
-        <div className="container mx-auto px-6 max-w-3xl relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: 'easeOut' }}
-            className="space-y-8"
-          >
-            <h2 className="text-3xl md:text-4xl font-serif italic text-secondary leading-snug">
-              "Dress well, feel confident, leave a mark."
-            </h2>
-            <div className="flex items-center justify-center space-x-6">
-              <div className="w-16 h-px bg-accent/30" />
-              <span className="text-accent/70 tracking-widest text-xs font-semibold">ELIJAY&apos;S</span>
-              <div className="w-16 h-px bg-accent/30" />
-            </div>
-          </motion.div>
+      {/* Hero Section — Full-Bleed Editorial */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="/WhatsApp Image 2026-05-12 at 8.07.17 PM.jpeg"
+            alt="Men's fashion editorial"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/70 to-transparent" />
         </div>
-      </section>
 
-      <CategoryGrid />
-
-      <section className="relative py-10 md:py-14 border-b border-utility-gray/50 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url("/WhatsApp Image 2026-05-12 at 8.07.17 PM.jpeg")', backgroundSize: 'cover', backgroundPosition: 'center' }} />
-        <div className="absolute inset-0 bg-primary/70" />
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-start">
-            <div className="lg:col-span-5 space-y-5">
-              <span className="text-accent/80 text-xs tracking-widest font-semibold uppercase">Nairobi Menswear</span>
-              <h1 className="text-3xl md:text-4xl lg:text-[2.5rem] font-serif text-secondary leading-snug tracking-tight">
-                Built Around What We Stock
-              </h1>
-            </div>
-            <div className="lg:col-span-7 space-y-5 text-secondary/90 font-light leading-[1.8]">
-              <p className="text-base md:text-[1.05rem]">
-                ELIJAY&apos;S Men&apos;s Wear is a focused menswear house — suits, shirts, trousers, polos, jackets,
-                sweaters, and finishing accessories chosen from our live inventory, not an endless catalogue.
-              </p>
-              <p className="text-base md:text-[1.05rem]">
-                Every item online reflects what we carry in-store: official shirts and florals, khakis and denim,
-                tailored suits, belts, ties, caps, and the layers that complete a Kenyan gentleman&apos;s wardrobe.
-              </p>
-              <p className="text-base md:text-[1.05rem]">
-                Shop with confidence knowing stock levels match our daily inventory sheet. Visit us in Nairobi or
-                order for delivery across Kenya with straightforward support.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-5">
-                {['Live inventory sync', 'In-store & online', 'Delivery across Kenya'].map((item) => (
-                  <div key={item} className="border-l border-accent/30 pl-4">
-                    <p className="text-accent/80 text-[10px] tracking-widest font-semibold uppercase">{item}</p>
-                  </div>
-                ))}
+        <div className="container mx-auto px-6 relative z-10 pt-24">
+          <div className="max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: 'easeOut' }}
+              className="space-y-8"
+            >
+              <div className="flex items-center space-x-5">
+                <div className="h-px w-12 bg-accent" />
+                <span className="text-accent text-[10px] md:text-xs font-semibold tracking-[0.35em] uppercase">
+                  New Arrivals · 2025
+                </span>
               </div>
-              <Link
-                to="/products"
-                className="btn-primary inline-block mt-5"
-              >
-                Shop the Collection
+
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-[0.9] tracking-tight">
+                Dress With <br />
+                <span className="italic font-light text-accent">Authority</span>
+              </h1>
+
+              <p className="text-white/60 text-base md:text-lg max-w-lg leading-relaxed font-light">
+                Sharp silhouettes and uncompromising craftsmanship. Built for the man who moves
+                with intention — from the boardroom to the evening.
+              </p>
+
+<Link
+                 to="/products"
+                 className="inline-flex items-center space-x-4 border border-white/50 text-white px-10 py-4 text-[10px] font-bold tracking-widest uppercase hover:bg-utility-gray hover:text-secondary transition-all duration-300"
+               >
+                <span>Shop Now</span>
+                <ArrowRight size={16} />
               </Link>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Video Background CTA */}
-      <section className="relative min-h-[620px] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-fixed bg-cover bg-center" style={{ backgroundImage: 'url("/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          <div className="absolute inset-0 bg-primary/75" />
-        </div>
-        <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9, ease: 'easeOut' }}
-            className="max-w-3xl mx-auto space-y-10"
-          >
-            <h3 className="text-accent/80 tracking-widest text-sm font-semibold uppercase">The ELIJAY&apos;S Standard</h3>
-            <h2 className="text-3xl md:text-4xl font-serif text-secondary tracking-tighter leading-[1.05]">
-              Quality You Can<br />
-              <span className="text-accent/90 italic font-light">See &amp; Feel</span>
-            </h2>
-            <p className="text-secondary font-light leading-relaxed max-w-xl mx-auto text-base">
-              From the fabric in our shirts to the finish on our belts — we stock pieces meant to be worn,
-              not just displayed. Walk in, try on, and build a wardrobe that works.
-            </p>
-            <Link
-              to="/products"
-              className="btn-outline inline-flex items-center justify-center hover:shadow-lg hover:shadow-accent/10"
-            >
-              Browse In-Stock Items
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Brand Promise Section */}
-      <section className="py-36 bg-primary relative">
+      {/* Featured Categories — Bento / Mosaic */}
+      <section className="py-20 md:py-28 bg-primary">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-24">
-            {[
-              { title: 'In-Stock Guarantee', desc: 'What you see online matches our inventory sheet — no phantom products or outdated listings.', icon: '01' },
-              { title: 'Everyday to Formal', desc: 'Official shirts, suits, khakis, polos, and accessories under one roof for the full wardrobe.', icon: '02' },
-              { title: 'Personal Service', desc: 'Visit our shop for sizing help, styling advice, and the human touch online stores cannot replicate.', icon: '03' }
-            ].map((promise, i) => (
+          <div className="mb-14 space-y-4">
+            <span className="text-accent text-[10px] font-semibold tracking-[0.35em] uppercase">
+              Curated Selection
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif text-white tracking-tight">
+              Featured Categories
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 auto-rows-[300px] md:auto-rows-[280px] gap-3">
+            {bentoPanels.map((panel, idx) => (
               <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2, duration: 0.8, ease: 'easeOut' }}
-                className="space-y-8 group"
+                key={panel.title}
+                custom={idx}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-50px' }}
+                variants={fadeUp}
+                className={`relative group overflow-hidden cursor-pointer ${panel.span}`}
               >
-                <span className="text-4xl font-serif text-accent/10 group-hover:text-accent/25 transition-colors duration-700 block">{promise.icon}</span>
-                <h3 className="text-lg md:text-xl font-serif text-accent/80 border-b border-utility-gray/50 pb-4">{promise.title}</h3>
-                <p className="text-secondary font-light text-base leading-relaxed">{promise.desc}</p>
+                <img
+                  src={panel.image}
+                  alt={panel.title}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.8s] ease-out group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-primary/5 group-hover:bg-primary/0 transition-colors duration-500" />
+                <div className="absolute bottom-8 left-8 right-8 z-10">
+                  <span className="text-accent/80 text-[9px] font-bold tracking-[0.35em] uppercase block mb-3">
+                    {panel.subtitle}
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-serif text-white tracking-wide leading-tight mb-4">
+                    {panel.title}
+                  </h3>
+                  <span className="inline-flex items-center space-x-3 text-white/90 text-[10px] font-bold tracking-widest uppercase group-hover:text-accent transition-colors">
+                    <span>Shop Now</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {featuredBlogs.length > 0 && (
-        <section className="pt-12 pb-20 bg-primary border-t border-utility-gray/50">
-          <div className="container mx-auto px-6">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
-              <div className="max-w-3xl space-y-4">
-                <span className="text-accent/70 text-xs tracking-widest font-semibold uppercase">
-                  Style Journal
-                </span>
-                <h2 className="text-2xl md:text-3xl font-serif text-secondary leading-snug tracking-tight">
-                  Recent notes from the ELIJAY'S Men's Wear journal
-                </h2>
-                <p className="text-secondary text-base max-w-2xl leading-relaxed font-light">
-                  Short editorial reads, wardrobe guidance, and product-led style ideas that support the collection and keep the brand discoverable.
-                </p>
-              </div>
-              <Link
-                to="/blog"
-                className="btn-primary inline-flex items-center justify-center uppercase"
-              >
-                View all articles
-              </Link>
-            </div>
+      {/* Product Showcase — horizontal scrolling product rows */}
+      <ProductShowcase categoryRows={homepageData?.categoryRows} />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-              {featuredBlogs.map((blog) => (
-                <BlogShowcase key={blog.id} blog={blog} />
-              ))}
-            </div>
+      {/* Trust / Features Bar */}
+      <section className="py-16 md:py-20 border-y border-white/5 bg-utility-gray">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+            {features.map((feat, i) => (
+              <motion.div
+                key={feat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.7 }}
+                className="flex flex-col items-center text-center space-y-4"
+              >
+                <div className="w-14 h-14 rounded-full border border-accent/30 flex items-center justify-center">
+                  <feat.icon size={24} className="text-accent" />
+                </div>
+                <div>
+                  <h4 className="text-white text-[11px] font-bold tracking-[0.2em] uppercase">
+                    {feat.label}
+                  </h4>
+                  <p className="text-[#888] text-[11px] mt-1 font-light">
+                    {feat.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+
+      {/* Shop by Collection */}
+      <section className="py-24 md:py-32 bg-primary">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16 space-y-4">
+            <span className="text-accent text-[10px] font-bold tracking-[0.35em] uppercase">
+              The Gentleman's Wardrobe
+            </span>
+            <h2 className="text-3xl md:text-4xl font-serif text-white tracking-tight">
+              Shop By Collection
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {collections.map((col, i) => (
+              <motion.div
+                key={col.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15, duration: 0.8 }}
+                className="relative group h-[500px] md:h-[600px] overflow-hidden cursor-pointer"
+              >
+                <img
+                  src={col.image}
+                  alt={col.title}
+                  loading="lazy"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[0.3s] ease-out group-hover:scale-104"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                  <span className="text-accent/80 text-[9px] tracking-[0.4em] font-bold uppercase mb-4 opacity-80">
+                    {col.subtitle}
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-serif text-white tracking-wide mb-4 leading-tight">
+                    {col.title}
+                  </h3>
+                  <span className="inline-flex items-center justify-center bg-accent text-primary text-[10px] font-bold tracking-widest uppercase px-4 py-1.5 rounded-full">
+                    {col.count} items
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Full-Bleed Promo Banner */}
+      <section className="relative py-32 md:py-40 overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg"
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-primary/85" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/50 to-primary/80" />
+        </div>
+
+        <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.9 }}
+            className="max-w-4xl mx-auto space-y-8"
+          >
+            <span className="text-accent text-[10px] font-bold tracking-[0.4em] uppercase">
+              Exclusive Offer · Use Code: ESQUIRE10
+            </span>
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white leading-tight tracking-tight">
+              World-Class <span className="italic font-light text-accent">Menswear</span> Collections
+            </h2>
+            <p className="text-white/60 text-base md:text-lg max-w-xl mx-auto font-light leading-relaxed">
+              Luxurious fabrics, impeccable tailoring. Experience the difference of world-class
+              menswear from ELIJAY'S.
+            </p>
+<Link
+               to="/products"
+               className="inline-flex items-center space-x-4 border border-white/50 text-white px-10 py-4 text-[10px] font-bold tracking-widest uppercase hover:bg-utility-gray hover:text-secondary transition-all duration-300"
+             >
+              <span>Shop Now</span>
+              <ArrowRight size={16} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
     </Layout>
   );
 };

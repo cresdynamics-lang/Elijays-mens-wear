@@ -148,7 +148,7 @@ const PosCategoryDropdown = ({ value, onChange, options }) => {
             <button
               type="button"
               onClick={() => { onChange(''); setOpen(false); }}
-              className={`w-full px-3 py-2 text-left text-xs hover:bg-white/10 ${!value ? 'text-accent-400 bg-white/5' : 'text-white/90'}`}
+              className={`w-full px-3 py-2 text-left text-xs hover:bg-utility-gray/10 ${!value ? 'text-accent-400 bg-utility-gray/5' : 'text-secondary/90'}`}
             >
               All categories (shop floor)
             </button>
@@ -158,7 +158,7 @@ const PosCategoryDropdown = ({ value, onChange, options }) => {
               <button
                 type="button"
                 onClick={() => { onChange(c.name); setOpen(false); }}
-                className={`w-full px-3 py-2 text-left text-xs hover:bg-white/10 ${value === c.name ? 'text-accent-400 bg-white/5' : 'text-white/90'}`}
+                className={`w-full px-3 py-2 text-left text-xs hover:bg-utility-gray/10 ${value === c.name ? 'text-accent-400 bg-utility-gray/5' : 'text-secondary/90'}`}
               >
                 {categoryOptionLabel(c)}
               </button>
@@ -202,7 +202,7 @@ const PosCartPanel = ({
     <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-3 pr-0.5 -mr-0.5">
       {cart.length === 0 && <p className="text-white/40 text-sm">Cart is empty</p>}
       {cart.map((item) => (
-        <div key={item.key} className="bg-white/5 rounded-lg p-3 text-white text-sm">
+        <div key={item.key} className="bg-utility-gray/10 rounded-lg p-3 text-secondary text-sm">
           <div className="flex justify-between gap-2">
             <div>
               <span className="font-medium">{item.name}</span>
@@ -219,7 +219,7 @@ const PosCartPanel = ({
           {item.variantLabel && <p className="text-white/50 text-xs">{item.variantLabel}</p>}
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-2">
-              <button type="button" onClick={() => updateQty(item.key, item.qty - 1)} className="p-1 bg-white/10 rounded"><Minus size={14} /></button>
+              <button type="button" onClick={() => updateQty(item.key, item.qty - 1)} className="p-1 bg-utility-gray/10 rounded"><Minus size={14} /></button>
               <span>{item.qty}</span>
               <button type="button" onClick={() => updateQty(item.key, item.qty + 1)} className="p-1 bg-white/10 rounded"><Plus size={14} /></button>
             </div>

@@ -43,7 +43,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-6 sm:space-y-0 sm:space-x-10 pt-6">
               <Link 
                 to="/products"
-                className="bg-accent text-primary px-12 py-5 text-xs font-bold tracking-widest hover:bg-accent/80 transition-all flex items-center space-x-4 group shadow-lg shadow-accent/20"
+                className="bg-accent text-white px-12 py-5 text-xs font-bold tracking-widest hover:bg-accent/80 transition-all flex items-center space-x-4 group shadow-lg shadow-accent/20"
               >
                 <span>DISCOVER COLLECTION</span>
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

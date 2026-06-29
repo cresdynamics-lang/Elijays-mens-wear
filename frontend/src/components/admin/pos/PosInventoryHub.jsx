@@ -62,7 +62,7 @@ const PosInventoryHub = ({ initialTab = 'stock', forcedModule, hideModulePicker 
               onClick={() => setModule(m.id)}
               className={`px-4 py-2 rounded-xl text-xs font-bold   border transition-all ${
                 module === m.id
-                  ? 'bg-accent text-primary border-accent'
+                  ? 'bg-accent text-white border-accent'
                   : 'bg-utility-gray/50 text-accent/70 border-accent/20 hover:border-accent/40'
               }`}
             >

@@ -22,7 +22,7 @@ const ProductCard = ({ product, onAddToCart, addedProductId }) => (
                 e.preventDefault();
                 onAddToCart(product);
               }}
-              className="bg-accent text-primary px-4 py-3 text-[10px] font-semibold flex items-center gap-2 hover:bg-accent/80 shadow-xl"
+              className="bg-accent text-white px-4 py-3 text-[10px] font-semibold flex items-center gap-2 hover:bg-accent/80 shadow-xl"
             >
               <ShoppingBag size={12} />
               {addedProductId === product.id ? 'Added' : 'Add to Cart'}

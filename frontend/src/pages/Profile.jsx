@@ -152,7 +152,7 @@ const Profile = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`w-full flex items-center justify-between p-5 text-[11px] font-bold tracking-[0.2em] transition-all border ${
                     activeTab === tab.id 
-                      ? 'bg-accent text-primary border-accent' 
+                      ? 'bg-accent text-white border-accent' 
                       : 'text-accent/70 border-utility-gray/60 hover:border-accent hover:text-accent'
                   }`}
                 >
@@ -201,7 +201,7 @@ const Profile = () => {
                           </div>
                           <button 
                             onClick={() => navigate('/products')}
-                            className="bg-accent text-primary px-8 py-4 text-[10px] font-bold hover:bg-accent/80 transition-all"
+                            className="bg-accent text-white px-8 py-4 text-[10px] font-bold hover:bg-accent/80 transition-all"
                           >
                             Explore Collection
                           </button>
@@ -286,7 +286,7 @@ const Profile = () => {
                             type="button"
                             onClick={() => saveProfile()}
                             disabled={profileSaving}
-                            className="bg-transparent border border-accent/40 text-accent px-8 py-4 text-[10px] font-bold hover:bg-accent hover:text-primary transition-all disabled:opacity-50"
+                            className="bg-transparent border border-accent/40 text-accent px-8 py-4 text-[10px] font-bold hover:bg-accent hover:text-white transition-all disabled:opacity-50"
                           >
                             {profileSaving ? 'Saving...' : 'Update Profile'}
                           </button>
@@ -312,7 +312,7 @@ const Profile = () => {
                               onClick={() => setAddressForm((f) => ({ ...f, delivery_zone: value }))}
                               className={`border px-3 py-3 text-[10px] font-bold uppercase tracking-wider transition-colors ${
                                 addressForm.delivery_zone === value
-                                  ? 'bg-accent text-primary border-accent'
+                                  ? 'bg-accent text-white border-accent'
                                   : 'border-utility-gray/60 text-accent/80 hover:border-accent hover:text-accent'
                               }`}
                             >
@@ -334,7 +334,7 @@ const Profile = () => {
                           type="button"
                           onClick={() => saveProfile(addressForm)}
                           disabled={profileSaving}
-                          className="bg-accent text-primary px-8 py-4 text-[10px] font-bold hover:bg-accent/80 transition-all disabled:opacity-50"
+                          className="bg-accent text-white px-8 py-4 text-[10px] font-bold hover:bg-accent/80 transition-all disabled:opacity-50"
                         >
                           {profileSaving ? 'Saving...' : 'Save Address'}
                         </button>
@@ -368,7 +368,7 @@ const Profile = () => {
                             />
                           </div>
                         </div>
-                        <button disabled={profileSaving} className="w-full bg-accent text-primary py-5 text-[10px] font-bold shadow-xl shadow-accent/20 hover:bg-accent/80 transition-all disabled:opacity-50">
+                        <button disabled={profileSaving} className="w-full bg-accent text-white py-5 text-[10px] font-bold shadow-xl shadow-accent/20 hover:bg-accent/80 transition-all disabled:opacity-50">
                           {profileSaving ? 'Saving...' : 'Change Password'}
                         </button>
                       </div>
