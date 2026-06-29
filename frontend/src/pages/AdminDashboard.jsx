@@ -8,13 +8,8 @@ import {
   Download, Filter, CheckCircle2, AlertCircle, Clock, 
   UserPlus, UserMinus, Trash2, Edit, Eye, ChevronRight, ChevronDown,
   Phone, Globe, Truck, CreditCard, CreditCard as CardIcon,
-  Warehouse,
-  Store, BookOpen
+  BookOpen
 } from 'lucide-react';
-import { AdminPosTerminalInfo, PosSalesView } from '../components/admin/pos/PosAdminViews';
-import PosTerminalView from '../components/pos/PosTerminalView';
-import ShiftSummaryView from '../components/pos/ShiftSummaryView';
-import { posAdminAPI } from '../services/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore, isStaffSession } from '../store/useAuthStore';
 import { userInitials } from '../lib/format';
@@ -39,10 +34,7 @@ import {
 import { ensureSocket, disconnectSocket } from '../lib/socket';
 import { ConfirmProvider, useConfirm } from '../components/admin/ConfirmDialog';
 import {
-  canViewInventory,
-  canManageInventory,
   canAccessProducts,
-  canUsePosTerminal,
   canViewCustomers,
   canManageUsers,
   canAccessFinance,
@@ -56,13 +48,12 @@ import {
 } from '../utils/staffPermissions';
 
 const FinanceHub = lazy(() => import('../components/admin/FinanceHub'));
-const PosInventoryHub = lazy(() => import('../components/admin/pos/PosInventoryHub'));
 const ProductsView = lazy(() => import('../components/admin/ProductsView'));
 const BlogsView = lazy(() => import('../components/admin/BlogsView'));
 
 const SectionLoader = () => (
   <div className="flex items-center justify-center h-64">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold-500" />
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-500" />
   </div>
 );
 
@@ -74,15 +65,14 @@ const AdminTable = ({ children }) => (
 const AdminDashboard = () => {
   const location = useLocation();
   const [activeSection, setActiveSection] = useState(() =>
-    useAuthStore.getState().isSeller ? 'pos-terminal' : 'dashboard'
+    useAuthStore.getState().isAdmin ? 'dashboard' : 'dashboard'
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const [shiftSummary, setShiftSummary] = useState(null);
   const navigate = useNavigate();
   const logout = useAuthStore(state => state.logout);
   const authState = useAuthStore();
-  const { user, isAuthenticated, isAdmin, isSeller } = authState;
+  const { user, isAuthenticated, isAdmin } = authState;
   const staffSession = isStaffSession(authState);
   const [authReady, setAuthReady] = useState(
     () => useAuthStore.persist?.hasHydrated?.() ?? true
@@ -106,49 +96,22 @@ const AdminDashboard = () => {
     }
   }, [authReady, staffSession, navigate]);
 
-  useEffect(() => {
-    if (location.state?.shiftSummary) {
-      setShiftSummary(location.state.shiftSummary);
-      setActiveSection('pos-terminal');
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
-
   const allSidebarItems = useMemo(() => [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, section: 'Overview' },
     { id: 'orders', label: 'Orders', icon: Package, section: 'Store' },
     { id: 'products', label: 'Products', icon: ShoppingBag, section: 'Store' },
     { id: 'blogs', label: 'Blog', icon: BookOpen, section: 'Store' },
     { id: 'users', label: 'Users', icon: Users, section: 'People' },
-    { id: 'inventory', label: 'Inventory', icon: Warehouse, section: 'Operations' },
     { id: 'finance', label: 'Finance', icon: CreditCard, section: 'Operations' },
     { id: 'reviews', label: 'Reviews', icon: Star, section: 'Marketing', badge: '5' },
     { id: 'settings', label: 'Settings', icon: Settings, section: 'System' },
   ], []);
 
-  const posOnlySidebarItems = useMemo(() => [
-    { id: 'pos-terminal', label: 'POS Terminal', icon: Store, section: 'POS' },
-    { id: 'finance', label: 'Finance', icon: CreditCard, section: 'POS' },
-    { id: 'orders', label: 'Online Orders', icon: ShoppingBag, section: 'POS' },
-  ], []);
-
   const sidebarItems = useMemo(() => {
-    const posOnly =
-      isSeller ||
-      (user?.role === 'staff' &&
-        canUsePosTerminal(user, { isSeller }) &&
-        !canViewInventory(user) &&
-        !canAccessProducts(user) &&
-        !canViewCustomers(user) &&
-        !hasPermission(user, 'dashboard') &&
-        !hasPermission(user, 'orders'));
-
-    const items = posOnly ? posOnlySidebarItems : allSidebarItems;
+    const items = allSidebarItems;
     return items.filter((item) => {
-      if (posOnly) return item.id !== 'finance' || canAccessFinance(user);
       if (user?.role === 'admin') return true;
       if (user?.role === 'staff') {
-        if (item.id === 'inventory') return canViewInventory(user);
         if (item.id === 'finance') return canAccessFinance(user);
         if (item.id === 'users') return canViewCustomers(user);
         if (item.id === 'products') return canAccessProducts(user);
@@ -156,7 +119,7 @@ const AdminDashboard = () => {
       }
       return false;
     });
-  }, [isSeller, user, allSidebarItems, posOnlySidebarItems]);
+  }, [user, allSidebarItems]);
 
   useEffect(() => {
     if (!authReady || !staffSession) return undefined;
@@ -184,11 +147,6 @@ const AdminDashboard = () => {
     navigate('/admin/login');
   };
 
-  const staffHasPosAccess = (perms) =>
-    perms.includes('pos-terminal') ||
-    perms.includes('inventory-view') ||
-    perms.includes('inventory-manage');
-
   const navSections = [...new Set(sidebarItems.map((item) => item.section))];
 
   const renderContent = () => {
@@ -197,16 +155,12 @@ const AdminDashboard = () => {
         hasPermission(user, activeSection) ||
         (activeSection === 'users' && canViewCustomers(user)) ||
         (activeSection === 'products' && canAccessProducts(user)) ||
-        (activeSection === 'inventory' && canViewInventory(user)) ||
         (activeSection === 'finance' && canAccessFinance(user)) ||
-        (activeSection === 'blogs' && hasPermission(user, 'blogs')) ||
-        (activeSection === 'pos-terminal' && canUsePosTerminal(user, { isSeller }));
+        (activeSection === 'blogs' && hasPermission(user, 'blogs'));
       if (!allowed) {
-        return <div className="p-8 text-center text-red-400">Unauthorized Access</div>;
+        return <div className="p-8 text-center text-red-600 dark:text-red-600 dark:text-red-400">Unauthorized Access</div>;
       }
     }
-
-    const inventoryReadOnly = user?.role === 'staff' && !canManageInventory(user);
 
     const heavySection = (
       <Suspense fallback={<SectionLoader />}>
@@ -215,9 +169,7 @@ const AdminDashboard = () => {
             case 'products':
               return <ProductsView />;
             case 'finance':
-              return <FinanceHub readOnly={isSeller} />;
-            case 'inventory':
-              return <PosInventoryHub readOnlyInventory={inventoryReadOnly} />;
+              return <FinanceHub />;
             default:
               return null;
           }
@@ -227,39 +179,15 @@ const AdminDashboard = () => {
 
     switch (activeSection) {
       case 'dashboard':
-        if (isSeller) return null;
-        return <DashboardView onOpenPos={() => setActiveSection('inventory')} />;
-      case 'orders': return <OrdersView readOnly={isSeller} />;
+        return <DashboardView />;
+      case 'orders': return <OrdersView />;
       case 'products':
       case 'finance':
-      case 'inventory':
         return heavySection;
       case 'blogs': return <BlogsView />;
       case 'users': return <UsersView />;
       case 'reviews': return <ReviewsView />;
       case 'settings': return <SettingsView />;
-      case 'pos-terminal':
-        if (shiftSummary) {
-          return (
-            <ShiftSummaryView
-              embedded
-              summary={shiftSummary}
-              onDone={() => {
-                setShiftSummary(null);
-                logout();
-                navigate('/admin/login');
-              }}
-            />
-          );
-        }
-        if (isSeller || canUsePosTerminal(user, { isSeller })) {
-          return <PosTerminalView embedded onClockOut={(summary) => setShiftSummary(summary)} />;
-        }
-        return (
-          <AdminPosTerminalInfo
-            onOpenInventory={() => setActiveSection('finance')}
-          />
-        );
       default: return <DashboardView />;
     }
   };
@@ -281,12 +209,12 @@ const AdminDashboard = () => {
 
   return (
     <ConfirmProvider>
-    <div className="flex h-dvh bg-navy-950 text-gold-50 font-sans overflow-hidden">
+    <div className="flex h-dvh bg-primary dark:bg-primary dark:bg-base-950 text-accent-50 font-sans overflow-hidden">
       {isMobileNavOpen && (
         <button
           type="button"
           aria-label="Close menu"
-          className="fixed inset-0 bg-navy-950/80 z-30 lg:hidden"
+          className="fixed inset-0 bg-primary/80 z-30 lg:hidden"
           onClick={() => setIsMobileNavOpen(false)}
         />
       )}
@@ -295,12 +223,12 @@ const AdminDashboard = () => {
       <aside 
         className={`${
           isSidebarOpen ? 'w-72 lg:w-64' : 'w-72 lg:w-20'
-        } fixed lg:relative inset-y-0 left-0 z-40 lg:z-20 bg-navy-900/95 lg:bg-navy-900/50 border-r border-gold-500/10 transition-all duration-300 flex flex-col backdrop-blur-xl ${
+        } fixed lg:relative inset-y-0 left-0 z-40 lg:z-20 bg-utility-gray/95 lg:bg-utility-gray/50 border-r border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 transition-all duration-300 flex flex-col backdrop-blur-xl ${
           isMobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className="p-6 border-b border-gold-500/10 flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold-600 rounded-lg flex items-center justify-center text-navy-950 font-bold text-xl">
+        <div className="p-6 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center gap-3">
+          <div className="w-10 h-10 bg-accent-600 rounded-lg flex items-center justify-center text-base-950 font-bold text-xl">
             PE
           </div>
           {isSidebarOpen && (
@@ -318,7 +246,7 @@ const AdminDashboard = () => {
           {navSections.map((section) => (
             <div key={section} className="mb-6">
               {isSidebarOpen && (
-                <h3 className="px-4 text-[10px] font-bold  tracking-[0.2em] text-gold-500/40 mb-2">
+                <h3 className="px-4 text-[10px] font-bold  tracking-[0.2em] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-2">
                   {section}
                 </h3>
               )}
@@ -330,17 +258,17 @@ const AdminDashboard = () => {
                     onClick={() => handleNavClick(item.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${
                       activeSection === item.id
-                        ? 'bg-gold-600 text-navy-950 shadow-lg shadow-gold-600/20'
-                        : 'text-gold-500/60 hover:bg-navy-800/50 hover:text-gold-400'
+                        ? 'bg-accent-600 text-base-950 shadow-lg shadow-accent-600/20'
+                        : 'text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 hover:bg-utility-gray dark:bg-utility-gray/50 hover:text-accent-400'
                     }`}
                   >
-                    <item.icon size={20} className={activeSection === item.id ? 'text-navy-950' : 'group-hover:text-gold-400'} />
+                    <item.icon size={20} className={activeSection === item.id ? 'text-base-950' : 'group-hover:text-accent-400'} />
                     {isSidebarOpen && (
                       <span className="text-sm font-medium flex-1 text-left">{item.label}</span>
                     )}
                     {isSidebarOpen && item.badge && (
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                        activeSection === item.id ? 'bg-navy-950 text-gold-500' : 'bg-gold-600/20 text-gold-500'
+                        activeSection === item.id ? 'bg-primary dark:bg-primary dark:bg-base-950 text-accent-500' : 'bg-accent-600/20 text-accent-500'
                       }`}>
                         {item.badge}
                       </span>
@@ -351,10 +279,10 @@ const AdminDashboard = () => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gold-500/10">
+        <div className="p-4 border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
+            className="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-600 dark:text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
           >
             <LogOut size={20} />
             {isSidebarOpen && <span className="text-sm font-medium">Logout</span>}
@@ -365,42 +293,42 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden min-w-0 w-full lg:ml-0">
         {/* Topbar */}
-        <header className="h-16 sm:h-20 bg-navy-900/30 border-b border-gold-500/10 flex items-center justify-between px-4 sm:px-6 lg:px-8 backdrop-blur-md shrink-0 gap-3">
+        <header className="h-16 sm:h-20 bg-utility-gray/30 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-between px-4 sm:px-6 lg:px-8 backdrop-blur-md shrink-0 gap-3">
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button 
               type="button"
               onClick={toggleSidebar}
-              className="p-2 text-gold-500/60 hover:text-gold-500 transition-colors bg-navy-800/50 rounded-lg border border-gold-500/10 shrink-0"
+              className="p-2 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 hover:text-accent-500 transition-colors bg-utility-gray dark:bg-utility-gray/50 rounded-lg border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 shrink-0"
             >
               {(isMobileMenuVisible || (isSidebarOpen && typeof window !== 'undefined' && window.innerWidth >= 1024)) ? <X size={20} /> : <Menu size={20} />}
             </button>
-            <div className="hidden sm:block h-8 w-[1px] bg-gold-500/10 mx-1 sm:mx-2" />
+            <div className="hidden sm:block h-8 w-[1px] bg-accent-500/10 mx-1 sm:mx-2" />
             <div className="flex flex-col min-w-0">
-              <span className="text-[9px] sm:text-[10px] font-bold text-gold-500/40   truncate">
-                {isSeller ? 'Seller Portal' : 'Admin / Overview'}
-              </span>
-              <h2 className="text-base sm:text-xl font-serif font-bold text-gold-100 capitalize truncate">
+               <span className="text-[9px] sm:text-[10px] font-bold text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   truncate">
+                 {isAdmin ? 'Admin' : 'Staff / Overview'}
+               </span>
+              <h2 className="text-base sm:text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 capitalize truncate">
                 {sidebarItems.find((i) => i.id === activeSection)?.label || activeSection.replace(/-/g, ' ')}
               </h2>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-6 shrink-0">
-            <div className="hidden md:flex items-center gap-2 bg-navy-800/50 border border-gold-500/10 px-4 py-2 rounded-xl focus-within:border-gold-500/30 transition-all">
-              <Search size={18} className="text-gold-500/40" />
+            <div className="hidden md:flex items-center gap-2 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 px-4 py-2 rounded-xl focus-within:border-accent-500/30 transition-all">
+              <Search size={18} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40" />
               <input
                 type="text" 
                 placeholder="Search anything..." 
-                className="bg-transparent border-none outline-none text-sm text-gold-100 placeholder:text-gold-500/30 w-64"
+                className="bg-transparent border-none outline-none text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 placeholder:text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/30 w-64"
               />
             </div>
             <div className="flex items-center gap-3">
-              <button className="relative p-2.5 text-gold-500/60 hover:text-gold-500 transition-all bg-navy-800/50 rounded-xl border border-gold-500/10 group">
+              <button className="relative p-2.5 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 hover:text-accent-500 transition-all bg-utility-gray dark:bg-utility-gray/50 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 group">
                 <Bell size={20} />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-gold-600 rounded-full border-2 border-navy-900 group-hover:scale-125 transition-transform"></span>
+                <span className="absolute top-2 right-2 w-2 h-2 bg-accent-600 rounded-full border-2 border-base-900 group-hover:scale-125 transition-transform"></span>
               </button>
               <div
-                className="h-10 w-10 bg-gradient-to-br from-gold-400 to-gold-700 rounded-full flex items-center justify-center text-navy-950 font-bold border-2 border-navy-800 cursor-pointer hover:scale-105 transition-transform text-sm"
+                className="h-10 w-10 bg-gradient-to-br from-accent-400 to-accent-700 rounded-full flex items-center justify-center text-base-950 font-bold border-2 border-base-800 cursor-pointer hover:scale-105 transition-transform text-sm"
                 title={[user?.fullName, user?.name, user?.full_name, user?.email].filter(Boolean).join(' Â· ')}
               >
                 {userInitials(user)}
@@ -410,7 +338,7 @@ const AdminDashboard = () => {
         </header>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 custom-scrollbar bg-gradient-to-b from-navy-950 to-navy-900/50">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 custom-scrollbar bg-gradient-to-b from-base-950 to-base-900/50">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
@@ -432,24 +360,10 @@ const AdminDashboard = () => {
 
 // --- Sub-views ---
 
-const DashboardView = ({ onOpenPos }) => {
-  const isAdmin = useAuthStore((s) => s.user?.role === 'admin');
+const DashboardView = () => {
   const [stats, setStats] = useState(null);
   const [salesData, setSalesData] = useState([]);
-  const [posOverview, setPosOverview] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [posLoading, setPosLoading] = useState(true);
-  const [closingShiftId, setClosingShiftId] = useState(null);
-
-  const loadPosOverview = async () => {
-    setPosLoading(true);
-    try {
-      const posRes = await posAdminAPI.getOverview().catch(() => null);
-      if (posRes?.data?.data) setPosOverview(posRes.data.data);
-    } finally {
-      setPosLoading(false);
-    }
-  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -469,34 +383,20 @@ const DashboardView = ({ onOpenPos }) => {
     };
 
     fetchDashboardData();
-    loadPosOverview();
   }, []);
-
-  const handleForceCloseShift = async (shiftId) => {
-    setClosingShiftId(shiftId);
-    try {
-      await posAdminAPI.forceCloseShift(shiftId);
-      await loadPosOverview();
-      adminToast.success('Open shift closed');
-    } catch (error) {
-      adminToast.error(apiErrorMessage(error, 'Could not close shift'));
-    } finally {
-      setClosingShiftId(null);
-    }
-  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-500"></div>
       </div>
     );
   }
 
   const statCards = [
-    { label: 'Total Revenue', value: `KSh ${stats?.revenue?.toLocaleString()}`, icon: CreditCard, detail: stats?.posRevenue != null ? `POS KSh ${Math.round(stats.posRevenue).toLocaleString()} + online` : null },
+    { label: 'Total Revenue', value: `KSh ${stats?.revenue?.toLocaleString()}`, icon: CreditCard },
     { label: 'Total Profit', value: `KSh ${stats?.profit?.toLocaleString()}`, icon: Tag },
-    { label: 'Total Sales', value: stats?.orders || 0, icon: Package, detail: stats?.posSales != null ? `${stats.posSales} POS Â· ${stats.onlineOrders} online` : null },
+    { label: 'Total Sales', value: stats?.orders || 0, icon: Package },
     { label: 'Pending Orders', value: stats?.pendingOrders || 0, icon: Clock },
   ];
 
@@ -505,112 +405,31 @@ const DashboardView = ({ onOpenPos }) => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((stat, i) => (
-          <div key={i} className="bg-navy-900/40 border border-gold-500/10 p-6 rounded-2xl hover:border-gold-500/20 transition-all group backdrop-blur-sm">
+          <div key={i} className="bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 p-6 rounded-2xl hover:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 transition-all group backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-navy-800/50 rounded-xl group-hover:bg-gold-600 group-hover:text-navy-950 transition-all">
-                <stat.icon size={22} className="text-gold-500 group-hover:text-navy-950" />
+              <div className="p-3 bg-utility-gray dark:bg-utility-gray/50 rounded-xl group-hover:bg-accent-600 group-hover:text-base-950 transition-all">
+                <stat.icon size={22} className="text-accent-500 group-hover:text-base-950" />
               </div>
               {stat.change && (stat.up ? (
-                <span className="flex items-center text-xs font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded-lg">
+                <span className="flex items-center text-xs font-bold text-green-600 dark:text-green-600 dark:text-green-400 bg-green-400/10 px-2 py-1 rounded-lg">
                   <ArrowUpRight size={14} className="mr-1" /> {stat.change}
                 </span>
               ) : (
-                <span className="flex items-center text-xs font-bold text-red-400 bg-red-400/10 px-2 py-1 rounded-lg">
+                <span className="flex items-center text-xs font-bold text-red-600 dark:text-red-600 dark:text-red-400 bg-red-400/10 px-2 py-1 rounded-lg">
                   <ArrowDownRight size={14} className="mr-1" /> {stat.change}
                 </span>
               ))}
             </div>
-            <div className="text-[10px] font-bold text-gold-500/40   mb-1">{stat.label}</div>
-            <div className="text-2xl font-serif font-bold text-gold-100">{stat.value}</div>
+            <div className="text-[10px] font-bold text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   mb-1">{stat.label}</div>
+            <div className="text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">{stat.value}</div>
           </div>
         ))}
       </div>
 
-      {(posLoading || posOverview) && (
-        <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl p-6 backdrop-blur-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-            <h3 className="font-serif font-bold text-lg text-gold-100">Shop POS & Inventory</h3>
-            {onOpenPos && (
-              <button type="button" onClick={onOpenPos} className="text-[10px] font-black   bg-gold-600 text-navy-950 px-4 py-2 rounded-lg">
-                Open POS & Inventory
-              </button>
-            )}
-          </div>
-          {posLoading ? (
-            <div className="flex items-center justify-center h-24">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500" />
-            </div>
-          ) : posOverview ? (
-          <>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              ['Today (shop)', `KSh ${Number(posOverview.kpis?.todayRevenue || 0).toLocaleString()}`],
-              ['This week', `KSh ${Number(posOverview.kpis?.weekRevenue || 0).toLocaleString()}`],
-              ['Open shifts', posOverview.kpis?.activeSellers ?? 0],
-              ['Low stock items', posOverview.lowStockItems?.length ?? 0],
-            ].map(([label, value]) => (
-              <div key={label} className="bg-navy-950/50 border border-gold-500/10 rounded-xl p-4">
-                <p className="text-[10px] text-gold-500/40  ">{label}</p>
-                <p className="text-xl font-bold text-gold-300 mt-1">{value}</p>
-              </div>
-            ))}
-          </div>
-          {posOverview.kpis?.openShifts?.length > 0 && (
-            <div className="mt-4 rounded-xl border border-gold-500/10 bg-navy-950/40 p-4">
-              <p className="text-[10px] font-bold   text-gold-500/50 mb-3">
-                Clocked in now (POS shifts not yet closed)
-              </p>
-              <div className="space-y-2">
-                {posOverview.kpis.openShifts.map((shift) => (
-                  <div
-                    key={shift.shiftId}
-                    className="flex flex-wrap items-center justify-between gap-3 text-sm text-gold-100/90"
-                  >
-                    <div>
-                      <span className="font-semibold">{shift.sellerName}</span>
-                      {shift.sellerEmail && (
-                        <span className="text-gold-500/50 text-xs ml-2">{shift.sellerEmail}</span>
-                      )}
-                      {shift.userRole && (
-                        <span className="text-[9px]   text-gold-500/40 ml-2">
-                          {shift.userRole}
-                        </span>
-                      )}
-                      {!shift.userRole && (
-                        <span className="text-[9px]   text-amber-400/70 ml-2">
-                          legacy POS profile
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] text-gold-500/40">
-                        since {new Date(shift.clockIn).toLocaleString('en-KE', { dateStyle: 'medium', timeStyle: 'short' })}
-                      </span>
-                      {isAdmin && (
-                        <button
-                          type="button"
-                          onClick={() => handleForceCloseShift(shift.shiftId)}
-                          disabled={closingShiftId === shift.shiftId}
-                          className="text-[10px] font-bold   text-red-300/80 hover:text-red-300 disabled:opacity-50"
-                        >
-                          {closingShiftId === shift.shiftId ? 'Closingâ€¦' : 'Close shift'}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          </>
-          ) : null}
-        </div>
-      )}
-
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
-        <div className="px-6 py-5 border-b border-gold-500/10 flex items-center justify-between">
-          <h3 className="font-serif font-bold text-lg text-gold-100">Monthly Sales</h3>
-          <div className="text-[10px] font-bold text-gold-500/40  ">Current Year</div>
+      <div className="bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+        <div className="px-6 py-5 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-between">
+          <h3 className="font-serif font-bold text-lg text-secondary dark:text-secondary dark:text-accent-100">Monthly Sales</h3>
+          <div className="text-[10px] font-bold text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40  ">Current Year</div>
         </div>
         <div className="p-8 h-64 flex items-end justify-between gap-2">
           {salesData.length > 0 ? salesData.map((d, i) => (
@@ -619,16 +438,16 @@ const DashboardView = ({ onOpenPos }) => {
                 <motion.div
                   initial={{ height: 0 }}
                   animate={{ height: `${(d.total / Math.max(...salesData.map(s => s.total || 1))) * 100}%` }}
-                  className="w-8 bg-gradient-to-t from-gold-600 to-gold-400 rounded-t-lg group-hover:from-gold-500 group-hover:to-gold-300 transition-all shadow-lg shadow-gold-600/10"
+                  className="w-8 bg-gradient-to-t from-accent-600 to-accent-400 rounded-t-lg group-hover:from-accent-500 group-hover:to-accent-300 transition-all shadow-lg shadow-accent-600/10"
                 />
-                <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-gold-600 text-navy-950 text-[10px] font-bold px-2 py-1 rounded pointer-events-none">
+                <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-accent-600 text-base-950 text-[10px] font-bold px-2 py-1 rounded pointer-events-none">
                   KSh {parseInt(d.total).toLocaleString()}
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-gold-500/30  ">{d.label}</span>
+              <span className="text-[10px] font-bold text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/30  ">{d.label}</span>
             </div>
           )) : (
-            <div className="w-full h-full flex items-center justify-center text-gold-500/20 text-xs  ">No sales data yet</div>
+            <div className="w-full h-full flex items-center justify-center text-accent-500/20 text-xs  ">No sales data yet</div>
           )}
         </div>
       </div>
@@ -815,7 +634,7 @@ const OrdersView = ({ readOnly = false }) => {
   return (
     <div className="space-y-6">
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm py-3 px-4 rounded-xl">
+        <div className="bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-600 dark:text-red-400 text-sm py-3 px-4 rounded-xl">
           {error}
         </div>
       )}
@@ -828,8 +647,8 @@ const OrdersView = ({ readOnly = false }) => {
               onClick={() => setFilter(f)}
               className={`shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                 filter === f
-                  ? 'bg-gold-600 text-navy-950 border-gold-600'
-                  : 'bg-navy-900/50 text-gold-500/60 border-gold-500/10 hover:border-gold-500/30'
+                  ? 'bg-accent-600 text-base-950 border-accent-600'
+                  : 'bg-utility-gray/50 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 hover:border-accent-500/30'
               }`}
             >
               {f}
@@ -840,7 +659,7 @@ const OrdersView = ({ readOnly = false }) => {
           <button
             type="button"
             onClick={handleExportOrders}
-            className="flex items-center gap-2 px-4 py-2 bg-navy-800/50 border border-gold-500/10 rounded-xl text-xs font-bold text-gold-500 hover:bg-navy-800 transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl text-xs font-bold text-accent-500 hover:bg-utility-gray dark:bg-base-800 transition-all"
           >
             <Download size={16} /> Export CSV
           </button>
@@ -848,7 +667,7 @@ const OrdersView = ({ readOnly = false }) => {
             <button
               type="button"
               onClick={() => fetchOrders()}
-              className="flex items-center gap-2 px-4 py-2 bg-navy-800/50 border border-gold-500/10 rounded-xl text-xs font-bold text-gold-500 hover:bg-navy-800 transition-all"
+              className="flex items-center gap-2 px-4 py-2 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl text-xs font-bold text-accent-500 hover:bg-utility-gray dark:bg-base-800 transition-all"
             >
               Refresh
             </button>
@@ -856,16 +675,16 @@ const OrdersView = ({ readOnly = false }) => {
         </div>
       </div>
 
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+      <div className="bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
         {loading ? (
           <div className="py-24 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500 mx-auto"></div>
           </div>
         ) : filteredOrders.length > 0 ? (
           <AdminTable>
           <table className="w-full min-w-[900px] text-left">
-            <thead className="bg-navy-800/50">
-              <tr className="text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+            <thead className="bg-utility-gray dark:bg-utility-gray/50">
+              <tr className="text-[10px] font-bold text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40  tracking-[0.2em]">
                 <th className="px-6 py-4">Order ID</th>
                 <th className="px-6 py-4">Customer</th>
                 <th className="px-6 py-4">Total</th>
@@ -875,28 +694,28 @@ const OrdersView = ({ readOnly = false }) => {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gold-500/5">
+            <tbody className="divide-y divide-accent-500/5">
               {filteredOrders.map((o) => (
-                <tr key={o.id} className="hover:bg-navy-800/30 transition-colors">
-                  <td className="px-6 py-4 font-bold text-gold-500">#{o.id.substring(0, 8).toUpperCase()}</td>
-                  <td className="px-6 py-4 text-sm text-gold-100">{o.customer_name}</td>
-                  <td className="px-6 py-4 font-bold text-gold-100">KSh {parseFloat(o.total_amount).toLocaleString()}</td>
+                <tr key={o.id} className="hover:bg-utility-gray dark:bg-utility-gray/30 transition-colors">
+                  <td className="px-6 py-4 font-bold text-accent-500">#{o.id.substring(0, 8).toUpperCase()}</td>
+                  <td className="px-6 py-4 text-sm text-secondary dark:text-secondary dark:text-accent-100">{o.customer_name}</td>
+                  <td className="px-6 py-4 font-bold text-secondary dark:text-secondary dark:text-accent-100">KSh {parseFloat(o.total_amount).toLocaleString()}</td>
                   <td className="px-6 py-4 text-xs">
-                    <span className={`px-2 py-1 rounded border border-gold-500/10 ${o.payment_status === 'paid' ? 'text-green-400 bg-green-400/5' : 'text-gold-500/60 bg-navy-800'}`}>
+                    <span className={`px-2 py-1 rounded border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 ${o.payment_status === 'paid' ? 'text-green-600 dark:text-green-600 dark:text-green-400 bg-green-400/5' : 'text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 bg-base-800'}`}>
                       {formatPaymentLabel(o.payment_method)} ({o.payment_status})
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`text-[10px] font-bold  px-2 py-1 rounded-full ${
-                      o.status === 'pending' ? 'bg-gold-500/10 text-gold-500' :
-                      o.status === 'delivered' ? 'bg-green-400/10 text-green-400' :
-                      o.status === 'cancelled' ? 'bg-red-400/10 text-red-400' :
+                      o.status === 'pending' ? 'bg-accent-500/10 text-accent-500' :
+                      o.status === 'delivered' ? 'bg-green-400/10 text-green-600 dark:text-green-600 dark:text-green-400' :
+                      o.status === 'cancelled' ? 'bg-red-400/10 text-red-600 dark:text-red-600 dark:text-red-400' :
                       'bg-blue-400/10 text-blue-400'
                     }`}>
                       {o.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-xs text-gold-500/40">
+                  <td className="px-6 py-4 text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">
                     {new Date(o.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -904,7 +723,7 @@ const OrdersView = ({ readOnly = false }) => {
                       <button
                         type="button"
                         onClick={() => openOrderDetail(o.id)}
-                        className="p-2 text-gold-500/60 hover:text-gold-500 hover:bg-navy-800 rounded-lg transition-all"
+                        className="p-2 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 hover:text-accent-500 hover:bg-utility-gray dark:bg-base-800 rounded-lg transition-all"
                         title="View Details"
                       >
                         <Eye size={16} />
@@ -913,7 +732,7 @@ const OrdersView = ({ readOnly = false }) => {
                         <button
                           type="button"
                           onClick={() => openOrderEdit(o)}
-                          className="p-2 text-gold-500/60 hover:text-gold-500 hover:bg-navy-800 rounded-lg transition-all"
+                          className="p-2 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 hover:text-accent-500 hover:bg-utility-gray dark:bg-base-800 rounded-lg transition-all"
                           title="Edit Order"
                         >
                           <Edit size={16} />
@@ -927,7 +746,7 @@ const OrdersView = ({ readOnly = false }) => {
           </table>
           </AdminTable>
         ) : (
-          <div className="py-24 text-center text-gold-500/40 text-sm">
+          <div className="py-24 text-center text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 text-sm">
             No orders found matching this criteria.
           </div>
         )}
@@ -935,76 +754,76 @@ const OrdersView = ({ readOnly = false }) => {
 
       {(detailLoading || detailOrder || actionError) && !editOrder && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-navy-900 border border-gold-500/20 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-utility-gray dark:bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
-                <h3 className="text-xl font-serif text-gold-100">Order Details</h3>
+                <h3 className="text-xl font-serif text-secondary dark:text-secondary dark:text-accent-100">Order Details</h3>
                 {detailOrder && (
-                  <p className="text-gold-500/50 text-xs mt-1  ">
+                  <p className="text-secondary/50 dark:text-secondary dark:text-secondary dark:text-secondary/50 dark:text-secondary dark:text-accent-500/50 text-xs mt-1  ">
                     #{detailOrder.id.substring(0, 8).toUpperCase()}
                   </p>
                 )}
               </div>
-              <button type="button" onClick={closeDetail} className="text-gold-500/40 hover:text-gold-500">
+              <button type="button" onClick={closeDetail} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 hover:text-accent-500">
                 <X size={20} />
               </button>
             </div>
 
             {detailLoading ? (
               <div className="py-12 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto" />
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500 mx-auto" />
               </div>
             ) : actionError && !detailOrder ? (
-              <p className="text-red-400 text-sm">{actionError}</p>
+              <p className="text-red-600 dark:text-red-600 dark:text-red-400 text-sm">{actionError}</p>
             ) : detailOrder ? (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-[10px]   text-gold-500/40 mb-1">Customer</p>
-                    <p className="text-gold-100">{detailOrder.customer_name}</p>
-                    <p className="text-gold-500/60 text-xs">{detailOrder.customer_email}</p>
+                    <p className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-1">Customer</p>
+                    <p className="text-secondary dark:text-secondary dark:text-accent-100">{detailOrder.customer_name}</p>
+                    <p className="text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 text-xs">{detailOrder.customer_email}</p>
                   </div>
                   <div>
-                    <p className="text-[10px]   text-gold-500/40 mb-1">Placed</p>
-                    <p className="text-gold-100">{new Date(detailOrder.created_at).toLocaleString()}</p>
+                    <p className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-1">Placed</p>
+                    <p className="text-secondary dark:text-secondary dark:text-accent-100">{new Date(detailOrder.created_at).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-[10px]   text-gold-500/40 mb-1">Status</p>
-                    <p className="text-gold-100  text-xs font-bold">{detailOrder.status}</p>
+                    <p className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-1">Status</p>
+                    <p className="text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  text-xs font-bold">{detailOrder.status}</p>
                   </div>
                   <div>
-                    <p className="text-[10px]   text-gold-500/40 mb-1">Payment</p>
-                    <p className="text-gold-100 text-xs">
+                    <p className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-1">Payment</p>
+                    <p className="text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-xs">
                       {formatPaymentLabel(detailOrder.payment_method)} Â· {detailOrder.payment_status}
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-navy-950/60 border border-gold-500/10 rounded-xl p-4 text-sm">
-                  <p className="text-[10px]   text-gold-500/40 mb-2">Shipping</p>
-                  <p className="text-gold-100">
+                <div className="bg-primary/60 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl p-4 text-sm">
+                  <p className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-2">Shipping</p>
+                  <p className="text-secondary dark:text-secondary dark:text-accent-100">
                     {[detailAddress.first_name, detailAddress.last_name].filter(Boolean).join(' ')}
                   </p>
-                  <p className="text-gold-500/70 text-xs mt-1">{detailAddress.line1}</p>
-                  <p className="text-gold-500/70 text-xs">{detailAddress.city}, {detailAddress.country || 'Kenya'}</p>
-                  <p className="text-gold-500/70 text-xs mt-1">{detailAddress.phone}</p>
-                  <p className="text-gold-500/70 text-xs">{detailAddress.email}</p>
+                  <p className="text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-500/70 text-xs mt-1">{detailAddress.line1}</p>
+                  <p className="text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-500/70 text-xs">{detailAddress.city}, {detailAddress.country || 'Kenya'}</p>
+                  <p className="text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-500/70 text-xs mt-1">{detailAddress.phone}</p>
+                  <p className="text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-500/70 text-xs">{detailAddress.email}</p>
                 </div>
 
                 <div>
-                  <p className="text-[10px]   text-gold-500/40 mb-3">Items</p>
+                  <p className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-3">Items</p>
                   <div className="space-y-2">
                     {(detailOrder.items || []).map((item) => (
-                      <div key={item.id} className="flex justify-between gap-4 bg-navy-950/60 border border-gold-500/5 rounded-xl px-4 py-3 text-sm">
+                      <div key={item.id} className="flex justify-between gap-4 bg-primary/60 border border-accent-500/5 rounded-xl px-4 py-3 text-sm">
                         <div>
-                          <p className="text-gold-100">{item.name}</p>
-                          <p className="text-gold-500/50 text-xs">
+                          <p className="text-secondary dark:text-secondary dark:text-accent-100">{item.name}</p>
+                          <p className="text-secondary/50 dark:text-secondary dark:text-secondary dark:text-secondary/50 dark:text-secondary dark:text-accent-500/50 text-xs">
                             Qty {item.quantity}
                             {item.size_label ? ` Â· Size ${item.size_label}` : ''}
                             {(item.variant_sku || item.product_sku) ? ` Â· SKU ${item.variant_sku || item.product_sku}` : ''}
                           </p>
                         </div>
-                        <p className="text-gold-400 shrink-0">
+                        <p className="text-accent-400 shrink-0">
                           KSh {(parseFloat(item.price) * item.quantity).toLocaleString()}
                         </p>
                       </div>
@@ -1012,9 +831,9 @@ const OrdersView = ({ readOnly = false }) => {
                   </div>
                 </div>
 
-                <div className="flex justify-between border-t border-gold-500/10 pt-4 text-sm font-bold">
-                  <span className="text-gold-500/60">Total</span>
-                  <span className="text-gold-400">KSh {parseFloat(detailOrder.total_amount).toLocaleString()}</span>
+                <div className="flex justify-between border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 pt-4 text-sm font-bold">
+                  <span className="text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60">Total</span>
+                  <span className="text-accent-400">KSh {parseFloat(detailOrder.total_amount).toLocaleString()}</span>
                 </div>
 
                 {!readOnly && (
@@ -1024,7 +843,7 @@ const OrdersView = ({ readOnly = false }) => {
                       closeDetail();
                       openOrderEdit(detailOrder);
                     }}
-                    className="w-full py-3 rounded-xl bg-gold-600 text-navy-950 text-[10px] font-bold   hover:bg-gold-500"
+                    className="w-full py-3 rounded-xl bg-accent-600 text-base-950 text-[10px] font-bold   hover:bg-accent-500"
                   >
                     Edit Order
                   </button>
@@ -1037,30 +856,30 @@ const OrdersView = ({ readOnly = false }) => {
 
       {editOrder && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-navy-900 border border-gold-500/20 rounded-2xl p-6 max-w-md w-full">
+          <div className="bg-utility-gray dark:bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-2xl p-6 max-w-md w-full">
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
-                <h3 className="text-xl font-serif text-gold-100">Edit Order</h3>
-                <p className="text-gold-500/50 text-xs mt-1  ">
+                <h3 className="text-xl font-serif text-secondary dark:text-secondary dark:text-accent-100">Edit Order</h3>
+                <p className="text-secondary/50 dark:text-secondary dark:text-secondary dark:text-secondary/50 dark:text-secondary dark:text-accent-500/50 text-xs mt-1  ">
                   #{editOrder.id.substring(0, 8).toUpperCase()} Â· {editOrder.customer_name}
                 </p>
               </div>
-              <button type="button" onClick={closeEdit} className="text-gold-500/40 hover:text-gold-500">
+              <button type="button" onClick={closeEdit} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 hover:text-accent-500">
                 <X size={20} />
               </button>
             </div>
 
             {actionError && (
-              <p className="text-red-400 text-sm mb-4">{actionError}</p>
+              <p className="text-red-600 dark:text-red-600 dark:text-red-400 text-sm mb-4">{actionError}</p>
             )}
 
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-[10px]   text-gold-500/40 font-bold">Order Status</label>
+                <label className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 font-bold">Order Status</label>
                 <select
                   value={editStatus}
                   onChange={(e) => setEditStatus(e.target.value)}
-                  className="w-full bg-navy-950 border border-gold-500/20 rounded-xl px-4 py-3 text-gold-100 text-sm outline-none focus:border-gold-500"
+                  className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-4 py-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-sm outline-none focus:border-accent-500"
                 >
                   {ORDER_STATUSES.map((status) => (
                     <option key={status} value={status}>{status}</option>
@@ -1068,11 +887,11 @@ const OrdersView = ({ readOnly = false }) => {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px]   text-gold-500/40 font-bold">Payment Status</label>
+                <label className="text-[10px]   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 font-bold">Payment Status</label>
                 <select
                   value={editPaymentStatus}
                   onChange={(e) => setEditPaymentStatus(e.target.value)}
-                  className="w-full bg-navy-950 border border-gold-500/20 rounded-xl px-4 py-3 text-gold-100 text-sm outline-none focus:border-gold-500"
+                  className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-4 py-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-sm outline-none focus:border-accent-500"
                 >
                   {PAYMENT_STATUSES.map((status) => (
                     <option key={status} value={status}>{status}</option>
@@ -1086,7 +905,7 @@ const OrdersView = ({ readOnly = false }) => {
                 type="button"
                 onClick={handleCancelOrder}
                 disabled={saving}
-                className="w-full mt-4 py-3 rounded-xl border border-red-500/30 text-red-400 text-[10px] font-bold   hover:bg-red-500/10 disabled:opacity-50"
+                className="w-full mt-4 py-3 rounded-xl border border-red-500/30 text-red-600 dark:text-red-600 dark:text-red-400 text-[10px] font-bold   hover:bg-red-500/10 disabled:opacity-50"
               >
                 Cancel Order
               </button>
@@ -1097,7 +916,7 @@ const OrdersView = ({ readOnly = false }) => {
                 type="button"
                 onClick={handleRefundOrder}
                 disabled={saving}
-                className="w-full mt-2 py-3 rounded-xl border border-amber-500/30 text-amber-400 text-[10px] font-bold   hover:bg-amber-500/10 disabled:opacity-50"
+                className="w-full mt-2 py-3 rounded-xl border border-amber-500/30 text-amber-600 dark:text-amber-600 dark:text-amber-400 text-[10px] font-bold   hover:bg-amber-500/10 disabled:opacity-50"
               >
                 Refund Order
               </button>
@@ -1107,7 +926,7 @@ const OrdersView = ({ readOnly = false }) => {
               <button
                 type="button"
                 onClick={closeEdit}
-                className="flex-1 py-3 rounded-xl border border-gold-500/20 text-gold-500/60 text-[10px] font-bold  "
+                className="flex-1 py-3 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 text-[10px] font-bold  "
               >
                 Close
               </button>
@@ -1116,7 +935,7 @@ const OrdersView = ({ readOnly = false }) => {
                   type="button"
                   onClick={handleSaveOrder}
                   disabled={saving}
-                  className="flex-1 py-3 rounded-xl bg-gold-600 text-navy-950 text-[10px] font-bold   hover:bg-gold-500 disabled:opacity-50"
+                  className="flex-1 py-3 rounded-xl bg-accent-600 text-base-950 text-[10px] font-bold   hover:bg-accent-500 disabled:opacity-50"
                 >
                   {saving ? 'Savingâ€¦' : 'Save Changes'}
                 </button>
@@ -1239,23 +1058,23 @@ const CategoriesView = () => {
   return (
     <div className="space-y-6 relative">
        <div className="flex items-center justify-between mb-8">
-        <h3 className="text-xl font-serif font-bold text-gold-100">Categories ({categories.length})</h3>
+        <h3 className="text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">Categories ({categories.length})</h3>
         <button 
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 px-6 py-3 bg-navy-800/50 border border-gold-500/10 text-gold-500 rounded-xl font-bold hover:bg-navy-800 transition-all"
+          className="flex items-center gap-2 px-6 py-3 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 text-accent-500 rounded-xl font-bold hover:bg-utility-gray dark:bg-base-800 transition-all"
         >
           <Plus size={20} /> New Category
         </button>
       </div>
 
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+      <div className="bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
         {loading ? (
           <div className="py-24 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500 mx-auto"></div>
           </div>
         ) : categories.length > 0 ? (
           <table className="w-full text-left">
-            <thead className="bg-navy-800/50 text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+            <thead className="bg-utility-gray dark:bg-utility-gray/50 text-[10px] font-bold text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40  tracking-[0.2em]">
               <tr>
                 <th className="px-6 py-4">Name</th>
                 <th className="px-6 py-4">Slug</th>
@@ -1264,18 +1083,18 @@ const CategoriesView = () => {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gold-500/5">
+            <tbody className="divide-y divide-accent-500/5">
               {categories.map((c) => (
-                <tr key={c.id} className="hover:bg-navy-800/30 transition-colors text-sm">
-                  <td className="px-6 py-4 font-bold text-gold-100 flex items-center gap-2">
-                    {c.parent_id && <ChevronRight size={14} className="text-gold-500/20" />}
+                <tr key={c.id} className="hover:bg-utility-gray dark:bg-utility-gray/30 transition-colors text-sm">
+                  <td className="px-6 py-4 font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 flex items-center gap-2">
+                    {c.parent_id && <ChevronRight size={14} className="text-accent-500/20" />}
                     {c.name}
                   </td>
-                  <td className="px-6 py-4 font-mono text-gold-500/60 text-xs">{c.slug}</td>
-                  <td className="px-6 py-4 text-gold-200">{c.is_featured ? 'Yes' : 'No'}</td>
+                  <td className="px-6 py-4 font-mono text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 text-xs">{c.slug}</td>
+                  <td className="px-6 py-4 text-accent-200">{c.is_featured ? 'Yes' : 'No'}</td>
                   <td className="px-6 py-4">
                     <span className={`text-[10px] font-bold  px-2 py-1 rounded-full ${
-                      c.is_active ? 'bg-green-400/10 text-green-400' : 'bg-navy-800 text-gold-500/30'
+                      c.is_active ? 'bg-green-400/10 text-green-600 dark:text-green-600 dark:text-green-400' : 'bg-utility-gray dark:bg-base-800 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/30'
                     }`}>
                       {c.is_active ? 'Active' : 'Inactive'}
                     </span>
@@ -1284,13 +1103,13 @@ const CategoriesView = () => {
                     <div className="flex justify-end gap-2">
                       <button 
                         onClick={() => handleOpenModal(c)}
-                        className="p-2 text-gold-500/60 hover:text-gold-500 transition-all"
+                        className="p-2 text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 hover:text-accent-500 transition-all"
                       >
                         <Edit size={16} />
                       </button>
                       <button 
                         onClick={() => handleDelete(c.id)}
-                        className="p-2 text-red-400/60 hover:text-red-400 transition-all"
+                        className="p-2 text-red-600 dark:text-red-600 dark:text-red-400/60 hover:text-red-600 dark:text-red-600 dark:text-red-400 transition-all"
                       >
                         <Trash2 size={16} />
                       </button>
@@ -1301,7 +1120,7 @@ const CategoriesView = () => {
             </tbody>
           </table>
         ) : (
-          <div className="py-24 text-center text-gold-500/40 text-sm">
+          <div className="py-24 text-center text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 text-sm">
             No categories defined.
           </div>
         )}
@@ -1309,23 +1128,23 @@ const CategoriesView = () => {
 
       {/* Category Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-primary/80 backdrop-blur-sm">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-navy-900 border border-gold-500/20 rounded-3xl p-8 w-full max-w-lg shadow-2xl"
+            className="bg-utility-gray dark:bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-3xl p-8 w-full max-w-lg shadow-2xl"
           >
             <div className="flex items-center justify-between mb-8">
-              <h4 className="text-2xl font-serif font-bold text-gold-100">
+              <h4 className="text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">
                 {currentCategory ? 'Edit Category' : 'Create New Category'}
               </h4>
-              <button onClick={() => setIsModalOpen(false)} className="text-gold-500/40 hover:text-gold-500"><X size={24} /></button>
+              <button onClick={() => setIsModalOpen(false)} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 hover:text-accent-500"><X size={24} /></button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Name</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Name</label>
                     <input 
                       type="text" 
                       required
@@ -1334,38 +1153,38 @@ const CategoriesView = () => {
                         const val = e.target.value.toUpperCase();
                         setFormData({...formData, name: val, slug: val.toLowerCase().replace(/ /g, '-')});
                       }}
-                      className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold "
+                      className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold "
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Slug</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Slug</label>
                     <input 
                       type="text" 
                       required
                       value={formData.slug}
                       onChange={(e) => setFormData({...formData, slug: e.target.value})}
-                      className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-mono"
+                      className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-mono"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Image</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Image</label>
                     <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-xl border border-gold-500/10 overflow-hidden bg-navy-950 flex items-center justify-center relative">
-                            {formData.image ? <img src={formData.image} className="w-full h-full object-cover" /> : <ImageIcon size={20} className="text-gold-500/20" />}
+                        <div className="w-16 h-16 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 overflow-hidden bg-primary dark:bg-primary dark:bg-base-950 flex items-center justify-center relative">
+                            {formData.image ? <img src={formData.image} className="w-full h-full object-cover" /> : <ImageIcon size={20} className="text-accent-500/20" />}
                             <input type="file" accept="image/*" onChange={handleImageChange} className="absolute inset-0 opacity-0 cursor-pointer" />
                         </div>
-                        <p className="text-[9px] text-gold-500/40  ">Click to upload cover image</p>
+                        <p className="text-[9px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40  ">Click to upload cover image</p>
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] text-gold-500/40   font-black">Description</label>
+                  <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Description</label>
                   <textarea 
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value.toUpperCase()})}
-                    className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all h-24 font-bold "
+                    className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all h-24 font-bold "
                   />
                 </div>
 
@@ -1375,25 +1194,25 @@ const CategoriesView = () => {
                     type="checkbox" 
                     checked={formData.is_featured}
                     onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
-                    className="w-4 h-4 rounded border-gold-500/20 bg-navy-950 text-gold-600 focus:ring-0 focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-primary dark:bg-primary dark:bg-base-950 text-accent-600 focus:ring-0 focus:ring-offset-0"
                   />
-                  <span className="text-xs text-gold-100">Featured Category</span>
+                  <span className="text-xs text-secondary dark:text-secondary dark:text-accent-100">Featured Category</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input 
                     type="checkbox" 
                     checked={formData.is_active}
                     onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
-                    className="w-4 h-4 rounded border-gold-500/20 bg-navy-950 text-gold-600 focus:ring-0 focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-primary dark:bg-primary dark:bg-base-950 text-accent-600 focus:ring-0 focus:ring-offset-0"
                   />
-                  <span className="text-xs text-gold-100">Active</span>
+                  <span className="text-xs text-secondary dark:text-secondary dark:text-accent-100">Active</span>
                 </label>
               </div>
 
               <button 
                 type="submit" 
                 disabled={submitting}
-                className="w-full bg-gold-600 text-navy-950 py-4 rounded-xl font-bold   hover:bg-gold-500 transition-all disabled:opacity-50"
+                className="w-full bg-accent-600 text-base-950 py-4 rounded-xl font-bold   hover:bg-accent-500 transition-all disabled:opacity-50"
               >
                 {submitting ? 'AUTHENTICATING...' : 'COMMIT CATEGORY'}
               </button>
@@ -1516,44 +1335,44 @@ const BrandsView = () => {
   return (
     <div className="space-y-6 relative">
        <div className="flex items-center justify-between mb-8">
-        <h3 className="text-xl font-serif font-bold text-gold-100">Brand Partners ({brands.length})</h3>
+        <h3 className="text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">Brand Partners ({brands.length})</h3>
         <button 
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 px-6 py-3 bg-navy-800/50 border border-gold-500/10 text-gold-500 rounded-xl font-bold hover:bg-navy-800 transition-all"
+          className="flex items-center gap-2 px-6 py-3 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 text-accent-500 rounded-xl font-bold hover:bg-utility-gray dark:bg-base-800 transition-all"
         >
           <Plus size={20} /> Add Brand
         </button>
       </div>
 
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+      <div className="bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
       {loading ? (
         <div className="py-24 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500 mx-auto"></div>
         </div>
       ) : brands.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
           {brands.map((brand) => (
-            <div key={brand.id} className="bg-navy-900/40 border border-gold-500/10 p-6 rounded-2xl flex items-center justify-between group backdrop-blur-sm transition-all hover:bg-navy-800/50">
+            <div key={brand.id} className="bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 p-6 rounded-2xl flex items-center justify-between group backdrop-blur-sm transition-all hover:bg-utility-gray dark:bg-utility-gray/50">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg border border-gold-500/10 overflow-hidden bg-navy-950 flex items-center justify-center">
-                    {brand.logo ? <img src={brand.logo} className="w-full h-full object-contain" /> : <Award size={20} className="text-gold-500/20" />}
+                <div className="w-12 h-12 rounded-lg border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 overflow-hidden bg-primary dark:bg-primary dark:bg-base-950 flex items-center justify-center">
+                    {brand.logo ? <img src={brand.logo} className="w-full h-full object-contain" /> : <Award size={20} className="text-accent-500/20" />}
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-gold-100 mb-1">{brand.name}</div>
-                  <div className="text-xs text-gold-500/40 mb-3">{brand.product_count || 0} products live</div>
+                  <div className="text-lg font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 mb-1">{brand.name}</div>
+                  <div className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-3">{brand.product_count || 0} products live</div>
                   <div className="flex gap-2">
-                    {brand.is_featured && <span className="bg-gold-600/10 text-gold-500 text-[9px] font-bold  px-2 py-0.5 rounded  border border-gold-500/10">Featured</span>}
-                    <span className={`text-[9px] font-bold  px-2 py-0.5 rounded  border ${brand.is_active ? 'border-green-400/20 text-green-400' : 'border-gold-500/5 text-gold-500/20'}`}>
+                    {brand.is_featured && <span className="bg-accent-600/10 text-accent-500 text-[9px] font-bold  px-2 py-0.5 rounded  border border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">Featured</span>}
+                    <span className={`text-[9px] font-bold  px-2 py-0.5 rounded  border ${brand.is_active ? 'border-green-400/20 text-green-600 dark:text-green-600 dark:text-green-400' : 'border-accent-500/5 text-accent-500/20'}`}>
                       {brand.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                 </div>
               </div>
               <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => handleOpenModal(brand)} className="w-10 h-10 bg-navy-800 rounded-xl border border-gold-500/10 flex items-center justify-center text-gold-500/60 hover:text-gold-500 hover:border-gold-500/40 transition-all">
+                <button onClick={() => handleOpenModal(brand)} className="w-10 h-10 bg-utility-gray dark:bg-base-800 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-center text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60 hover:text-accent-500 hover:border-accent-500/40 transition-all">
                   <Edit size={18} />
                 </button>
-                <button onClick={() => handleDelete(brand.id)} className="w-10 h-10 bg-red-400/10 rounded-xl border border-red-400/20 flex items-center justify-center text-red-400/60 hover:text-red-400 hover:border-red-400/40 transition-all">
+                <button onClick={() => handleDelete(brand.id)} className="w-10 h-10 bg-red-400/10 rounded-xl border border-red-400/20 flex items-center justify-center text-red-600 dark:text-red-600 dark:text-red-400/60 hover:text-red-600 dark:text-red-600 dark:text-red-400 hover:border-red-400/40 transition-all">
                   <Trash2 size={18} />
                 </button>
               </div>
@@ -1561,7 +1380,7 @@ const BrandsView = () => {
           ))}
         </div>
       ) : (
-        <div className="py-24 text-center text-gold-500/40 text-sm">
+        <div className="py-24 text-center text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 text-sm">
           No brand partners found.
         </div>
       )}
@@ -1569,23 +1388,23 @@ const BrandsView = () => {
 
       {/* Brand Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-primary/80 backdrop-blur-sm">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-navy-900 border border-gold-500/20 rounded-3xl p-8 w-full max-w-lg shadow-2xl"
+            className="bg-utility-gray dark:bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-3xl p-8 w-full max-w-lg shadow-2xl"
           >
             <div className="flex items-center justify-between mb-8">
-              <h4 className="text-2xl font-serif font-bold text-gold-100">
+              <h4 className="text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">
                 {currentBrand ? 'Edit Brand' : 'Create New Brand'}
               </h4>
-              <button onClick={() => setIsModalOpen(false)} className="text-gold-500/40 hover:text-gold-500"><X size={24} /></button>
+              <button onClick={() => setIsModalOpen(false)} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 hover:text-accent-500"><X size={24} /></button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Name</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Name</label>
                     <input 
                       type="text" 
                       required
@@ -1594,38 +1413,38 @@ const BrandsView = () => {
                         const val = e.target.value.toUpperCase();
                         setFormData({...formData, name: val, slug: val.toLowerCase().replace(/ /g, '-')});
                       }}
-                      className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold "
+                      className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold "
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Slug</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Slug</label>
                     <input 
                       type="text" 
                       required
                       value={formData.slug}
                       onChange={(e) => setFormData({...formData, slug: e.target.value})}
-                      className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-mono"
+                      className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-mono"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Logo</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Logo</label>
                     <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-xl border border-gold-500/10 overflow-hidden bg-navy-950 flex items-center justify-center relative">
-                            {formData.logo ? <img src={formData.logo} className="w-full h-full object-contain" /> : <Award size={20} className="text-gold-500/20" />}
+                        <div className="w-16 h-16 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 overflow-hidden bg-primary dark:bg-primary dark:bg-base-950 flex items-center justify-center relative">
+                            {formData.logo ? <img src={formData.logo} className="w-full h-full object-contain" /> : <Award size={20} className="text-accent-500/20" />}
                             <input type="file" accept="image/*" onChange={handleLogoChange} className="absolute inset-0 opacity-0 cursor-pointer" />
                         </div>
-                        <p className="text-[9px] text-gold-500/40  ">Click to upload brand logo</p>
+                        <p className="text-[9px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40  ">Click to upload brand logo</p>
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] text-gold-500/40   font-black">Description</label>
+                  <label className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40   font-black">Description</label>
                   <textarea 
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value.toUpperCase()})}
-                    className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all h-24 font-bold "
+                    className="w-full bg-primary dark:bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all h-24 font-bold "
                   />
                 </div>
 
@@ -1635,25 +1454,25 @@ const BrandsView = () => {
                     type="checkbox" 
                     checked={formData.is_featured}
                     onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
-                    className="w-4 h-4 rounded border-gold-500/20 bg-navy-950 text-gold-600 focus:ring-0 focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-primary dark:bg-primary dark:bg-base-950 text-accent-600 focus:ring-0 focus:ring-offset-0"
                   />
-                  <span className="text-xs text-gold-100">Featured Brand</span>
+                  <span className="text-xs text-secondary dark:text-secondary dark:text-accent-100">Featured Brand</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input 
                     type="checkbox" 
                     checked={formData.is_active}
                     onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
-                    className="w-4 h-4 rounded border-gold-500/20 bg-navy-950 text-gold-600 focus:ring-0 focus:ring-offset-0"
+                    className="w-4 h-4 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-primary dark:bg-primary dark:bg-base-950 text-accent-600 focus:ring-0 focus:ring-offset-0"
                   />
-                  <span className="text-xs text-gold-100">Active</span>
+                  <span className="text-xs text-secondary dark:text-secondary dark:text-accent-100">Active</span>
                 </label>
               </div>
 
               <button 
                 type="submit" 
                 disabled={submitting}
-                className="w-full bg-gold-600 text-navy-950 py-4 rounded-xl font-bold   hover:bg-gold-500 transition-all disabled:opacity-50"
+                className="w-full bg-accent-600 text-base-950 py-4 rounded-xl font-bold   hover:bg-accent-500 transition-all disabled:opacity-50"
               >
                 {submitting ? 'SAVING...' : 'SAVE BRAND'}
               </button>
@@ -1683,8 +1502,8 @@ const UsersView = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h3 className="text-xl sm:text-2xl font-serif font-bold text-gold-100">Users</h3>
-          <p className="text-xs text-gold-500/40 mt-1">
+          <h3 className="text-xl sm:text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">Users</h3>
+          <p className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mt-1">
             {isAdmin ? 'Website accounts, staff, and administrators' : 'Customer accounts only'}
           </p>
         </div>
@@ -1696,8 +1515,8 @@ const UsersView = () => {
               onClick={() => setTab(t.id)}
               className={`px-4 py-2 rounded-xl text-xs font-bold   border transition-all ${
                 tab === t.id
-                  ? 'bg-gold-600 text-navy-950 border-gold-600'
-                  : 'bg-navy-900/50 text-gold-500/70 border-gold-500/15 hover:border-gold-500/40'
+                  ? 'bg-accent-600 text-base-950 border-accent-600'
+                  : 'bg-utility-gray/50 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-500/70 border-accent-500/15 hover:border-accent-500/40'
               }`}
             >
               {t.label}
@@ -1707,13 +1526,13 @@ const UsersView = () => {
       </div>
 
       {!isAdmin && currentUser && (
-        <div className="bg-navy-900/40 border border-gold-500/15 rounded-xl p-4 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-gold-600 text-navy-950 font-bold flex items-center justify-center">
+        <div className="bg-utility-gray/40 border border-accent-500/15 rounded-xl p-4 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-accent-600 text-base-950 font-bold flex items-center justify-center">
             {userInitials(currentUser)}
           </div>
           <div>
-            <p className="text-sm font-bold text-gold-100">{currentUser.fullName || currentUser.name}</p>
-            <p className="text-xs text-gold-500/50">{currentUser.email} Â· Staff</p>
+            <p className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{currentUser.fullName || currentUser.name}</p>
+            <p className="text-xs text-secondary/50 dark:text-secondary dark:text-secondary dark:text-secondary/50 dark:text-secondary dark:text-accent-500/50">{currentUser.email} Â· Staff</p>
           </div>
         </div>
       )}
@@ -1785,18 +1604,18 @@ const CustomersView = ({ embedded = false }) => {
       {!embedded && (
       <div className="flex flex-col gap-4 mb-6 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col">
-          <h3 className="text-xl sm:text-2xl font-serif font-bold text-gold-100">Customer Directory</h3>
-          <p className="text-xs text-gold-500/40 mt-1">Managing {customers.length} registered clients</p>
+          <h3 className="text-xl sm:text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">Customer Directory</h3>
+          <p className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mt-1">Managing {customers.length} registered clients</p>
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
-          <div className="bg-navy-800/50 border border-gold-500/10 px-4 py-2 rounded-xl flex items-center gap-2 w-full sm:w-auto">
-            <Search size={16} className="text-gold-500/40" />
+          <div className="bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 px-4 py-2 rounded-xl flex items-center gap-2 w-full sm:w-auto">
+            <Search size={16} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40" />
             <input 
               type="text" 
               placeholder="Search customers..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none text-sm text-gold-100 placeholder:text-gold-500/20 w-full sm:w-56" 
+              className="bg-transparent border-none outline-none text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 placeholder:text-accent-500/20 w-full sm:w-56" 
             />
           </div>
         </div>
@@ -1804,29 +1623,29 @@ const CustomersView = ({ embedded = false }) => {
       )}
       {embedded && (
         <div className="flex flex-wrap gap-3 items-center justify-between">
-          <p className="text-xs text-gold-500/40">{customers.length} registered customers</p>
-          <div className="bg-navy-800/50 border border-gold-500/10 px-4 py-2 rounded-xl flex items-center gap-2 w-full sm:w-auto">
-            <Search size={16} className="text-gold-500/40" />
+          <p className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{customers.length} registered customers</p>
+          <div className="bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 px-4 py-2 rounded-xl flex items-center gap-2 w-full sm:w-auto">
+            <Search size={16} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40" />
             <input 
               type="text" 
               placeholder="Search customers..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-none outline-none text-sm text-gold-100 placeholder:text-gold-500/20 w-full sm:w-48" 
+              className="bg-transparent border-none outline-none text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 placeholder:text-accent-500/20 w-full sm:w-48" 
             />
           </div>
         </div>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-gold-500/10 bg-navy-900/40 backdrop-blur-sm">
+      <div className="overflow-hidden rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray/40 backdrop-blur-sm">
         {loading ? (
           <div className="py-24 text-center">
-            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-gold-500"></div>
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-accent-500"></div>
           </div>
         ) : filteredCustomers.length > 0 ? (
           <AdminTable>
           <table className="w-full min-w-[720px] text-left">
-            <thead className="bg-navy-800/50 text-[10px] font-bold tracking-[0.2em] text-gold-500/40">
+            <thead className="bg-utility-gray dark:bg-utility-gray/50 text-[10px] font-bold tracking-[0.2em] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">
               <tr>
                 <th className="px-6 py-4">Customer</th>
                 <th className="px-6 py-4">Contact Info</th>
@@ -1836,34 +1655,34 @@ const CustomersView = ({ embedded = false }) => {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gold-500/5">
+            <tbody className="divide-y divide-accent-500/5">
               {filteredCustomers.map((c) => (
-                <tr key={c.id} className="transition-colors hover:bg-navy-800/30">
+                <tr key={c.id} className="transition-colors hover:bg-utility-gray dark:bg-utility-gray/30">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-navy-800 bg-gold-600 font-bold text-navy-950 shadow-lg">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-base-800 bg-accent-600 font-bold text-base-950 shadow-lg">
                         {userInitials(c)}
                       </div>
                       <div>
-                        <div className="flex items-center gap-2 text-sm font-bold text-gold-100">
+                        <div className="flex items-center gap-2 text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">
                           {c.name}
                           {c.is_verified && <CheckCircle2 size={14} className="text-blue-400" />}
                         </div>
-                        <div className="mt-0.5 text-[10px] text-gold-500/40">ID: {String(c.id).substring(0, 8)}</div>
+                        <div className="mt-0.5 text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">ID: {String(c.id).substring(0, 8)}</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-xs text-gold-100">{c.email}</div>
-                    <div className="mt-1 flex items-center gap-1 text-[10px] text-gold-500/40">
+                    <div className="text-xs text-secondary dark:text-secondary dark:text-accent-100">{c.email}</div>
+                    <div className="mt-1 flex items-center gap-1 text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">
                       <Phone size={10} /> {c.phone || 'No phone'}
                     </div>
                   </td>
-                  <td className="px-6 py-4 font-serif font-bold text-gold-100">KSh {parseFloat(c.total_spent || 0).toLocaleString()}</td>
-                  <td className="px-6 py-4 text-xs text-gold-500/60">{new Date(c.created_at).toLocaleDateString('en-KE', { month: 'short', year: 'numeric' })}</td>
+                  <td className="px-6 py-4 font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">KSh {parseFloat(c.total_spent || 0).toLocaleString()}</td>
+                  <td className="px-6 py-4 text-xs text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60">{new Date(c.created_at).toLocaleDateString('en-KE', { month: 'short', year: 'numeric' })}</td>
                   <td className="px-6 py-4">
                     <span className={`rounded px-2 py-0.5 text-[9px] font-black tracking-[0.1em] ${
-                      c.is_active !== false ? 'bg-green-400/10 text-green-400' : 'bg-red-400/10 text-red-400'
+                      c.is_active !== false ? 'bg-green-400/10 text-green-600 dark:text-green-600 dark:text-green-400' : 'bg-red-400/10 text-red-600 dark:text-red-600 dark:text-red-400'
                     }`}>
                       {c.is_active !== false ? 'Active' : 'Suspended'}
                     </span>
@@ -1872,7 +1691,7 @@ const CustomersView = ({ embedded = false }) => {
                     <div className="flex justify-end gap-2">
                       <button 
                         onClick={() => handleToggleStatus(c.id, c.is_active !== false)}
-                        className={`rounded-lg p-2 transition-all ${c.is_active !== false ? 'text-red-400/40 hover:bg-red-400/5 hover:text-red-400' : 'text-green-400/40 hover:bg-green-400/5 hover:text-green-400'}`}
+                        className={`rounded-lg p-2 transition-all ${c.is_active !== false ? 'text-red-600 dark:text-red-600 dark:text-red-400/40 hover:bg-red-400/5 hover:text-red-600 dark:text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-600 dark:text-green-400/40 hover:bg-green-400/5 hover:text-green-600 dark:text-green-600 dark:text-green-400'}`}
                         title={c.is_active !== false ? 'Suspend Account' : 'Activate Account'}
                       >
                         {c.is_active !== false ? <UserMinus size={16} /> : <UserPlus size={16} />}
@@ -1880,7 +1699,7 @@ const CustomersView = ({ embedded = false }) => {
                       <button
                         type="button"
                         onClick={() => handleViewCustomer(c.id)}
-                        className="rounded-lg p-2 text-gold-500/40 transition-all hover:bg-navy-800 hover:text-gold-500"
+                        className="rounded-lg p-2 text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 transition-all hover:bg-utility-gray dark:bg-base-800 hover:text-accent-500"
                         title="View details"
                       >
                         <Eye size={16} />
@@ -1893,7 +1712,7 @@ const CustomersView = ({ embedded = false }) => {
           </table>
           </AdminTable>
         ) : (
-          <div className="py-24 text-center text-sm text-gold-500/40">
+          <div className="py-24 text-center text-sm text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">
             No customers found matching your search.
           </div>
         )}
@@ -1904,27 +1723,27 @@ const CustomersView = ({ embedded = false }) => {
           <button
             type="button"
             aria-label="Close customer details"
-            className="fixed inset-0 bg-navy-950/80 backdrop-blur-sm"
+            className="fixed inset-0 bg-primary/80 backdrop-blur-sm"
             onClick={closeModal}
           />
           <div className="relative flex min-h-full items-center justify-center p-4 py-8">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="relative flex max-h-[min(90dvh,760px)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-gold-500/20 bg-navy-900 shadow-2xl"
+              className="relative flex max-h-[min(90dvh,760px)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-utility-gray dark:bg-utility-gray dark:bg-base-900 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-start justify-between gap-4 border-b border-gold-500/10 p-6">
+              <div className="flex items-start justify-between gap-4 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 p-6">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-gold-500/10 bg-gold-600 text-lg font-bold text-navy-950">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-accent-600 text-lg font-bold text-base-950">
                     {userInitials(selectedCustomer)}
                   </div>
                   <div>
-                    <h3 className="font-serif text-xl font-bold text-gold-100">{selectedCustomer.name}</h3>
-                    <p className="text-sm text-gold-500/50">Customer details and order history</p>
+                    <h3 className="font-serif text-xl font-bold text-secondary dark:text-secondary dark:text-accent-100">{selectedCustomer.name}</h3>
+                    <p className="text-sm text-secondary/50 dark:text-secondary dark:text-secondary dark:text-secondary/50 dark:text-secondary dark:text-accent-500/50">Customer details and order history</p>
                   </div>
                 </div>
-                <button type="button" onClick={closeModal} className="rounded-lg p-2 text-gold-500/40 transition-colors hover:text-gold-500">
+                <button type="button" onClick={closeModal} className="rounded-lg p-2 text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 transition-colors hover:text-accent-500">
                   <X size={20} />
                 </button>
               </div>
@@ -1938,19 +1757,19 @@ const CustomersView = ({ embedded = false }) => {
                       { label: 'Joined', value: new Date(selectedCustomer.created_at).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' }), icon: Clock },
                       { label: 'Total Spent', value: `KSh ${parseFloat(selectedCustomer.total_spent || 0).toLocaleString()}`, icon: Package },
                     ].map((item) => (
-                      <div key={item.label} className="rounded-2xl border border-gold-500/10 bg-navy-950/50 p-4">
-                        <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gold-500/40">
+                      <div key={item.label} className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary/50 p-4">
+                        <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">
                           <item.icon size={12} /> {item.label}
                         </div>
-                        <div className="text-sm font-bold text-gold-100 break-words">{item.value}</div>
+                        <div className="text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 break-words">{item.value}</div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="rounded-2xl border border-gold-500/10 bg-navy-950/50 p-4">
+                  <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary/50 p-4">
                     <div className="mb-3 flex items-center justify-between">
-                      <h4 className="text-sm font-bold text-gold-100">Account status</h4>
-                      <span className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] ${selectedCustomer.is_active !== false ? 'bg-green-400 text-navy-950' : 'bg-red-400 text-navy-950'}`}>
+                      <h4 className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">Account status</h4>
+                      <span className={`rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] ${selectedCustomer.is_active !== false ? 'bg-green-400 text-base-950' : 'bg-red-400 text-base-950'}`}>
                         {selectedCustomer.is_active !== false ? 'Active' : 'Suspended'}
                       </span>
                     </div>
@@ -1958,14 +1777,14 @@ const CustomersView = ({ embedded = false }) => {
                       <button
                         type="button"
                         onClick={() => handleToggleStatus(selectedCustomer.id, selectedCustomer.is_active !== false)}
-                        className="rounded-xl bg-gold-600 px-4 py-3 text-sm font-bold text-navy-950 transition-colors hover:bg-gold-500"
+                        className="rounded-xl bg-accent-600 px-4 py-3 text-sm font-bold text-base-950 transition-colors hover:bg-accent-500"
                       >
                         Toggle status
                       </button>
                       <button
                         type="button"
                         onClick={closeModal}
-                        className="rounded-xl border border-gold-500/15 px-4 py-3 text-sm font-bold text-gold-100 hover:border-gold-500/40"
+                        className="rounded-xl border border-accent-500/15 px-4 py-3 text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 hover:border-accent-500/40"
                       >
                         Close
                       </button>
@@ -1973,29 +1792,29 @@ const CustomersView = ({ embedded = false }) => {
                   </div>
                 </div>
 
-                <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-gold-500/10 bg-navy-950/50">
-                  <div className="border-b border-gold-500/10 px-4 py-3">
-                    <h4 className="text-sm font-bold text-gold-100">Orders</h4>
-                    <p className="text-xs text-gold-500/40">{detailLoading ? 'Loading details...' : `${selectedCustomer.orders?.length || 0} order(s)`}</p>
+                <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary/50">
+                  <div className="border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 px-4 py-3">
+                    <h4 className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">Orders</h4>
+                    <p className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{detailLoading ? 'Loading details...' : `${selectedCustomer.orders?.length || 0} order(s)`}</p>
                   </div>
                   <div className="min-h-0 flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
                     {!detailLoading && (selectedCustomer.orders || []).length > 0 ? (
                       selectedCustomer.orders.map((order) => (
-                        <div key={order.id} className="rounded-xl border border-gold-500/10 bg-navy-900/60 p-4">
+                        <div key={order.id} className="rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray/60 p-4">
                           <div className="flex items-center justify-between gap-3">
                             <div>
-                              <div className="text-sm font-bold text-gold-100">Order #{String(order.id).slice(0, 8)}</div>
-                              <div className="text-[10px] uppercase tracking-[0.2em] text-gold-500/40">{new Date(order.created_at).toLocaleDateString()}</div>
+                              <div className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">Order #{String(order.id).slice(0, 8)}</div>
+                              <div className="text-[10px] uppercase tracking-[0.2em] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{new Date(order.created_at).toLocaleDateString()}</div>
                             </div>
-                            <span className="rounded-full border border-gold-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-gold-500/60">
+                            <span className="rounded-full border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60">
                               {order.status}
                             </span>
                           </div>
-                          <div className="mt-3 text-sm font-bold text-gold-100">KSh {parseFloat(order.total_amount || 0).toLocaleString()}</div>
+                          <div className="mt-3 text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">KSh {parseFloat(order.total_amount || 0).toLocaleString()}</div>
                         </div>
                       ))
                     ) : (
-                      <div className="rounded-xl border border-dashed border-gold-500/10 py-10 text-center text-sm text-gold-500/40">
+                      <div className="rounded-xl border border-dashed border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 py-10 text-center text-sm text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">
                         No orders recorded.
                       </div>
                     )}
@@ -2020,8 +1839,8 @@ const AdminsView = ({ roleFilter = null }) => {
     name: '',
     email: '',
     password: '',
-    accessPreset: 'pos-only',
-    permissions: ['pos-terminal'],
+     accessPreset: 'limited',
+     permissions: [],
   });
 
   const fetchAdmins = async () => {
@@ -2050,8 +1869,8 @@ const AdminsView = ({ roleFilter = null }) => {
       name: '',
       email: '',
       password: '',
-      accessPreset: 'pos-only',
-      permissions: ['pos-terminal'],
+      accessPreset: 'limited',
+      permissions: [],
     });
     setIsModalOpen(true);
   };
@@ -2152,12 +1971,12 @@ const AdminsView = ({ roleFilter = null }) => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <p className="text-xs text-gold-500/40">{visibleAdmins.length} {roleFilter || 'dashboard'} user(s)</p>
+        <p className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{visibleAdmins.length} {roleFilter || 'dashboard'} user(s)</p>
         {roleFilter === 'staff' && (
         <button 
           type="button"
           onClick={handleOpenModal}
-          className="px-4 sm:px-6 py-3 bg-gold-600 text-navy-950 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gold-500 transition-all shadow-lg shadow-gold-600/20 text-sm"
+          className="px-4 sm:px-6 py-3 bg-accent-600 text-base-950 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-accent-500 transition-all shadow-lg shadow-accent-600/20 text-sm"
         >
           <UserPlus size={20} /> Add staff
         </button>
@@ -2166,47 +1985,47 @@ const AdminsView = ({ roleFilter = null }) => {
       
       {loading ? (
         <div className="py-24 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500 mx-auto"></div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {visibleAdmins.length > 0 ? visibleAdmins.map((admin, i) => (
-            <div key={i} className={`bg-navy-900/40 border-l-4 border-gold-500 p-6 rounded-r-2xl border-y border-r border-gold-500/10 backdrop-blur-sm group`}>
+            <div key={i} className={`bg-utility-gray/40 border-l-4 border-accent-500 p-6 rounded-r-2xl border-y border-r border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 backdrop-blur-sm group`}>
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <div className="text-sm font-bold text-gold-100 flex items-center gap-2">
+                  <div className="text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 flex items-center gap-2">
                     {admin.name}
                     {admin.is_active === false && <span className="w-2 h-2 rounded-full bg-red-500"></span>}
                   </div>
-                  <div className="text-xs text-gold-500/40">{admin.email}</div>
+                  <div className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{admin.email}</div>
                   {admin.role === 'staff' && (
                     <span className={`inline-block mt-2 text-[9px] font-bold   px-2 py-0.5 rounded ${
-                      admin.is_active !== false ? 'bg-green-400/10 text-green-400' : 'bg-red-400/10 text-red-400'
+                      admin.is_active !== false ? 'bg-green-400/10 text-green-600 dark:text-green-600 dark:text-green-400' : 'bg-red-400/10 text-red-600 dark:text-red-600 dark:text-red-400'
                     }`}>
                       {admin.is_active !== false ? 'Active' : 'Suspended'}
                     </span>
                   )}
                 </div>
-                <span className={`text-[9px] font-bold  px-2 py-1 rounded bg-navy-800 border border-gold-500/10 ${admin.role === 'admin' ? 'text-gold-400' : 'text-blue-400'}`}>
+                <span className={`text-[9px] font-bold  px-2 py-1 rounded bg-utility-gray dark:bg-base-800 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 ${admin.role === 'admin' ? 'text-accent-400' : 'text-blue-400'}`}>
                   {admin.role}
                 </span>
               </div>
-              <div className="pt-4 border-t border-gold-500/5 flex justify-between items-center text-[10px]">
-                <span className="text-gold-500/30 ">ID: {admin.id.substring(0, 8)}</span>
+              <div className="pt-4 border-t border-accent-500/5 flex justify-between items-center text-[10px]">
+                <span className="text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/30 ">ID: {admin.id.substring(0, 8)}</span>
                 <div className="flex gap-2">
                   {admin.role === 'staff' && (
                     <>
                       <button
                         type="button"
                         onClick={() => handleOpenEdit(admin)}
-                        className="px-2.5 py-1.5 rounded-lg text-[10px] font-bold  tracking-wider text-gold-500/70 hover:text-gold-400 hover:bg-navy-800 transition-all flex items-center gap-1"
+                        className="px-2.5 py-1.5 rounded-lg text-[10px] font-bold  tracking-wider text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-500/70 hover:text-accent-400 hover:bg-utility-gray dark:bg-base-800 transition-all flex items-center gap-1"
                       >
                         <Eye size={14} /> View staff
                       </button>
                       <button 
                         type="button"
                         onClick={() => handleDeleteStaff(admin.id)}
-                        className="p-1.5 rounded-lg text-red-400/40 hover:text-red-400 hover:bg-red-400/5 transition-all"
+                        className="p-1.5 rounded-lg text-red-600 dark:text-red-600 dark:text-red-400/40 hover:text-red-600 dark:text-red-600 dark:text-red-400 hover:bg-red-400/5 transition-all"
                         title="Remove Staff"
                       >
                         <Trash2 size={14} />
@@ -2215,7 +2034,7 @@ const AdminsView = ({ roleFilter = null }) => {
                   )}
                   <button 
                     onClick={() => handleToggleStatus(admin.id, admin.is_active !== false)}
-                    className="p-1.5 rounded-lg text-gold-500/40 hover:text-gold-500 hover:bg-navy-800 transition-all"
+                    className="p-1.5 rounded-lg text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 hover:text-accent-500 hover:bg-utility-gray dark:bg-base-800 transition-all"
                     title={admin.is_active !== false ? "Suspend Access" : "Restore Access"}
                   >
                     {admin.is_active !== false ? <UserMinus size={14} /> : <CheckCircle2 size={14} />}
@@ -2224,7 +2043,7 @@ const AdminsView = ({ roleFilter = null }) => {
               </div>
             </div>
           )) : (
-            <div className="col-span-full py-12 text-center text-gold-500/40 text-sm">No admin accounts found.</div>
+            <div className="col-span-full py-12 text-center text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 text-sm">No admin accounts found.</div>
           )}
         </div>
       )}
@@ -2235,21 +2054,21 @@ const AdminsView = ({ roleFilter = null }) => {
           <button
             type="button"
             aria-label="Close"
-            className="fixed inset-0 bg-navy-950/80 backdrop-blur-sm"
+            className="fixed inset-0 bg-primary/80 backdrop-blur-sm"
             onClick={handleCloseModal}
           />
           <div className="relative flex min-h-full items-center justify-center p-4 py-8">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="relative bg-navy-900 border border-gold-500/20 rounded-2xl w-full max-w-md max-h-[min(90dvh,720px)] flex flex-col shadow-2xl"
+              className="relative bg-utility-gray dark:bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-2xl w-full max-w-md max-h-[min(90dvh,720px)] flex flex-col shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex shrink-0 justify-between items-center p-6 border-b border-gold-500/10 bg-navy-900/50">
-                <h3 className="font-serif font-bold text-gold-100 text-xl">
+              <div className="flex shrink-0 justify-between items-center p-6 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray/50">
+                <h3 className="font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-xl">
                   {editingStaff ? 'View staff & re-assign duties' : 'Add staff'}
                 </h3>
-                <button type="button" onClick={handleCloseModal} className="text-gold-500/40 hover:text-gold-500 transition-colors">
+                <button type="button" onClick={handleCloseModal} className="text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 hover:text-accent-500 transition-colors">
                   <X size={20} />
                 </button>
               </div>
@@ -2258,54 +2077,54 @@ const AdminsView = ({ roleFilter = null }) => {
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
                   <div className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-gold-500/60   mb-2">Full Name</label>
+                  <label className="block text-[10px] font-bold text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60   mb-2">Full Name</label>
                   <input 
                     type="text" 
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-navy-950/50 border border-gold-500/20 rounded-xl px-4 py-3 text-gold-100 focus:outline-none focus:border-gold-500/50 transition-colors placeholder:text-gold-500/20"
+                    className="w-full bg-primary/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-4 py-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 focus:outline-none focus:border-accent-500/50 transition-colors placeholder:text-accent-500/20"
                     placeholder="E.g. James Arthur"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gold-500/60   mb-2">Email Address</label>
+                  <label className="block text-[10px] font-bold text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60   mb-2">Email Address</label>
                   <input 
                     type="email" 
                     required
                     readOnly={Boolean(editingStaff)}
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className={`w-full bg-navy-950/50 border border-gold-500/20 rounded-xl px-4 py-3 text-gold-100 focus:outline-none focus:border-gold-500/50 transition-colors placeholder:text-gold-500/20 ${editingStaff ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    className={`w-full bg-primary/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-4 py-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 focus:outline-none focus:border-accent-500/50 transition-colors placeholder:text-accent-500/20 ${editingStaff ? 'opacity-60 cursor-not-allowed' : ''}`}
                     placeholder="staff@prince-esquare.com"
                   />
                 </div>
 
                 {!editingStaff && (
                 <div>
-                  <label className="block text-[10px] font-bold text-gold-500/60   mb-2">Temporary Password</label>
+                  <label className="block text-[10px] font-bold text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60   mb-2">Temporary Password</label>
                   <input 
                     type="password" 
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
-                    className="w-full bg-navy-950/50 border border-gold-500/20 rounded-xl px-4 py-3 text-gold-100 focus:outline-none focus:border-gold-500/50 transition-colors placeholder:text-gold-500/20"
+                    className="w-full bg-primary/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-4 py-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 focus:outline-none focus:border-accent-500/50 transition-colors placeholder:text-accent-500/20"
                     placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   />
                 </div>
                 )}
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gold-500/60   mb-2">Access role</label>
+                  <label className="block text-[10px] font-bold text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60   mb-2">Access role</label>
                   <div className="space-y-2">
                     {STAFF_ACCESS_PRESETS.map((preset) => (
                       <label
                         key={preset.id}
                         className={`block p-3 rounded-xl border cursor-pointer transition-all ${
                           formData.accessPreset === preset.id
-                            ? 'border-gold-500/50 bg-gold-500/10'
-                            : 'border-gold-500/15 bg-navy-950/40 hover:border-gold-500/30'
+                            ? 'border-accent-500/50 bg-accent-500/10'
+                            : 'border-accent-500/15 bg-primary/40 hover:border-accent-500/30'
                         }`}
                       >
                         <div className="flex items-start gap-3">
@@ -2317,8 +2136,8 @@ const AdminsView = ({ roleFilter = null }) => {
                             className="mt-1"
                           />
                           <div>
-                            <p className="text-sm font-bold text-gold-100">{preset.label}</p>
-                            <p className="text-[11px] text-gold-500/50 mt-0.5">{preset.description}</p>
+                            <p className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{preset.label}</p>
+                            <p className="text-[11px] text-secondary/50 dark:text-secondary dark:text-secondary dark:text-secondary/50 dark:text-secondary dark:text-accent-500/50 mt-0.5">{preset.description}</p>
                           </div>
                         </div>
                       </label>
@@ -2328,15 +2147,15 @@ const AdminsView = ({ roleFilter = null }) => {
 
                 {(formData.accessPreset === 'custom' || editingStaff) && (
                 <div>
-                  <label className="block text-[10px] font-bold text-gold-500/60   mb-2">
+                  <label className="block text-[10px] font-bold text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/60   mb-2">
                     {editingStaff ? 'Assigned duties' : 'Custom duties'}
                   </label>
-                  <div className="space-y-3 max-h-52 overflow-y-auto custom-scrollbar p-3 bg-navy-950/50 border border-gold-500/20 rounded-xl">
+                  <div className="space-y-3 max-h-52 overflow-y-auto custom-scrollbar p-3 bg-primary/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl">
                     {STAFF_PERMISSION_GROUPS.map((group) => (
                       <div key={group.label}>
-                        <p className="text-[9px] font-bold   text-gold-500/40 mb-1">{group.label}</p>
+                        <p className="text-[9px] font-bold   text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mb-1">{group.label}</p>
                         {group.hint && (
-                          <p className="text-[10px] text-gold-500/30 mb-2">{group.hint}</p>
+                          <p className="text-[10px] text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/30 mb-2">{group.hint}</p>
                         )}
                         <div className="grid grid-cols-1 gap-2">
                           {group.permissions.map((perm) => (
@@ -2345,10 +2164,9 @@ const AdminsView = ({ roleFilter = null }) => {
                                 type="checkbox"
                                 checked={formData.permissions.includes(perm)}
                                 onChange={(e) => handlePermissionToggle(perm, e.target.checked)}
-                                disabled={perm === 'inventory-manage' && !formData.permissions.includes('inventory-view')}
-                                className="w-3.5 h-3.5 rounded border-gold-500/20 bg-navy-900 text-gold-600 focus:ring-0 focus:ring-offset-0"
+                                className="w-3.5 h-3.5 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-utility-gray dark:bg-utility-gray dark:bg-base-900 text-accent-600 focus:ring-0 focus:ring-offset-0"
                               />
-                              <span className="text-[10px]  font-bold text-gold-100 group-hover:text-gold-500 transition-colors">
+                              <span className="text-[10px]  font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 group-hover:text-accent-500 transition-colors">
                                 {perm.replace(/-/g, ' ')}
                               </span>
                             </label>
@@ -2357,19 +2175,19 @@ const AdminsView = ({ roleFilter = null }) => {
                       </div>
                     ))}
                   </div>
-                  <p className="text-[10px] text-gold-500/40 mt-2">
-                    POS only: checkout without inventory. Inventory view: add products and browse stock read-only. Inventory manage: update stock (admin grants only).
-                  </p>
+                   <p className="text-[10px] text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 mt-2">
+                     Staff accounts can be configured with specific access to products, orders, blog, and finance sections.
+                   </p>
                 </div>
                 )}
                 </div>
                 </div>
 
-                <div className="shrink-0 p-6 pt-4 border-t border-gold-500/10 bg-navy-900 rounded-b-2xl">
+                <div className="shrink-0 p-6 pt-4 border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray dark:bg-utility-gray dark:bg-base-900 rounded-b-2xl">
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full bg-gold-600 text-navy-950 py-4 rounded-xl font-bold   hover:bg-gold-500 transition-all disabled:opacity-50"
+                    className="w-full bg-accent-600 text-base-950 py-4 rounded-xl font-bold   hover:bg-accent-500 transition-all disabled:opacity-50"
                   >
                     {submitting ? (editingStaff ? 'SAVING...' : 'CREATING...') : (editingStaff ? 'SAVE CHANGES' : 'CREATE STAFF ACCOUNT')}
                   </button>
@@ -2433,9 +2251,9 @@ const ReviewsView = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <h3 className="text-xl font-serif font-bold text-gold-100">Customer Feedback</h3>
+          <h3 className="text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">Customer Feedback</h3>
           {pendingCount > 0 && (
-            <span className="bg-gold-600 text-navy-950 px-2 py-0.5 rounded-full text-[10px] font-black  ">
+            <span className="bg-accent-600 text-base-950 px-2 py-0.5 rounded-full text-[10px] font-black  ">
               {pendingCount} Pending
             </span>
           )}
@@ -2444,43 +2262,43 @@ const ReviewsView = () => {
 
       {loading ? (
         <div className="py-24 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500 mx-auto"></div>
         </div>
       ) : reviews.length > 0 ? (
         <div className="space-y-4">
           {reviews.map((r) => (
-            <div key={r.id} className="bg-navy-900/40 border border-gold-500/10 p-6 rounded-2xl backdrop-blur-sm relative group">
+            <div key={r.id} className="bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 p-6 rounded-2xl backdrop-blur-sm relative group">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-navy-800 rounded-full flex items-center justify-center text-gold-500 font-bold border border-gold-500/10">
+                  <div className="w-10 h-10 bg-utility-gray dark:bg-base-800 rounded-full flex items-center justify-center text-accent-500 font-bold border border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">
                     {userInitials({ name: r.user_name, email: r.user_email })}
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-gold-100">{r.user_name || 'Anonymous'}</div>
-                    <div className="text-xs text-gold-500/40">{r.product_name}</div>
+                    <div className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{r.user_name || 'Anonymous'}</div>
+                    <div className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{r.product_name}</div>
                   </div>
                 </div>
                 <div className="flex gap-0.5">
                   {[1,2,3,4,5].map(star => (
-                    <Star key={star} size={14} className={star <= r.rating ? 'fill-gold-500 text-gold-500' : 'text-gold-500/10'} />
+                    <Star key={star} size={14} className={star <= r.rating ? 'fill-accent-500 text-accent-500' : 'text-accent-500/10'} />
                   ))}
                 </div>
               </div>
-              <p className="text-sm text-gold-200/80 leading-relaxed mb-6 italic">"{r.comment}"</p>
-              <div className="flex items-center justify-between border-t border-gold-500/5 pt-4">
-                <span className="text-[10px] text-gold-500/30  ">{new Date(r.created_at).toLocaleDateString()}</span>
+              <p className="text-sm text-accent-200/80 leading-relaxed mb-6 italic">"{r.comment}"</p>
+              <div className="flex items-center justify-between border-t border-accent-500/5 pt-4">
+                <span className="text-[10px] text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/30  ">{new Date(r.created_at).toLocaleDateString()}</span>
                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   {!r.is_approved && (
                     <button 
                       onClick={() => handleApprove(r.id)}
-                      className="flex items-center gap-2 px-3 py-1.5 bg-green-400 text-navy-950 rounded-lg text-[10px] font-black  "
+                      className="flex items-center gap-2 px-3 py-1.5 bg-green-400 text-base-950 rounded-lg text-[10px] font-black  "
                     >
                       <CheckCircle2 size={12} /> Approve
                     </button>
                   )}
                   <button 
                     onClick={() => handleDelete(r.id)}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-red-400/10 text-red-400 rounded-lg text-[10px] font-black   border border-red-400/20"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-red-400/10 text-red-600 dark:text-red-600 dark:text-red-400 rounded-lg text-[10px] font-black   border border-red-400/20"
                   >
                      <Trash2 size={12} /> Delete
                   </button>
@@ -2490,7 +2308,7 @@ const ReviewsView = () => {
           ))}
         </div>
       ) : (
-        <div className="py-24 text-center text-gold-500/40 text-sm bg-navy-900/40 border border-gold-500/10 rounded-2xl border-dashed">
+        <div className="py-24 text-center text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40 text-sm bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl border-dashed">
           No reviews yet.
         </div>
       )}
@@ -2610,12 +2428,12 @@ const SettingsView = () => {
     <div className="space-y-8 pb-12">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="space-y-8 lg:col-span-2">
-          <div className="rounded-2xl border border-gold-500/10 bg-navy-900/40 p-8 backdrop-blur-sm">
-            <h4 className="mb-6 flex items-center gap-3 font-serif text-xl font-bold text-gold-100">
-              <Settings size={20} className="text-gold-500" /> Store Information
+          <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray/40 p-8 backdrop-blur-sm">
+            <h4 className="mb-6 flex items-center gap-3 font-serif text-xl font-bold text-secondary dark:text-secondary dark:text-accent-100">
+              <Settings size={20} className="text-accent-500" /> Store Information
             </h4>
             {loading ? (
-              <div className="py-12 text-center text-xs text-gold-500/40">Retrieving configurations...</div>
+              <div className="py-12 text-center text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">Retrieving configurations...</div>
             ) : (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {[
@@ -2625,7 +2443,7 @@ const SettingsView = () => {
                   { label: 'Store Currency', key: 'store_currency' },
                 ].map((f, i) => (
                   <div key={i} className="space-y-2">
-                    <label className="text-[10px] font-black text-gold-500/40">{f.label}</label>
+                    <label className="text-[10px] font-black text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{f.label}</label>
                     <input 
                       type="text" 
                       value={settings[f.key] || ''} 
@@ -2636,7 +2454,7 @@ const SettingsView = () => {
                         }
                         setSettings({ ...settings, [f.key]: val });
                       }}
-                      className="w-full rounded-xl border border-gold-500/10 bg-navy-950 px-4 py-3 font-bold text-gold-100 outline-none transition-all focus:border-gold-500/40"
+                      className="w-full rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary dark:bg-base-950 px-4 py-3 font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none transition-all focus:border-accent-500/40"
                     />
                   </div>
                 ))}
@@ -2644,9 +2462,9 @@ const SettingsView = () => {
             )}
           </div>
 
-          <div className="rounded-2xl border border-gold-500/10 bg-navy-900/40 p-8 backdrop-blur-sm">
-            <h4 className="mb-6 flex items-center gap-3 font-serif text-xl font-bold text-gold-100">
-              <Mail size={20} className="text-gold-500" /> Notification Preferences
+          <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray/40 p-8 backdrop-blur-sm">
+            <h4 className="mb-6 flex items-center gap-3 font-serif text-xl font-bold text-secondary dark:text-secondary dark:text-accent-100">
+              <Mail size={20} className="text-accent-500" /> Notification Preferences
             </h4>
             <div className="space-y-4">
               {[
@@ -2655,10 +2473,10 @@ const SettingsView = () => {
                 'New Customer Registrations',
                 'Daily Sales Summaries',
               ].map((pref, i) => (
-                <label key={i} className="flex items-center justify-between rounded-xl border border-gold-500/5 bg-navy-950/50 p-4">
-                  <span className="text-xs font-bold text-gold-100 transition-colors">{pref}</span>
-                  <div className="relative h-6 w-12 rounded-full border border-gold-500/20 bg-navy-800">
-                    <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-gold-600" />
+                <label key={i} className="flex items-center justify-between rounded-xl border border-accent-500/5 bg-primary/50 p-4">
+                  <span className="text-xs font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 transition-colors">{pref}</span>
+                  <div className="relative h-6 w-12 rounded-full border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-base-800">
+                    <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-accent-600" />
                   </div>
                 </label>
               ))}
@@ -2667,32 +2485,32 @@ const SettingsView = () => {
         </div>
 
         <div className="space-y-8">
-          <div className="rounded-2xl border border-gold-500/10 bg-navy-900/40 p-8 backdrop-blur-sm">
+          <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray/40 p-8 backdrop-blur-sm">
             <div className="mb-5 flex items-center gap-3">
-              <ShieldCheck size={20} className="text-gold-500" />
+              <ShieldCheck size={20} className="text-accent-500" />
               <div>
-                <h5 className="font-serif text-lg font-bold text-gold-100">Admin accounts</h5>
-                <p className="text-xs text-gold-500/40">Edit existing admin access or select one to update.</p>
+                <h5 className="font-serif text-lg font-bold text-secondary dark:text-secondary dark:text-accent-100">Admin accounts</h5>
+                <p className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">Edit existing admin access or select one to update.</p>
               </div>
             </div>
             {adminsLoading ? (
-              <div className="py-10 text-center text-xs text-gold-500/40">Loading admins...</div>
+              <div className="py-10 text-center text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">Loading admins...</div>
             ) : admins.length ? (
               <div className="space-y-3 max-h-72 overflow-y-auto pr-1 custom-scrollbar">
                 {admins.map((admin) => (
-                  <div key={admin.id} className="rounded-xl border border-gold-500/10 bg-navy-950/50 p-4 flex items-start justify-between gap-3">
+                  <div key={admin.id} className="rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary/50 p-4 flex items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-bold text-gold-100">{admin.name}</p>
+                        <p className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{admin.name}</p>
                         {admin.is_active === false && <span className="h-2 w-2 rounded-full bg-red-500" />}
                       </div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-gold-500/35">{admin.email}</p>
-                      <p className="mt-1 text-[10px] text-gold-500/30">ID: {String(admin.id).substring(0, 8)}</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-accent-500/35">{admin.email}</p>
+                      <p className="mt-1 text-[10px] text-secondary/70 dark:text-secondary dark:text-secondary dark:text-secondary/70 dark:text-secondary dark:text-accent-500/30">ID: {String(admin.id).substring(0, 8)}</p>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleEditAdmin(admin)}
-                      className="inline-flex items-center gap-2 rounded-lg border border-gold-500/15 px-3 py-2 text-[10px] font-bold text-gold-100 hover:border-gold-500/40"
+                      className="inline-flex items-center gap-2 rounded-lg border border-accent-500/15 px-3 py-2 text-[10px] font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 hover:border-accent-500/40"
                     >
                       <Edit size={12} /> Edit
                     </button>
@@ -2700,16 +2518,16 @@ const SettingsView = () => {
                 ))}
               </div>
             ) : (
-              <div className="py-10 text-center text-xs text-gold-500/40">No admin accounts found.</div>
+              <div className="py-10 text-center text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">No admin accounts found.</div>
             )}
           </div>
 
-          <div className="rounded-2xl border border-gold-500/10 bg-navy-900/40 p-8 backdrop-blur-sm">
+          <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray/40 p-8 backdrop-blur-sm">
             <div className="mb-5 flex items-center gap-3">
-              <ShieldCheck size={20} className="text-gold-500" />
+              <ShieldCheck size={20} className="text-accent-500" />
               <div>
-                <h5 className="font-serif text-lg font-bold text-gold-100">{editingAdminId ? 'Edit admin account' : 'Add another admin'}</h5>
-                <p className="text-xs text-gold-500/40">{editingAdminId ? 'Update the selected admin details below.' : 'Create a full admin account from the settings page.'}</p>
+                <h5 className="font-serif text-lg font-bold text-secondary dark:text-secondary dark:text-accent-100">{editingAdminId ? 'Edit admin account' : 'Add another admin'}</h5>
+                <p className="text-xs text-secondary/60 dark:text-secondary dark:text-secondary dark:text-secondary/60 dark:text-secondary dark:text-accent-500/40">{editingAdminId ? 'Update the selected admin details below.' : 'Create a full admin account from the settings page.'}</p>
               </div>
             </div>
             <form onSubmit={handleCreateAdmin} className="space-y-4">
@@ -2719,7 +2537,7 @@ const SettingsView = () => {
                 value={adminForm.name}
                 onChange={(e) => setAdminForm({ ...adminForm, name: e.target.value })}
                 placeholder="Full name"
-                className="w-full rounded-xl border border-gold-500/10 bg-navy-950 px-4 py-3 text-sm text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+                className="w-full rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary dark:bg-base-950 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
               />
               <input
                 type="email"
@@ -2727,7 +2545,7 @@ const SettingsView = () => {
                 value={adminForm.email}
                 onChange={(e) => setAdminForm({ ...adminForm, email: e.target.value })}
                 placeholder="Email address"
-                className="w-full rounded-xl border border-gold-500/10 bg-navy-950 px-4 py-3 text-sm text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+                className="w-full rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary dark:bg-base-950 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
               />
               <input
                 type="password"
@@ -2735,12 +2553,12 @@ const SettingsView = () => {
                 value={adminForm.password}
                 onChange={(e) => setAdminForm({ ...adminForm, password: e.target.value })}
                 placeholder={editingAdminId ? 'New password (optional)' : 'Temporary password'}
-                className="w-full rounded-xl border border-gold-500/10 bg-navy-950 px-4 py-3 text-sm text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+                className="w-full rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary dark:bg-base-950 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
               />
               <button 
                 type="submit"
                 disabled={creatingAdmin}
-                className="w-full rounded-2xl bg-gold-600 py-4 font-black tracking-[0.2em] text-navy-950 shadow-xl shadow-gold-600/10 transition-all hover:bg-gold-500 disabled:opacity-50"
+                className="w-full rounded-2xl bg-accent-600 py-4 font-black tracking-[0.2em] text-base-950 shadow-xl shadow-accent-600/10 transition-all hover:bg-accent-500 disabled:opacity-50"
               >
                 {creatingAdmin ? 'SAVING...' : editingAdminId ? 'UPDATE ADMIN' : 'CREATE ADMIN'}
               </button>
@@ -2748,7 +2566,7 @@ const SettingsView = () => {
                 <button
                   type="button"
                   onClick={resetAdminForm}
-                  className="w-full rounded-2xl border border-gold-500/15 py-4 font-black tracking-[0.2em] text-gold-100 transition-all hover:border-gold-500/40"
+                  className="w-full rounded-2xl border border-accent-500/15 py-4 font-black tracking-[0.2em] text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 transition-all hover:border-accent-500/40"
                 >
                   CANCEL EDIT
                 </button>
@@ -2759,7 +2577,7 @@ const SettingsView = () => {
           <button 
             onClick={handleSave}
             disabled={saving}
-            className="w-full rounded-2xl bg-gold-600 py-5 font-black tracking-[0.2em] text-navy-950 shadow-xl shadow-gold-600/10 transition-all hover:bg-gold-500 disabled:opacity-50"
+            className="w-full rounded-2xl bg-accent-600 py-5 font-black tracking-[0.2em] text-base-950 shadow-xl shadow-accent-600/10 transition-all hover:bg-accent-500 disabled:opacity-50"
           >
             {saving ? 'UPDATING...' : 'SAVE CONFIGURATIONS'}
           </button>

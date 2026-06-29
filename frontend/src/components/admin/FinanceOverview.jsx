@@ -347,7 +347,7 @@ const FinanceOverview = () => {
   if (loading) {
     return (
       <div className="py-24 text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent dark:border-accent-500 mx-auto"></div>
       </div>
     );
   }
@@ -356,8 +356,8 @@ const FinanceOverview = () => {
     <div className="space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div>
-          <span className="text-[10px] font-black  tracking-[0.3em] text-gold-500/40">Shop + online — one view</span>
-          <h3 className="text-3xl font-serif font-bold text-gold-100 mt-2">Finance</h3>
+          <span className="text-[10px] font-black  tracking-[0.3em] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Shop + online — one view</span>
+          <h3 className="text-3xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 mt-2">Finance</h3>
         </div>
         <div className="flex flex-wrap gap-2">
           {['daily', 'weekly', 'monthly'].map((p) => (
@@ -367,8 +367,8 @@ const FinanceOverview = () => {
               onClick={() => setPeriod(p)}
               className={`px-5 py-3 rounded-xl text-[10px] font-black   border transition-all ${
                 period === p
-                  ? 'bg-gold-600 text-navy-950 border-gold-600'
-                  : 'bg-navy-900/50 text-gold-500/70 border-gold-500/10 hover:border-gold-500/40'
+                  ? 'bg-accent-600 text-base-950 border-accent-600'
+                  : 'bg-utility-gray dark:bg-utility-gray/50 text-accent dark:text-secondary dark:text-secondary dark:text-accent-500/70 border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 hover:border-accent-500/40'
               }`}
             >
               {p}
@@ -392,31 +392,31 @@ const FinanceOverview = () => {
             key={card.label}
             type="button"
             onClick={card.action}
-            className="text-left bg-navy-900/40 border border-gold-500/10 rounded-2xl p-6 backdrop-blur-sm transition-all hover:border-gold-500/40 disabled:hover:border-gold-500/10"
+            className="text-left bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl p-6 backdrop-blur-sm transition-all hover:border-accent-500/40 disabled:hover:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10"
             disabled={!card.action}
           >
             <div className="flex items-center justify-between mb-6">
-              <div className="w-11 h-11 rounded-xl bg-gold-600/10 border border-gold-500/10 flex items-center justify-center text-gold-500">
+              <div className="w-11 h-11 rounded-xl bg-accent-600/10 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-center text-accent-500">
                 <card.icon size={20} />
               </div>
-              <span className="text-[10px] text-green-400 font-black  ">Live</span>
+              <span className="text-[10px] text-green-600 dark:text-green-600 dark:text-green-400 font-black  ">Live</span>
             </div>
-            <p className="text-[10px]  tracking-[0.2em] text-gold-500/40 font-black">{card.label}</p>
-            <h4 className="text-2xl font-serif font-bold text-gold-100 mt-2">{card.value}</h4>
-            <p className="text-xs text-gold-500/40 mt-2">{card.detail}</p>
+            <p className="text-[10px]  tracking-[0.2em] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 font-black">{card.label}</p>
+            <h4 className="text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 mt-2">{card.value}</h4>
+            <p className="text-xs text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 mt-2">{card.detail}</p>
           </button>
         ))}
       </div>
 
       {dailyStockRows.length > 0 && (
-        <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
-          <div className="p-6 border-b border-gold-500/10 flex items-center justify-between">
-            <h4 className="font-serif font-bold text-xl text-gold-100">Opening &amp; Closing Stock (today)</h4>
-            <span className="text-[10px]   text-gold-500/40">By category — from POS inventory</span>
+        <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+          <div className="p-6 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-between">
+            <h4 className="font-serif font-bold text-xl text-secondary dark:text-secondary dark:text-accent-100">Opening &amp; Closing Stock (today)</h4>
+            <span className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">By category — from POS inventory</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-navy-800/50 text-gold-500/50 text-xs ">
+              <thead className="bg-utility-gray dark:bg-utility-gray/50 text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 text-xs ">
                 <tr>
                   <th className="p-3">Category</th>
                   <th className="p-3 text-center">Opening</th>
@@ -429,13 +429,13 @@ const FinanceOverview = () => {
               </thead>
               <tbody>
                 {dailyStockRows.map((row) => (
-                  <tr key={row.name || row.category} className="border-t border-gold-500/10">
-                    <td className="p-3 text-gold-100">{row.name || row.category}</td>
+                  <tr key={row.name || row.category} className="border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">
+                    <td className="p-3 text-secondary dark:text-secondary dark:text-accent-100">{row.name || row.category}</td>
                     <td className="p-3 text-center tabular-nums">{row.opening_qty ?? 0}</td>
-                    <td className="p-3 text-center tabular-nums text-red-400/90">{row.sales_qty ?? 0}</td>
-                    <td className="p-3 text-center tabular-nums text-green-400/90">{row.stock_in_qty ?? 0}</td>
+                    <td className="p-3 text-center tabular-nums text-red-600 dark:text-red-600 dark:text-red-400/90">{row.sales_qty ?? 0}</td>
+                    <td className="p-3 text-center tabular-nums text-green-600 dark:text-green-600 dark:text-green-400/90">{row.stock_in_qty ?? 0}</td>
                     <td className="p-3 text-center tabular-nums text-orange-400/90">{row.stock_out_qty ?? 0}</td>
-                    <td className="p-3 text-center tabular-nums font-medium text-gold-200">{row.closing_qty ?? 0}</td>
+                    <td className="p-3 text-center tabular-nums font-medium text-accent-200">{row.closing_qty ?? 0}</td>
                     <td className="p-3 text-center tabular-nums text-violet-300/90">{row.store_qty ?? 0}</td>
                   </tr>
                 ))}
@@ -446,37 +446,37 @@ const FinanceOverview = () => {
       )}
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 bg-navy-900/40 border border-gold-500/10 rounded-2xl p-6 backdrop-blur-sm">
+        <div className="xl:col-span-2 bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl p-6 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-8">
-            <h4 className="font-serif font-bold text-xl text-gold-100">Revenue Graph</h4>
-            <span className="text-[10px]   text-gold-500/40">{getPeriodLabel(period)}</span>
+            <h4 className="font-serif font-bold text-xl text-secondary dark:text-secondary dark:text-accent-100">Revenue Graph</h4>
+            <span className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">{getPeriodLabel(period)}</span>
           </div>
           <div className="h-72 flex items-end gap-3">
             {chartData.map((item) => (
               <div key={item.label} className="flex-1 h-full flex flex-col justify-end gap-3">
-                <div className="text-[10px] text-gold-500/50 text-center">{formatMoney(item.total).replace('KSh ', '')}</div>
+                <div className="text-[10px] text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 text-center">{formatMoney(item.total).replace('KSh ', '')}</div>
                 <div className="h-56 flex items-end">
                   <div
-                    className="w-full rounded-t-xl bg-gradient-to-t from-gold-700 to-gold-400 min-h-[8px]"
+                    className="w-full rounded-t-xl bg-gradient-to-t from-accent-700 to-accent-400 min-h-[8px]"
                     style={{ height: `${Math.max(5, (item.total / maxChart) * 100)}%` }}
                   />
                 </div>
-                <div className="text-[10px] font-black   text-gold-500/40 text-center">{item.label}</div>
+                <div className="text-[10px] font-black   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 text-center">{item.label}</div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl p-6 backdrop-blur-sm">
-          <h4 className="font-serif font-bold text-xl text-gold-100 mb-6">Top Movers</h4>
+        <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl p-6 backdrop-blur-sm">
+          <h4 className="font-serif font-bold text-xl text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 mb-6">Top Movers</h4>
           <div className="space-y-4">
             {(soldProducts.length ? soldProducts : topProducts).slice(0, 6).map((item, index) => (
-              <div key={item.id || item.name} className="flex items-center justify-between p-4 rounded-xl bg-navy-950/50 border border-gold-500/5">
+              <div key={item.id || item.name} className="flex items-center justify-between p-4 rounded-xl bg-primary dark:bg-primary/50 border border-accent-500/5">
                 <div>
-                  <p className="text-sm font-bold text-gold-100">{item.name}</p>
-                  <p className="text-[10px]   text-gold-500/40">Rank #{index + 1}</p>
+                  <p className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{item.name}</p>
+                  <p className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Rank #{index + 1}</p>
                 </div>
-                <span className="text-gold-500 font-black">{item.quantity || item.sales || 0}</span>
+                <span className="text-accent-500 font-black">{item.quantity || item.sales || 0}</span>
               </div>
             ))}
           </div>
@@ -484,32 +484,32 @@ const FinanceOverview = () => {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
-          <div className="p-6 border-b border-gold-500/10 flex items-center justify-between">
-            <h4 className="font-serif font-bold text-xl text-gold-100">Products Sold - {getPeriodLabel(period)}</h4>
-            <span className="text-[10px]   text-gold-500/40">{soldProducts.length} products</span>
+        <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+          <div className="p-6 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-between">
+            <h4 className="font-serif font-bold text-xl text-secondary dark:text-secondary dark:text-accent-100">Products Sold - {getPeriodLabel(period)}</h4>
+            <span className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">{soldProducts.length} products</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-navy-800/50">
-                <tr className="text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+              <thead className="bg-utility-gray dark:bg-utility-gray/50">
+                <tr className="text-[10px] font-bold text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-[0.2em]">
                   <th className="px-6 py-4">Product</th>
                   <th className="px-6 py-4">Sold</th>
                   <th className="px-6 py-4">Revenue</th>
                   <th className="px-6 py-4">Profit</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gold-500/5">
+              <tbody className="divide-y divide-accent-500/5">
                 {soldProducts.length ? soldProducts.map((item) => (
-                  <tr key={item.id} className="hover:bg-navy-800/30 transition-colors">
-                    <td className="px-6 py-4 text-sm font-bold text-gold-100">{item.name}</td>
-                    <td className="px-6 py-4 text-gold-500 font-black">{item.quantity}</td>
-                    <td className="px-6 py-4 text-gold-100">{formatMoney(item.revenue)}</td>
-                    <td className="px-6 py-4 text-green-400">{formatMoney(item.profit)}</td>
+                  <tr key={item.id} className="hover:bg-utility-gray dark:bg-utility-gray/30 transition-colors">
+                    <td className="px-6 py-4 text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{item.name}</td>
+                    <td className="px-6 py-4 text-accent-500 font-black">{item.quantity}</td>
+                    <td className="px-6 py-4 text-secondary dark:text-secondary dark:text-accent-100">{formatMoney(item.revenue)}</td>
+                    <td className="px-6 py-4 text-green-600 dark:text-green-600 dark:text-green-400">{formatMoney(item.profit)}</td>
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan="4" className="px-6 py-12 text-center text-gold-500/40 text-sm">No sold products in this period yet.</td>
+                    <td colSpan="4" className="px-6 py-12 text-center text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 text-sm">No sold products in this period yet.</td>
                   </tr>
                 )}
               </tbody>
@@ -517,38 +517,38 @@ const FinanceOverview = () => {
           </div>
         </div>
 
-        <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
-          <div className="p-6 border-b border-gold-500/10 flex items-center justify-between">
-            <h4 className="font-serif font-bold text-xl text-gold-100">Stock Manager</h4>
-            <span className="text-[10px]   text-gold-500/40">Website stock · {totalStock.toLocaleString()} pieces</span>
+        <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+          <div className="p-6 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-between">
+            <h4 className="font-serif font-bold text-xl text-secondary dark:text-secondary dark:text-accent-100">Stock Manager</h4>
+            <span className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Website stock · {totalStock.toLocaleString()} pieces</span>
           </div>
-          <div className="max-h-[520px] overflow-y-auto custom-scrollbar divide-y divide-gold-500/5">
+          <div className="max-h-[520px] overflow-y-auto custom-scrollbar divide-y divide-accent-500/5">
             {products.slice(0, 18).map((product) => (
               <button
                 type="button"
                 key={product.id}
                 onClick={() => setStockModalProduct(product)}
-                className="w-full p-5 hover:bg-navy-800/20 transition-colors text-left"
+                className="w-full p-5 hover:bg-utility-gray dark:bg-utility-gray/20 transition-colors text-left"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-navy-950 border border-gold-500/10 shrink-0">
+                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 shrink-0">
                       {product.thumbnail ? (
                         <img src={resolveDisplayImageUrl(product.thumbnail)} alt={product.name} className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gold-500/30">
+                        <div className="w-full h-full flex items-center justify-center text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30">
                           <Package size={20} />
                         </div>
                       )}
                     </div>
                     <div className="min-w-0">
-                    <p className="text-sm font-bold text-gold-100 ">{product.name}</p>
-                    <p className="text-[10px]   text-gold-500/40">
+                    <p className="text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 ">{product.name}</p>
+                    <p className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">
                       {product.category_name || 'Uncategorized'} - {formatMoney(product.price)} - Total stock {getProductStockTotal(product)}
                     </p>
                   </div>
                 </div>
-                  <span className="px-4 py-2 border border-gold-500/20 rounded-xl text-[10px] font-black   text-gold-500">
+                  <span className="px-4 py-2 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl text-[10px] font-black   text-accent-500">
                     Manage
                   </span>
                   </div>
@@ -559,39 +559,39 @@ const FinanceOverview = () => {
       </div>
 
       {stockModalProduct && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-sm">
-          <div className="bg-navy-900 border border-gold-500/20 rounded-3xl p-6 w-full max-w-3xl max-h-[88vh] overflow-y-auto custom-scrollbar shadow-2xl">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-primary dark:bg-primary/80 backdrop-blur-sm">
+          <div className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-3xl p-6 w-full max-w-3xl max-h-[88vh] overflow-y-auto custom-scrollbar shadow-2xl">
             <div className="flex items-start justify-between gap-4 mb-6">
               <div className="flex items-center gap-4 min-w-0">
-                <div className="w-20 h-20 rounded-2xl overflow-hidden bg-navy-950 border border-gold-500/10 shrink-0">
+                <div className="w-20 h-20 rounded-2xl overflow-hidden bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 shrink-0">
                   {stockModalProduct.thumbnail ? (
                     <img src={resolveDisplayImageUrl(stockModalProduct.thumbnail)} alt={stockModalProduct.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gold-500/30">
+                    <div className="w-full h-full flex items-center justify-center text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30">
                       <Package size={24} />
                     </div>
                   )}
                 </div>
                 <div>
-                  <p className="text-xl font-serif font-bold text-gold-100 ">{stockModalProduct.name}</p>
-                  <p className="text-[10px]   text-gold-500/40 mt-1">
+                  <p className="text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 ">{stockModalProduct.name}</p>
+                  <p className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 mt-1">
                     {stockModalProduct.category_name || 'Uncategorized'} - {formatMoney(stockModalProduct.price)}
                   </p>
                 </div>
               </div>
-              <button type="button" onClick={() => setStockModalProduct(null)} className="text-gold-500/40 hover:text-gold-500">
+              <button type="button" onClick={() => setStockModalProduct(null)} className="text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 hover:text-accent-500">
                 <X size={22} />
               </button>
             </div>
 
             <div className="space-y-3">
               {getVariantRows(stockModalProduct).length > 0 ? getVariantRows(stockModalProduct).map((variant) => (
-                <div key={stockKey(stockModalProduct, variant)} className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center bg-navy-950/60 border border-gold-500/5 rounded-2xl p-4">
+                <div key={stockKey(stockModalProduct, variant)} className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center bg-primary dark:bg-primary/60 border border-accent-500/5 rounded-2xl p-4">
                   <div>
-                    <p className="text-[11px] font-black   text-gold-100">
+                    <p className="text-[11px] font-black   text-secondary dark:text-secondary dark:text-accent-100">
                       Size {variant.size || 'Standard'}{variant.color ? ` - ${variant.color}` : ''}
                     </p>
-                    <p className="text-[9px]   text-gold-500/30 mt-1">
+                    <p className="text-[9px]   text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30 mt-1">
                       SKU: {variant.sku || variant.stock_id || 'Not set'}
                     </p>
                   </div>
@@ -602,7 +602,7 @@ const FinanceOverview = () => {
                         ...stockDrafts,
                         [stockKey(stockModalProduct, variant)]: Math.max(0, Number(stockDrafts[stockKey(stockModalProduct, variant)] ?? 0) - 1),
                       })}
-                      className="w-10 h-10 rounded-xl bg-navy-800 border border-gold-500/10 text-gold-500 font-black"
+                      className="w-10 h-10 rounded-xl bg-utility-gray dark:bg-base-800 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 text-accent-500 font-black"
                     >
                       -
                     </button>
@@ -611,7 +611,7 @@ const FinanceOverview = () => {
                       min="0"
                       value={stockDrafts[stockKey(stockModalProduct, variant)] ?? 0}
                       onChange={(e) => setStockDrafts({ ...stockDrafts, [stockKey(stockModalProduct, variant)]: e.target.value })}
-                      className="w-24 bg-navy-900 border border-gold-500/10 rounded-xl py-3 px-3 text-gold-100 text-sm outline-none focus:border-gold-500/40 font-bold text-center"
+                      className="w-24 bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-sm outline-none focus:border-accent-500/40 font-bold text-center"
                     />
                     <button
                       type="button"
@@ -619,38 +619,38 @@ const FinanceOverview = () => {
                         ...stockDrafts,
                         [stockKey(stockModalProduct, variant)]: Number(stockDrafts[stockKey(stockModalProduct, variant)] ?? 0) + 1,
                       })}
-                      className="w-10 h-10 rounded-xl bg-navy-800 border border-gold-500/10 text-gold-500 font-black"
+                      className="w-10 h-10 rounded-xl bg-utility-gray dark:bg-base-800 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 text-accent-500 font-black"
                     >
                       +
                     </button>
                   </div>
                 </div>
               )) : (
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center bg-navy-950/60 border border-gold-500/5 rounded-2xl p-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-center bg-primary dark:bg-primary/60 border border-accent-500/5 rounded-2xl p-4">
                   <div>
-                    <p className="text-[11px] font-black   text-gold-100">Product total stock</p>
-                    <p className="text-[9px]   text-gold-500/30 mt-1">No size variants saved</p>
+                    <p className="text-[11px] font-black   text-secondary dark:text-secondary dark:text-accent-100">Product total stock</p>
+                    <p className="text-[9px]   text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30 mt-1">No size variants saved</p>
                   </div>
                   <input
                     type="number"
                     min="0"
                     value={stockDrafts[stockKey(stockModalProduct)] ?? 0}
                     onChange={(e) => setStockDrafts({ ...stockDrafts, [stockKey(stockModalProduct)]: e.target.value })}
-                    className="w-28 bg-navy-900 border border-gold-500/10 rounded-xl py-3 px-3 text-gold-100 text-sm outline-none focus:border-gold-500/40 font-bold text-center"
+                    className="w-28 bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-sm outline-none focus:border-accent-500/40 font-bold text-center"
                   />
                 </div>
               )}
             </div>
 
-            <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-gold-500/10">
-              <button type="button" onClick={() => setStockModalProduct(null)} className="px-6 py-3 rounded-xl bg-navy-800 text-gold-500/70 text-[10px] font-black  ">
+            <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">
+              <button type="button" onClick={() => setStockModalProduct(null)} className="px-6 py-3 rounded-xl bg-utility-gray dark:bg-base-800 text-accent dark:text-secondary dark:text-secondary dark:text-accent-500/70 text-[10px] font-black  ">
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={() => handleStockSave(stockModalProduct)}
                 disabled={savingStockId === stockModalProduct.id}
-                className="px-6 py-3 rounded-xl bg-gold-600 text-navy-950 text-[10px] font-black   disabled:opacity-50"
+                className="px-6 py-3 rounded-xl bg-accent-600 text-base-950 text-[10px] font-black   disabled:opacity-50"
               >
                 {savingStockId === stockModalProduct.id ? 'Updating' : 'Update Stock'}
               </button>
@@ -660,11 +660,11 @@ const FinanceOverview = () => {
       )}
 
       {isLowStockOpen && (
-        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-navy-950/80 backdrop-blur-sm">
-          <div className="bg-navy-900 border border-gold-500/20 rounded-3xl p-6 w-full max-w-3xl max-h-[88vh] overflow-y-auto custom-scrollbar shadow-2xl">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-primary dark:bg-primary/80 backdrop-blur-sm">
+          <div className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-3xl p-6 w-full max-w-3xl max-h-[88vh] overflow-y-auto custom-scrollbar shadow-2xl">
             <div className="flex items-center justify-between mb-6">
-              <h4 className="text-2xl font-serif font-bold text-gold-100  ">Low Stock Sizes</h4>
-              <button type="button" onClick={() => setIsLowStockOpen(false)} className="text-gold-500/40 hover:text-gold-500">
+              <h4 className="text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  ">Low Stock Sizes</h4>
+              <button type="button" onClick={() => setIsLowStockOpen(false)} className="text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 hover:text-accent-500">
                 <X size={22} />
               </button>
             </div>
@@ -677,25 +677,25 @@ const FinanceOverview = () => {
                     setIsLowStockOpen(false);
                     setStockModalProduct(row.product);
                   }}
-                  className="w-full flex items-center justify-between gap-4 bg-navy-950/60 border border-gold-500/5 rounded-2xl p-4 text-left hover:border-gold-500/30"
+                  className="w-full flex items-center justify-between gap-4 bg-primary dark:bg-primary/60 border border-accent-500/5 rounded-2xl p-4 text-left hover:border-accent-500/30"
                 >
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-navy-950 border border-gold-500/10 shrink-0">
+                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 shrink-0">
                       {resolveDisplayImageUrl(row.product.thumbnail) && (
                         <img src={resolveDisplayImageUrl(row.product.thumbnail)} alt={row.product.name} className="w-full h-full object-cover" />
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-gold-100 ">{row.name}</p>
-                      <p className="text-[10px]   text-gold-500/40">
+                      <p className="text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 ">{row.name}</p>
+                      <p className="text-[10px]   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">
                         Size {row.size}{row.color ? ` - ${row.color}` : ''} - {row.stockId || 'No stock ID'}
                       </p>
                     </div>
                   </div>
-                  <span className="text-red-400 text-sm font-black">{row.stock} left</span>
+                  <span className="text-red-600 dark:text-red-600 dark:text-red-400 text-sm font-black">{row.stock} left</span>
                 </button>
               )) : (
-                <div className="py-12 text-center text-gold-500/40 text-sm">No low stock sizes right now.</div>
+                <div className="py-12 text-center text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 text-sm">No low stock sizes right now.</div>
               )}
             </div>
           </div>

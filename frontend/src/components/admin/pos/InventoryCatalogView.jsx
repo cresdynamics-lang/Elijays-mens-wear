@@ -17,7 +17,7 @@ const STATUS_FILTERS = [
 ];
 
 const Empty = ({ message }) => (
-  <p className="text-gold-500/40 text-sm text-center py-16">{message}</p>
+  <p className="text-accent-500/40 text-sm text-center py-16">{message}</p>
 );
 
 const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
@@ -243,10 +243,10 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
           <button type="button" onClick={() => openPanel('receive')} className="px-3 py-1.5 border border-sky-500/40 text-sky-300 rounded-lg text-xs">
             Receive at store
           </button>
-          <button type="button" onClick={() => openPanel('in')} className="px-3 py-1.5 bg-gold-600 text-navy-950 rounded-lg text-xs font-medium">
+          <button type="button" onClick={() => openPanel('in')} className="px-3 py-1.5 bg-accent-600 text-base-950 rounded-lg text-xs font-medium">
             Store → Shop
           </button>
-          <button type="button" onClick={() => openPanel('out')} className="px-3 py-1.5 border border-gold-500/30 text-gold-400 rounded-lg text-xs">
+          <button type="button" onClick={() => openPanel('out')} className="px-3 py-1.5 border border-accent-500/30 text-accent-400 rounded-lg text-xs">
             Shop → Store
           </button>
           {selectedIds.size > 0 && (
@@ -274,15 +274,15 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
         </div>
       </div>
 
-      <div className="bg-navy-900/50 border border-gold-500/10 rounded-xl p-4 space-y-4">
+      <div className="bg-base-900/50 border border-accent-500/10 rounded-xl p-4 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-end gap-3">
           <label className="flex-1 space-y-1.5">
-            <span className="text-[10px]   text-gold-500/60 font-bold">Category</span>
+            <span className="text-[10px]   text-accent-500/60 font-bold">Category</span>
             <div className="relative">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full appearance-none bg-navy-950 border border-gold-500/20 rounded-lg px-3 py-2.5 pr-10 text-white text-sm focus:border-gold-500/40 outline-none"
+                className="w-full appearance-none bg-base-950 border border-accent-500/20 rounded-lg px-3 py-2.5 pr-10 text-white text-sm focus:border-accent-500/40 outline-none"
               >
                 <option value="">All categories</option>
                 {categorySummary.map((cat) => (
@@ -291,16 +291,16 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
                   </option>
                 ))}
               </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gold-500/40 pointer-events-none" />
+              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-accent-500/40 pointer-events-none" />
             </div>
           </label>
 
           {selectedSummary && (
-            <div className="text-xs text-gold-500/60 sm:pb-1 space-y-0.5 shrink-0">
+            <div className="text-xs text-accent-500/60 sm:pb-1 space-y-0.5 shrink-0">
               <p>
-                Shop: <span className="text-gold-300">{selectedSummary.shop_qty}</span>
+                Shop: <span className="text-accent-300">{selectedSummary.shop_qty}</span>
                 {' · '}
-                Warehouse: <span className="text-gold-300">{selectedSummary.store_qty}</span>
+                Warehouse: <span className="text-accent-300">{selectedSummary.store_qty}</span>
               </p>
               <p>
                 {selectedSummary.live_on_website} on website · {selectedSummary.inventory_only} not published
@@ -311,19 +311,19 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <label className="flex-1 relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gold-500/40" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-accent-500/40" />
             <input
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search name, SKU, description…"
-              className="w-full bg-navy-950 border border-gold-500/20 rounded-lg pl-9 pr-3 py-2 text-white text-sm outline-none focus:border-gold-500/40"
+              className="w-full bg-base-950 border border-accent-500/20 rounded-lg pl-9 pr-3 py-2 text-white text-sm outline-none focus:border-accent-500/40"
             />
           </label>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-navy-950 border border-gold-500/20 rounded-lg px-3 py-2 text-white text-sm sm:w-48"
+            className="bg-base-950 border border-accent-500/20 rounded-lg px-3 py-2 text-white text-sm sm:w-48"
           >
             {STATUS_FILTERS.map((f) => (
               <option key={f.id} value={f.id}>{f.label}</option>
@@ -334,7 +334,7 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
         <div className="flex items-center justify-between px-0.5">
           <h3 className="text-sm font-medium text-white">
             {selectedCategory || 'All categories'}
-            <span className="text-gold-500/50 font-normal ml-2">
+            <span className="text-accent-500/50 font-normal ml-2">
               {filteredProducts.length} piece{filteredProducts.length !== 1 ? 's' : ''}
               {searchQuery || statusFilter !== 'all' ? ` (filtered from ${items.length})` : ''}
             </span>
@@ -344,13 +344,13 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
               <button
                 type="button"
                 onClick={toggleSelectAllVisible}
-                className="text-[10px] text-gold-400 underline"
+                className="text-[10px] text-accent-400 underline"
               >
                 {pagedProducts.every((p) => selectedIds.has(p.id)) ? 'Deselect page' : 'Select page'}
               </button>
             )}
             {filteredProducts.length > PAGE_SIZE && (
-              <p className="text-[10px] text-gold-500/40">
+              <p className="text-[10px] text-accent-500/40">
                 Page {page} of {totalPages}
               </p>
             )}
@@ -422,18 +422,18 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
               type="button"
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
-              className="px-3 py-1.5 border border-gold-500/20 text-gold-400 rounded text-xs disabled:opacity-40"
+              className="px-3 py-1.5 border border-accent-500/20 text-accent-400 rounded text-xs disabled:opacity-40"
             >
               Previous
             </button>
-            <span className="text-[10px] text-gold-500/50 tabular-nums">
+            <span className="text-[10px] text-accent-500/50 tabular-nums">
               {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filteredProducts.length)} of {filteredProducts.length}
             </span>
             <button
               type="button"
               disabled={page >= totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 border border-gold-500/20 text-gold-400 rounded text-xs disabled:opacity-40"
+              className="px-3 py-1.5 border border-accent-500/20 text-accent-400 rounded text-xs disabled:opacity-40"
             >
               Next
             </button>
@@ -451,8 +451,8 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
 
       {panel && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setPanel(null)}>
-          <div className="bg-navy-900 border border-gold-500/20 rounded-xl p-6 max-w-md w-full space-y-3" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-gold-400 text-sm">
+          <div className="bg-base-900 border border-accent-500/20 rounded-xl p-6 max-w-md w-full space-y-3" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-accent-400 text-sm">
               {panel === 'in' && 'Store → Shop'}
               {panel === 'out' && 'Shop → Store'}
               {panel === 'receive' && 'Receive at store'}
@@ -461,7 +461,7 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
               <select
                 value={form.productId}
                 onChange={(e) => setForm({ ...form, productId: e.target.value })}
-                className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white text-sm"
+                className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white text-sm"
               >
                 <option value="">Select product</option>
                 {panelProducts.map((p) => (
@@ -473,17 +473,17 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
                 {filteredProducts.find((p) => p.id === form.productId)?.name || 'Selected product'}
               </p>
             )}
-            <input type="number" min={1} value={form.qty} onChange={(e) => setForm({ ...form, qty: e.target.value })} className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white" placeholder="Quantity" />
+            <input type="number" min={1} value={form.qty} onChange={(e) => setForm({ ...form, qty: e.target.value })} className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white" placeholder="Quantity" />
             <textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
               rows={2}
-              className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white text-sm resize-none"
+              className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white text-sm resize-none"
               placeholder="Notes (optional)"
             />
             <div className="flex gap-2">
-              <button type="button" onClick={() => setPanel(null)} className="flex-1 py-2 border border-gold-500/30 text-gold-400 rounded text-sm">Cancel</button>
-              <button type="button" onClick={() => submitMovement(panel)} className="flex-1 py-2 bg-gold-600 text-navy-950 rounded text-sm font-medium">Confirm</button>
+              <button type="button" onClick={() => setPanel(null)} className="flex-1 py-2 border border-accent-500/30 text-accent-400 rounded text-sm">Cancel</button>
+              <button type="button" onClick={() => submitMovement(panel)} className="flex-1 py-2 bg-accent-600 text-base-950 rounded text-sm font-medium">Confirm</button>
             </div>
           </div>
         </div>
@@ -491,23 +491,23 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
 
       {publishItem && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setPublishItem(null)}>
-          <div className="bg-navy-900 border border-gold-500/20 rounded-xl p-6 max-w-md w-full space-y-3" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-gold-400 text-sm">Publish — {publishItem.name}</h3>
-            <p className="text-[10px] text-gold-500/50">Set category and price before going live. Add images in Edit details first.</p>
+          <div className="bg-base-900 border border-accent-500/20 rounded-xl p-6 max-w-md w-full space-y-3" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-accent-400 text-sm">Publish — {publishItem.name}</h3>
+            <p className="text-[10px] text-accent-500/50">Set category and price before going live. Add images in Edit details first.</p>
             <select
               value={publishForm.category_id}
               onChange={(e) => setPublishForm({ ...publishForm, category_id: e.target.value })}
-              className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white text-sm"
+              className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white text-sm"
             >
               <option value="">Select website category</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
-            <input type="number" value={publishForm.price} onChange={(e) => setPublishForm({ ...publishForm, price: e.target.value })} className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white" placeholder="Website price" />
-            <p className="text-[10px] text-gold-500/40">Shop stock on publish: {publishItem.currentQty ?? 0} (mirrors to website)</p>
+            <input type="number" value={publishForm.price} onChange={(e) => setPublishForm({ ...publishForm, price: e.target.value })} className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white" placeholder="Website price" />
+            <p className="text-[10px] text-accent-500/40">Shop stock on publish: {publishItem.currentQty ?? 0} (mirrors to website)</p>
             <div className="flex gap-2">
-              <button type="button" onClick={() => setPublishItem(null)} className="flex-1 py-2 border border-gold-500/30 text-gold-400 rounded text-sm">Cancel</button>
+              <button type="button" onClick={() => setPublishItem(null)} className="flex-1 py-2 border border-accent-500/30 text-accent-400 rounded text-sm">Cancel</button>
             <button
               type="button"
               disabled={publishBusy || !publishForm.category_id}
@@ -528,7 +528,7 @@ const InventoryCatalogView = ({ onCategoryChange, readOnly = false }) => {
                   setPublishBusy(false);
                 }
               }}
-              className="flex-1 py-2 bg-gold-600 text-navy-950 rounded font-medium disabled:opacity-50"
+              className="flex-1 py-2 bg-accent-600 text-base-950 rounded font-medium disabled:opacity-50"
             >
               Publish
             </button>

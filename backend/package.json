@@ -11,6 +11,7 @@
     "pos:bootstrap": "node scripts/pos-bootstrap.js",
     "import:stock": "node scripts/import-stock-excel.js",
     "seed:eljays-inventory": "node scripts/seed-eljays-inventory.js",
+    "sync:eljays-excel": "node scripts/eljays-sync-from-excel.js",
     "link:products": "node scripts/link-ecommerce-pos.js",
     "sync:pos-prices": "node scripts/sync-pos-prices.js",
     "prisma:generate": "prisma generate",

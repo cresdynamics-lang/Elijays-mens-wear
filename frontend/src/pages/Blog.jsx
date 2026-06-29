@@ -76,7 +76,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="min-h-screen bg-navy-950 text-white">
+    <div className="min-h-screen bg-primary text-secondary">
       <SEO
         title={routeSeo.blog.title}
         description={routeSeo.blog.description}
@@ -91,27 +91,27 @@ export default function Blog() {
         ]}
       />
 
-      <section className="relative border-b border-gold-600/10 overflow-hidden">
+      <section className="relative border-b border-utility-gray/50 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: 'url("/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg")' }}
         />
-        <div className="absolute inset-0 bg-navy-950/80" />
+        <div className="absolute inset-0 bg-primary/70 backdrop-blur-sm" />
         <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-20">
           <div className="max-w-4xl space-y-4">
-            <span className="text-gold-500 text-[9px] tracking-[0.35em] font-bold uppercase">
+            <span className="text-accent/80 text-[9px] tracking-[0.35em] font-semibold uppercase">
               ELIJAY'S Style Journal
             </span>
-            <h1 className="text-3xl md:text-4xl font-serif leading-tight text-white">
+            <h1 className="text-3xl md:text-4xl font-serif leading-tight text-secondary tracking-tight">
               Style notes, wardrobe ideas, and editorial stories from the brand
             </h1>
-            <p className="text-navy-200 text-sm md:text-base max-w-3xl leading-relaxed">
+            <p className="text-secondary/70 text-sm md:text-base max-w-3xl leading-relaxed font-light">
               A tighter, more useful blog built around the products, categories, and styling language already on the site.
             </p>
             <div className="pt-3">
               <Link
                 to="/"
-                className="inline-flex items-center text-gold-400 text-[9px] font-bold tracking-[0.25em] uppercase hover:text-gold-300 transition-colors"
+                className="inline-flex items-center text-accent/80 text-[9px] font-semibold tracking-[0.25em] uppercase hover:text-accent transition-colors duration-300"
               >
                 Back to home
               </Link>
@@ -127,17 +127,17 @@ export default function Blog() {
             placeholder="Search blog posts..."
             value={searchQuery}
             onChange={handleSearch}
-            className="w-full px-4 py-3 bg-navy-900/70 border border-gold-600/15 rounded-lg text-white placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-gold-500/40"
+            className="input-sleek w-full px-4 py-3 text-sm placeholder:text-secondary/40"
           />
 
           {categories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
               <button
                 onClick={() => handleCategoryFilter('')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                   !selectedCategory
-                    ? 'bg-gold-600 text-navy-950'
-                    : 'bg-navy-900/70 text-navy-200 border border-gold-600/15 hover:border-gold-500/30'
+                    ? 'btn-primary'
+                    : 'btn-outline'
                 }`}
               >
                 All
@@ -146,10 +146,10 @@ export default function Blog() {
                 <button
                   key={category}
                   onClick={() => handleCategoryFilter(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                     selectedCategory === category
-                      ? 'bg-gold-600 text-navy-950'
-                      : 'bg-navy-900/70 text-navy-200 border border-gold-600/15 hover:border-gold-500/30'
+                      ? 'btn-primary'
+                      : 'btn-outline'
                   }`}
                 >
                   {category}
@@ -161,12 +161,12 @@ export default function Blog() {
 
         {loading && (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent/60"></div>
           </div>
         )}
 
         {!loading && blogs.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 mb-12">
             {blogs.map((blog) => (
               <BlogShowcase key={blog.id} blog={blog} />
             ))}
@@ -174,8 +174,8 @@ export default function Blog() {
         )}
 
         {!loading && blogs.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-lg text-navy-200 mb-4">No blog posts found.</p>
+          <div className="text-center py-14">
+            <p className="text-lg text-secondary/60 mb-5 font-light">No blog posts found.</p>
             {searchQuery || selectedCategory ? (
               <button
                 onClick={() => {
@@ -183,7 +183,7 @@ export default function Blog() {
                   setSelectedCategory('');
                   setCurrentPage(1);
                 }}
-                className="text-gold-400 hover:text-gold-300 font-medium underline"
+                className="text-accent/80 hover:text-accent font-medium transition-colors duration-300"
               >
                 Clear filters
               </button>
@@ -196,21 +196,21 @@ export default function Blog() {
             {currentPage > 1 && (
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
-                className="px-4 py-2 bg-gold-600 text-navy-950 rounded-lg hover:bg-gold-500 transition-colors font-medium"
+                className="btn-primary px-4 py-2.5 text-xs tracking-wider rounded-xl"
               >
                 Previous
               </button>
             )}
 
-            <div className="flex gap-1">
+            <div className="flex gap-1.5">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`px-3 py-2 rounded-lg transition-colors ${
+                  className={`px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
                     currentPage === page
-                      ? 'bg-gold-600 text-navy-950'
-                      : 'bg-navy-900/70 text-navy-200 border border-gold-600/15 hover:border-gold-500/30'
+                      ? 'btn-primary'
+                      : 'btn-outline'
                   }`}
                 >
                   {page}
@@ -221,7 +221,7 @@ export default function Blog() {
             {currentPage < totalPages && (
               <button
                 onClick={() => setCurrentPage(currentPage + 1)}
-                className="px-4 py-2 bg-gold-600 text-navy-950 rounded-lg hover:bg-gold-500 transition-colors font-medium"
+                className="btn-primary px-4 py-2.5 text-xs tracking-wider rounded-xl"
               >
                 Next
               </button>

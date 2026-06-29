@@ -133,7 +133,7 @@ const PosCategoryDropdown = ({ value, onChange, options }) => {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="w-full flex items-center justify-between gap-2 bg-navy-950 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs text-left hover:border-gold-500/40"
+        className="w-full flex items-center justify-between gap-2 bg-base-950 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs text-left hover:border-accent-500/40"
       >
         <span className="truncate">{buttonLabel}</span>
         <ChevronDown size={14} className={`shrink-0 text-white/50 transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -142,13 +142,13 @@ const PosCategoryDropdown = ({ value, onChange, options }) => {
         <ul
           role="listbox"
           style={menuStyle}
-          className="fixed z-[100] max-h-56 overflow-y-auto overscroll-contain rounded-lg border border-white/10 bg-navy-950 shadow-xl shadow-black/50 py-1"
+          className="fixed z-[100] max-h-56 overflow-y-auto overscroll-contain rounded-lg border border-white/10 bg-base-950 shadow-xl shadow-black/50 py-1"
         >
           <li role="option" aria-selected={!value}>
             <button
               type="button"
               onClick={() => { onChange(''); setOpen(false); }}
-              className={`w-full px-3 py-2 text-left text-xs hover:bg-white/10 ${!value ? 'text-gold-400 bg-white/5' : 'text-white/90'}`}
+              className={`w-full px-3 py-2 text-left text-xs hover:bg-white/10 ${!value ? 'text-accent-400 bg-white/5' : 'text-white/90'}`}
             >
               All categories (shop floor)
             </button>
@@ -158,7 +158,7 @@ const PosCategoryDropdown = ({ value, onChange, options }) => {
               <button
                 type="button"
                 onClick={() => { onChange(c.name); setOpen(false); }}
-                className={`w-full px-3 py-2 text-left text-xs hover:bg-white/10 ${value === c.name ? 'text-gold-400 bg-white/5' : 'text-white/90'}`}
+                className={`w-full px-3 py-2 text-left text-xs hover:bg-white/10 ${value === c.name ? 'text-accent-400 bg-white/5' : 'text-white/90'}`}
               >
                 {categoryOptionLabel(c)}
               </button>
@@ -228,7 +228,7 @@ const PosCartPanel = ({
         </div>
       ))}
     </div>
-    <div className="shrink-0 border-t border-white/10 pt-3 mt-2 space-y-3 bg-navy-950 shadow-[0_-12px_32px_rgba(0,0,0,0.45)]">
+    <div className="shrink-0 border-t border-white/10 pt-3 mt-2 space-y-3 bg-base-950 shadow-[0_-12px_32px_rgba(0,0,0,0.45)]">
       {canDiscount && (
         <div>
           <label className="text-white/60 text-xs">Discount (KES)</label>
@@ -238,7 +238,7 @@ const PosCartPanel = ({
       <div className="space-y-1 text-white">
         <div className="flex justify-between text-sm"><span>Subtotal</span><span>{formatKES(subtotal)}</span></div>
         {canDiscount && discount > 0 && <div className="flex justify-between text-sm text-green-400"><span>Discount</span><span>-{formatKES(discount)}</span></div>}
-        <div className="flex justify-between text-lg font-bold"><span>Total</span><span className="text-gold-400">{formatKES(grandTotal)}</span></div>
+        <div className="flex justify-between text-lg font-bold"><span>Total</span><span className="text-accent-400">{formatKES(grandTotal)}</span></div>
       </div>
       <div className="grid grid-cols-3 gap-2">
         {PAYMENT_METHODS.map((m) => (
@@ -246,7 +246,7 @@ const PosCartPanel = ({
             key={m.id}
             type="button"
             onClick={() => setPaymentMethod(m.id)}
-            className={`py-2 rounded text-xs sm:text-sm font-medium ${paymentMethod === m.id ? 'bg-gold-600 text-navy-950' : 'bg-white/10 text-white'}`}
+            className={`py-2 rounded text-xs sm:text-sm font-medium ${paymentMethod === m.id ? 'bg-accent-600 text-base-950' : 'bg-white/10 text-white'}`}
           >
             {m.label}
           </button>
@@ -259,7 +259,7 @@ const PosCartPanel = ({
         type="button"
         disabled={cart.length === 0 || busy}
         onClick={confirmSale}
-        className="w-full bg-gold-600 text-navy-950 font-bold py-3.5 rounded-lg disabled:opacity-40"
+        className="w-full bg-accent-600 text-base-950 font-bold py-3.5 rounded-lg disabled:opacity-40"
       >
         Confirm Sale
       </button>
@@ -295,8 +295,8 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
 
   const shellClass = embedded
     ? embeddedLayout === 'finance'
-      ? 'h-[calc(100dvh-12.5rem)] min-h-[420px] flex flex-col overflow-hidden bg-navy-950 border border-gold-500/10 rounded-2xl'
-      : 'h-[calc(100dvh-9.5rem)] min-h-[420px] flex flex-col overflow-hidden bg-navy-950 border border-gold-500/10 rounded-2xl'
+      ? 'h-[calc(100dvh-12.5rem)] min-h-[420px] flex flex-col overflow-hidden bg-base-950 border border-accent-500/10 rounded-2xl'
+      : 'h-[calc(100dvh-9.5rem)] min-h-[420px] flex flex-col overflow-hidden bg-base-950 border border-accent-500/10 rounded-2xl'
     : 'h-dvh max-h-dvh flex flex-col overflow-hidden bg-[#0a0f1e]';
 
   const loadShift = useCallback(async () => {
@@ -493,7 +493,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
         <p className="text-white/60 mb-8 text-center">
           Hi {user?.fullName || user?.name}, begin your shift to access the terminal.
         </p>
-        <button type="button" onClick={clockIn} className="bg-gold-600 text-navy-950 px-8 py-3 rounded-lg font-bold">
+        <button type="button" onClick={clockIn} className="bg-accent-600 text-base-950 px-8 py-3 rounded-lg font-bold">
           Clock In
         </button>
       </div>
@@ -539,7 +539,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
 
   return (
     <div className={shellClass}>
-      <header className="shrink-0 bg-navy-950 border-b border-gold-500/20 px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-white text-sm">
+      <header className="shrink-0 bg-base-950 border-b border-accent-500/20 px-4 py-3 flex flex-wrap items-center justify-between gap-2 text-white text-sm">
         <span>{user?.fullName || user?.name}</span>
         <span>Shift: {new Date(activeShift.clock_in).toLocaleTimeString()}</span>
         <span>Cash: {formatKES(activeShift.total_cash || 0)} | M-Pesa: {formatKES(activeShift.total_mpesa || 0)} | Card: {formatKES(activeShift.total_card || 0)}</span>
@@ -550,12 +550,12 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
         <div className="flex-1 min-h-0 p-4 overflow-y-auto overscroll-contain">
           <div className="mb-4 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-white/50">
             <p>
-              <strong className="text-gold-400">{totalInStock.toLocaleString()}</strong> on floor
+              <strong className="text-accent-400">{totalInStock.toLocaleString()}</strong> on floor
               {' · '}
-              Page <strong className="text-gold-400">{currentPage}</strong> /{' '}
-              <strong className="text-gold-400">{totalPages}</strong>
+              Page <strong className="text-accent-400">{currentPage}</strong> /{' '}
+              <strong className="text-accent-400">{totalPages}</strong>
               {' · '}
-              <strong className="text-gold-400">{totalMatching.toLocaleString()}</strong> total
+              <strong className="text-accent-400">{totalMatching.toLocaleString()}</strong> total
             </p>
             {selectedBalance && (
               <p className="mt-1">
@@ -581,7 +581,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
               onChange={(e) => setSkuScan(e.target.value)}
               onKeyDown={handleSkuScan}
               placeholder="Scan / type SKU + Enter to add"
-              className="w-full bg-gold-600/10 border border-gold-500/30 rounded-lg py-3 px-4 text-white font-mono text-sm"
+              className="w-full bg-accent-600/10 border border-accent-500/30 rounded-lg py-3 px-4 text-white font-mono text-sm"
             />
           </div>
           <div className="flex flex-wrap gap-2 mb-3 items-center">
@@ -606,8 +606,8 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
                 onClick={() => setChannelFilter(f.id)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   channelFilter === f.id
-                    ? 'bg-gold-600 text-navy-950 border-gold-600'
-                    : 'bg-white/5 text-white/70 border-white/10 hover:border-gold-500/40'
+                    ? 'bg-accent-600 text-base-950 border-accent-600'
+                    : 'bg-white/5 text-white/70 border-white/10 hover:border-accent-500/40'
                 }`}
               >
                 {f.label} ({filterCounts[f.id] ?? 0})
@@ -634,7 +634,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
                 type="button"
                 disabled={!hasMore || loadingMore}
                 onClick={loadNextPage}
-                className="px-4 py-2 rounded-lg text-xs font-medium bg-gold-600 text-navy-950 disabled:opacity-40"
+                className="px-4 py-2 rounded-lg text-xs font-medium bg-accent-600 text-base-950 disabled:opacity-40"
               >
                 {loadingMore ? 'Loading…' : 'Next page →'}
               </button>
@@ -651,7 +651,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
               <button
                 type="button"
                 onClick={() => loadProducts(search, categoryFilter, { offset: 0, append: false })}
-                className="mt-4 px-4 py-2 rounded-lg bg-gold-600 text-navy-950 font-medium text-sm"
+                className="mt-4 px-4 py-2 rounded-lg bg-accent-600 text-base-950 font-medium text-sm"
               >
                 Retry
               </button>
@@ -678,13 +678,13 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
                     const badge = channelBadge(p);
                     return (
                       <tr key={p.id} className={`border-t border-white/5 ${out ? 'opacity-60' : 'hover:bg-white/5'}`}>
-                        <td className="p-3 font-mono text-xs text-gold-400/90">{p.sku || '—'}</td>
+                        <td className="p-3 font-mono text-xs text-accent-400/90">{p.sku || '—'}</td>
                         <td className="p-3">
                           <span className="font-medium">{p.name}</span>
                           <span className={`ml-2 text-[9px] px-1.5 py-0.5 rounded border ${badge.className}`}>{badge.label}</span>
                         </td>
                         <td className="p-3 text-white/50 text-xs">{p.categoryName || '—'}</td>
-                        <td className="p-3 text-right text-gold-400 font-semibold">{formatKES(p.shop_price)}</td>
+                        <td className="p-3 text-right text-accent-400 font-semibold">{formatKES(p.shop_price)}</td>
                         <td className="p-3 text-center text-xs tabular-nums">{out ? 'Out' : qty === 1 ? '1' : qty}</td>
                         <td className="p-3 text-center text-xs tabular-nums text-violet-300/90">
                           {p.categoryWebsiteStock != null ? p.categoryWebsiteStock : '—'}
@@ -701,7 +701,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
                             type="button"
                             disabled={out}
                             onClick={() => (p.variants?.length ? setVariantPick(p) : addToCart(p))}
-                            className="px-3 py-1 rounded bg-gold-600 text-navy-950 text-xs font-bold disabled:opacity-40"
+                            className="px-3 py-1 rounded bg-accent-600 text-base-950 text-xs font-bold disabled:opacity-40"
                           >
                             Add
                           </button>
@@ -730,12 +730,12 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
                         ? 'border-white/10 opacity-70 cursor-not-allowed'
                         : p.channel === 'inventory'
                           ? 'border-sky-500/25 hover:bg-white/10 hover:border-sky-500/40'
-                          : 'border-gold-500/30 hover:bg-white/10 hover:border-gold-500/50'
+                          : 'border-accent-500/30 hover:bg-white/10 hover:border-accent-500/50'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <p className="font-medium text-sm line-clamp-2 flex-1">{p.name}</p>
-                    {p.sku && <p className="font-mono text-[10px] text-gold-400/70 mt-0.5">{p.sku}</p>}
+                    {p.sku && <p className="font-mono text-[10px] text-accent-400/70 mt-0.5">{p.sku}</p>}
                       {p.thumbnail && (
                         <img src={p.thumbnail} alt="" className="w-10 h-10 rounded object-cover shrink-0 border border-white/10" />
                       )}
@@ -743,7 +743,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
                     <span className={`inline-block mt-2 px-2 py-0.5 rounded-full text-[10px]  tracking-wide border ${badge.className}`}>
                       {badge.label}
                     </span>
-                    <p className="text-gold-400 text-sm mt-2 font-semibold">POS: {formatKES(p.shop_price)}</p>
+                    <p className="text-accent-400 text-sm mt-2 font-semibold">POS: {formatKES(p.shop_price)}</p>
                     {p.website_price != null && p.websiteStatus !== 'none' && (
                       <p className="text-white/45 text-xs mt-0.5">Web: {formatKES(p.website_price)}</p>
                     )}
@@ -764,7 +764,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
             </div>
           )}
         </div>
-        <aside className="hidden lg:flex lg:flex-col w-96 shrink-0 border-l border-white/10 p-4 min-h-0 overflow-hidden bg-navy-950/80">
+        <aside className="hidden lg:flex lg:flex-col w-96 shrink-0 border-l border-white/10 p-4 min-h-0 overflow-hidden bg-base-950/80">
           <PosCartPanel {...cartPanelProps} />
         </aside>
       </div>
@@ -772,16 +772,16 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
       <button
         type="button"
         onClick={() => setShowCart(true)}
-        className="lg:hidden shrink-0 border-t border-gold-500/20 bg-navy-950/95 backdrop-blur px-4 py-3 flex items-center justify-between font-bold"
+        className="lg:hidden shrink-0 border-t border-accent-500/20 bg-base-950/95 backdrop-blur px-4 py-3 flex items-center justify-between font-bold"
       >
         <span className="text-white/80 text-sm font-medium">Cart ({cart.length}) · {formatKES(grandTotal)}</span>
-        <span className="bg-gold-600 text-navy-950 px-4 py-2 rounded-lg text-sm">{cart.length ? 'Checkout' : 'Open cart'}</span>
+        <span className="bg-accent-600 text-base-950 px-4 py-2 rounded-lg text-sm">{cart.length ? 'Checkout' : 'Open cart'}</span>
       </button>
 
       {showCart && (
         <div className="fixed inset-0 z-50 bg-black/60 flex flex-col justify-end" onClick={() => setShowCart(false)}>
           <div
-            className="bg-navy-950 rounded-t-2xl flex flex-col h-[min(92dvh,720px)] max-h-[92dvh]"
+            className="bg-base-950 rounded-t-2xl flex flex-col h-[min(92dvh,720px)] max-h-[92dvh]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="shrink-0 flex justify-center pt-2 pb-1">
@@ -796,7 +796,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
 
       {variantPick && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setVariantPick(null)}>
-          <div className="bg-navy-950 border border-white/10 rounded-xl p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-base-950 border border-white/10 rounded-xl p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-white font-medium mb-4">Select variant — {variantPick.name}</h3>
             <div className="space-y-2">
               {variantPick.variants.map((v) => (
@@ -811,7 +811,7 @@ const PosTerminalView = ({ embedded = false, embeddedLayout = 'direct', onClockO
 
       {showClockOut && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-navy-950 border border-white/10 rounded-xl p-6 max-w-sm w-full text-white">
+          <div className="bg-base-950 border border-white/10 rounded-xl p-6 max-w-sm w-full text-white">
             <h3 className="font-semibold">End shift?</h3>
             <p className="text-white/60 text-sm mt-2">You will be logged out after clocking out.</p>
             <div className="flex gap-3 mt-6">

@@ -31,19 +31,19 @@ const StickyAddToCart = ({
           )}
 
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-[13px] md:text-sm font-semibold text-navy-950 truncate leading-tight">
+            <p className="text-[13px] md:text-sm font-semibold text-base-950 truncate leading-tight">
               {productName}
             </p>
             {variantSummary && (
               <p className="text-[11px] md:text-xs text-slate-500 truncate mt-0.5">{variantSummary}</p>
             )}
-            <p className="sm:hidden text-[12px] font-medium text-navy-950 mt-0.5">
+            <p className="sm:hidden text-[12px] font-medium text-base-950 mt-0.5">
               KSh{displayPrice.toLocaleString()}
             </p>
           </div>
 
           <div className="hidden sm:block shrink-0 text-right">
-            <p className="text-sm font-medium text-navy-950 whitespace-nowrap">
+            <p className="text-sm font-medium text-base-950 whitespace-nowrap">
               KSh{displayPrice.toLocaleString()}
             </p>
             {compareAtPrice != null && compareAtPrice > displayPrice && (
@@ -60,13 +60,13 @@ const StickyAddToCart = ({
             className={`shrink-0 flex items-center justify-center gap-2 rounded-full px-4 md:px-5 py-2.5 md:py-3 text-[12px] md:text-[13px] font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
               addedToCart
                 ? 'bg-green-600 text-white'
-                : 'bg-navy-950 text-white hover:bg-navy-900'
+                : 'bg-utility-gray text-secondary dark:bg-base-950 dark:text-white hover:bg-utility-gray/80'
             }`}
           >
             <span className="relative">
               <ShoppingBag size={16} strokeWidth={2} />
               {!addedToCart && (
-                <Plus size={9} strokeWidth={3} className="absolute -top-0.5 -right-1.5 bg-white text-navy-950 rounded-full" />
+                <Plus size={9} strokeWidth={3} className="absolute -top-0.5 -right-1.5 bg-white text-base-950 rounded-full" />
               )}
             </span>
             <span className="whitespace-nowrap">{addedToCart ? 'Added' : 'Add to cart'}</span>

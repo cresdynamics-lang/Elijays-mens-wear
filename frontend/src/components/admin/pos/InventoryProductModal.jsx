@@ -12,8 +12,8 @@ import {
   newSizeRow,
 } from '../../../utils/inventoryVariants';
 
-const inputCls = 'w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white text-sm';
-const labelCls = 'text-gold-500/50 text-xs block mb-1';
+const inputCls = 'w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white text-sm';
+const labelCls = 'text-accent-500/50 text-xs block mb-1';
 
 const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) => {
   const isNew = !itemId;
@@ -247,16 +247,16 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div
-        className="bg-navy-900 border border-gold-500/20 rounded-xl w-full max-w-3xl max-h-[92vh] overflow-y-auto custom-scrollbar"
+        className="bg-base-900 border border-accent-500/20 rounded-xl w-full max-w-3xl max-h-[92vh] overflow-y-auto custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-navy-900/95 backdrop-blur border-b border-gold-500/10 px-6 py-4 flex items-center justify-between z-10">
+        <div className="sticky top-0 bg-base-900/95 backdrop-blur border-b border-accent-500/10 px-6 py-4 flex items-center justify-between z-10">
           <div>
-            <h3 className="text-gold-400 font-medium">
+            <h3 className="text-accent-400 font-medium">
               {isNew ? 'Add product' : 'Product details'}
             </h3>
             {!isNew && (
-              <p className="text-[10px] text-gold-500/40 mt-0.5  ">
+              <p className="text-[10px] text-accent-500/40 mt-0.5  ">
                 Data source: {source === 'live' ? 'Live website' : 'Inventory draft'}
                 {websiteLinked && ' · Linked'}
               </p>
@@ -270,11 +270,11 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
         </div>
 
         {loading ? (
-          <p className="p-8 text-center text-gold-500/50 text-sm">Loading…</p>
+          <p className="p-8 text-center text-accent-500/50 text-sm">Loading…</p>
         ) : (
           <div className="p-6 space-y-6">
             <section className="space-y-3">
-              <h4 className="text-xs font-bold   text-gold-500/70">Basics</h4>
+              <h4 className="text-xs font-bold   text-accent-500/70">Basics</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className={labelCls}>Product name</label>
@@ -305,16 +305,16 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                 <div>
                   <label className={labelCls}>Retail price KES</label>
                   <input type="number" min={0} className={inputCls} value={form.shop_price} onChange={(e) => setForm({ ...form, shop_price: e.target.value })} />
-                  <p className="text-[9px] text-gold-500/40 mt-1">Same price for shop and website.</p>
+                  <p className="text-[9px] text-accent-500/40 mt-1">Same price for shop and website.</p>
                 </div>
                 <div>
                   <label className={labelCls}>Cost price KES</label>
                   <input type="number" min={0} className={inputCls} value={form.cost_price} onChange={(e) => setForm({ ...form, cost_price: e.target.value })} placeholder="What you paid" />
                 </div>
-                <div className="md:col-span-2 rounded-lg border border-gold-500/15 bg-navy-950/60 p-3">
-                  <p className="text-[10px] text-gold-500/50 mb-1">Profit (retail − cost)</p>
+                <div className="md:col-span-2 rounded-lg border border-accent-500/15 bg-base-950/60 p-3">
+                  <p className="text-[10px] text-accent-500/50 mb-1">Profit (retail − cost)</p>
                   <p className="text-sm text-green-400 font-medium">
-                    KSh {profit.toLocaleString()} <span className="text-gold-500/50 font-normal">· {margin}% margin</span>
+                    KSh {profit.toLocaleString()} <span className="text-accent-500/50 font-normal">· {margin}% margin</span>
                   </p>
                 </div>
                 <div>
@@ -326,7 +326,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                     <div>
                       <label className={labelCls}>Shop opening qty</label>
                       <input type="number" min={0} className={inputCls} value={form.opening_qty} onChange={(e) => setForm({ ...form, opening_qty: e.target.value })} placeholder={String(variantStockTotal() || 0)} />
-                      <p className="text-[9px] text-gold-500/40 mt-1">Defaults to total of size stocks if left empty.</p>
+                      <p className="text-[9px] text-accent-500/40 mt-1">Defaults to total of size stocks if left empty.</p>
                     </div>
                     <div>
                       <label className={labelCls}>Store qty (warehouse)</label>
@@ -338,7 +338,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
             </section>
 
             <section className="space-y-3">
-              <h4 className="text-xs font-bold   text-gold-500/70">Images & description</h4>
+              <h4 className="text-xs font-bold   text-accent-500/70">Images & description</h4>
               <div>
                 <label className={labelCls}>Description</label>
                 <textarea
@@ -353,9 +353,9 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                 <label className={labelCls}>Main thumbnail</label>
                 <div className="flex items-center gap-3 mt-1">
                   {form.thumbnailPreview && (
-                    <img src={form.thumbnailPreview} alt="" className="w-20 h-20 object-cover rounded border border-gold-500/20" />
+                    <img src={form.thumbnailPreview} alt="" className="w-20 h-20 object-cover rounded border border-accent-500/20" />
                   )}
-                  <label className="flex items-center gap-2 px-3 py-2 border border-gold-500/30 rounded text-xs text-gold-400 cursor-pointer hover:bg-gold-500/5">
+                  <label className="flex items-center gap-2 px-3 py-2 border border-accent-500/30 rounded text-xs text-accent-400 cursor-pointer hover:bg-accent-500/5">
                     <Upload size={14} /> Upload image
                     <input type="file" accept="image/*" className="hidden" onChange={handleThumbnail} />
                   </label>
@@ -366,20 +366,20 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
             <section className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-xs font-bold   text-gold-500/70">Colors & sizes</h4>
-                  <p className="text-[10px] text-gold-500/40 mt-0.5">Set stock and optional price override per size.</p>
+                  <h4 className="text-xs font-bold   text-accent-500/70">Colors & sizes</h4>
+                  <p className="text-[10px] text-accent-500/40 mt-0.5">Set stock and optional price override per size.</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setForm((f) => ({ ...f, color_groups: [...f.color_groups, newColorGroup('')] }))}
-                  className="flex items-center gap-1 text-xs text-gold-400 hover:text-gold-300"
+                  className="flex items-center gap-1 text-xs text-accent-400 hover:text-accent-300"
                 >
                   <Plus size={14} /> Add color
                 </button>
               </div>
 
               {form.color_groups.map((group) => (
-                <div key={group._key} className="border border-gold-500/15 rounded-lg p-4 space-y-3 bg-navy-950/40">
+                <div key={group._key} className="border border-accent-500/15 rounded-lg p-4 space-y-3 bg-base-950/40">
                   <div className="flex flex-wrap gap-3 items-start">
                     <div className="flex-1 min-w-[140px]">
                       <label className={labelCls}>Color / variant name</label>
@@ -399,9 +399,9 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                       <label className={labelCls}>Color image</label>
                       <div className="flex items-center gap-2">
                         {group.imagePreview && (
-                          <img src={group.imagePreview} alt="" className="w-12 h-12 object-cover rounded border border-gold-500/20" />
+                          <img src={group.imagePreview} alt="" className="w-12 h-12 object-cover rounded border border-accent-500/20" />
                         )}
-                        <label className="px-2 py-1.5 border border-gold-500/20 rounded text-[10px] text-gold-500/60 cursor-pointer">
+                        <label className="px-2 py-1.5 border border-accent-500/20 rounded text-[10px] text-accent-500/60 cursor-pointer">
                           Upload
                           <input type="file" accept="image/*" className="hidden" onChange={(e) => handleColorImage(group._key, e)} />
                         </label>
@@ -429,7 +429,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                           key={sz}
                           type="button"
                           onClick={() => addSizeToGroup(group._key, sz)}
-                          className="px-2 py-1 text-[10px] border border-gold-500/25 text-gold-400 rounded hover:bg-gold-500/10"
+                          className="px-2 py-1 text-[10px] border border-accent-500/25 text-accent-400 rounded hover:bg-accent-500/10"
                         >
                           {sz}
                         </button>
@@ -442,7 +442,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                         value={customSize}
                         onChange={(e) => setCustomSize(e.target.value)}
                       />
-                      <button type="button" onClick={() => addSizeToGroup(group._key, customSize)} className="px-3 py-1 text-xs border border-gold-500/30 text-gold-400 rounded">
+                      <button type="button" onClick={() => addSizeToGroup(group._key, customSize)} className="px-3 py-1 text-xs border border-accent-500/30 text-accent-400 rounded">
                         Add size
                       </button>
                     </div>
@@ -451,7 +451,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                   {group.sizes.length > 0 && (
                     <div className="overflow-x-auto">
                       <table className="w-full text-xs">
-                        <thead className="text-gold-500/40">
+                        <thead className="text-accent-500/40">
                           <tr>
                             <th className="text-left p-1">Size</th>
                             <th className="p-1">Stock</th>
@@ -461,13 +461,13 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                         </thead>
                         <tbody>
                           {group.sizes.map((row) => (
-                            <tr key={row._key} className="border-t border-gold-500/10">
+                            <tr key={row._key} className="border-t border-accent-500/10">
                               <td className="p-1 font-mono">{row.size}</td>
                               <td className="p-1">
                                 <input
                                   type="number"
                                   min={0}
-                                  className="w-16 bg-navy-950 border border-gold-500/20 rounded px-1 py-0.5 text-white"
+                                  className="w-16 bg-base-950 border border-accent-500/20 rounded px-1 py-0.5 text-white"
                                   value={row.stock}
                                   onChange={(e) => setForm((f) => ({
                                     ...f,
@@ -487,7 +487,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                               <td className="p-1">
                                 <input
                                   type="number"
-                                  className="w-16 bg-navy-950 border border-gold-500/20 rounded px-1 py-0.5 text-white"
+                                  className="w-16 bg-base-950 border border-accent-500/20 rounded px-1 py-0.5 text-white"
                                   value={row.price_override}
                                   placeholder="0"
                                   onChange={(e) => setForm((f) => ({
@@ -531,8 +531,8 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
               ))}
             </section>
 
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-gold-500/10">
-              <button type="button" onClick={onClose} className="px-4 py-2 border border-gold-500/30 text-gold-400 rounded text-sm">
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-accent-500/10">
+              <button type="button" onClick={onClose} className="px-4 py-2 border border-accent-500/30 text-accent-400 rounded text-sm">
                 Cancel
               </button>
               <button
@@ -548,7 +548,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                   type="button"
                   disabled={busy}
                   onClick={() => handleSave(true)}
-                  className="px-4 py-2 bg-gold-600 text-navy-950 rounded text-sm font-medium disabled:opacity-50"
+                  className="px-4 py-2 bg-accent-600 text-base-950 rounded text-sm font-medium disabled:opacity-50"
                 >
                   {busy ? 'Publishing…' : websiteLinked ? 'Save & update website' : 'Save & publish'}
                 </button>
@@ -558,7 +558,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                   type="button"
                   disabled={busy}
                   onClick={() => handleSave(true)}
-                  className="ml-auto px-4 py-2 bg-gold-600 text-navy-950 rounded text-sm font-medium disabled:opacity-50"
+                  className="ml-auto px-4 py-2 bg-accent-600 text-base-950 rounded text-sm font-medium disabled:opacity-50"
                 >
                   Save & publish to website
                 </button>

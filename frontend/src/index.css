@@ -1,138 +1,144 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --color-gold-50: #fffef5;
-  --color-gold-100: #fff9d6;
-  --color-gold-200: #fff0a8;
-  --color-gold-300: #fce76f;
-  --color-gold-400: #f7dc4a;
-  --color-gold-500: #F7D138;
-  --color-gold-600: #d4ad1f;
-  --color-gold-700: #a88616;
-  --color-gold-800: #7a610f;
-  --color-gold-900: #4c3c09;
-  --color-gold-950: #261e04;
-
-  --color-navy-50: #f5f5f5;
-  --color-navy-100: #e8e8e8;
-  --color-navy-200: #cfcfcf;
-  --color-navy-300: #a8a8a8;
-  --color-navy-400: #737373;
-  --color-navy-500: #525252;
-  --color-navy-600: #3a3a3a;
-  --color-navy-700: #262626;
-  --color-navy-800: #141414;
-  --color-navy-900: #0a0a0a;
-  --color-navy-950: #050505;
-
+  --color-accent: #D4AF37;
+  --color-accent-50: #fffef5;
+  --color-accent-100: #fff9d6;
+  --color-accent-200: #fff0a8;
+  --color-accent-300: #fce76f;
+  --color-accent-400: #f7dc4a;
+  --color-accent-500: #D4AF37;
+  --color-accent-600: #b8962e;
+  --color-accent-700: #8c7024;
+  --color-accent-800: #604b1a;
+  --color-accent-900: #3d2f11;
+  --color-accent-950: #1f1808;
   --font-serif: "Playfair Display", Georgia, serif;
-  --font-sans: "DM Sans", sans-serif;
+  --font-sans: "Montserrat", "DM Sans", sans-serif;
 }
 
-:root {
-  background-color: #0a0a0a;
-  color: #fafafa;
-  font-family: "DM Sans", sans-serif;
-  overflow-x: hidden;
+@layer base {
+  :root {
+    --page-bg: #f8f8f8;
+    --text-main: #000000;
+    --card-bg: #f0f0f0;
+    --card-border: #e0e0e0;
+    --input-bg: #f0f0f0;
+  }
+  .dark {
+    --page-bg: #000000;
+    --text-main: #ffffff;
+    --card-bg: #111111;
+    --card-border: #262626;
+    --input-bg: #1a1a1a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--page-bg) !important;
+    color: var(--text-main) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Navbar & Footer: always black bg */
+  header, footer {
+    background-color: #000000 !important;
+  }
+  /* Navbar text: always white since bg is black */
+  header nav a, header nav button,
+  header .text-secondary,
+  header .text-accent,
+  header a, header button, header span,
+  header h1, header h2, header h3, header h4, header h5, header h6,
+  header p, header li {
+    color: #ffffff !important;
+  }
+  header a:hover, header button:hover {
+    color: #D4AF37 !important;
+  }
+  /* Footer headings stay gold */
+  footer h1, footer h2, footer h3,
+  footer .text-accent {
+    color: #D4AF37 !important;
+  }
+  /* Footer sub-content white */
+  footer a, footer p, footer span,
+  footer li, footer .text-secondary,
+  footer .text-white {
+    color: #ffffff !important;
+  }
+  footer a:hover {
+    color: #D4AF37 !important;
+  }
 }
 
-* {
-  box-sizing: border-box;
+@layer components {
+  .btn-primary {
+    @apply bg-accent text-primary px-10 py-4 text-[10px] font-bold tracking-widest uppercase hover:bg-accent/80 transition-all;
+  }
+  .btn-outline {
+    @apply border border-accent text-accent px-10 py-4 text-[10px] font-bold tracking-widest uppercase hover:bg-accent hover:text-primary transition-all;
+  }
 }
 
-body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 16px;
-}
-
-/* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Playfair Display", Georgia, serif;
+  font-family: var(--font-serif);
   line-height: 1.15;
   margin-bottom: 0.5em;
-  color: #fafafa;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--text-main);
 }
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.05rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.95rem; letter-spacing: 0.04em; }
 
-h1 { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.01em; }
-h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
-h3 { font-size: 1.2rem; font-weight: 600; }
-h4 { font-size: 1.05rem; font-weight: 500; }
-h5 { font-size: 1rem; font-weight: 500; }
-h6 { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.04em; }
+p { line-height: 1.7; color: var(--text-main); font-weight: 500; }
 
-.hero-section h1,
-.hero-section h2,
-.hero-section h3,
-.hero-section h4,
-.hero-section h5,
-.hero-section h6 {
-  font-size: unset;
-  letter-spacing: unset;
-  margin-bottom: unset;
-  font-weight: unset;
-  line-height: unset;
-}
-
-p {
-  line-height: 1.7;
-  color: #c1c8da;
-}
-
-/* Custom Utilities */
 .glass {
-  background: rgba(25, 41, 87, 0.4);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(238, 214, 47, 0.3);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(25, 41, 87, 0.5); /* Harsh, grounded studio shadow */
-  border-radius: 1rem;
 }
 
 .text-gradient-gold {
-  background: linear-gradient(to right, #f6ecb1, #EED62F, #f6ecb1);
+  background: linear-gradient(to right, #f6ecb1, #D4AF37, #f6ecb1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gold-border {
-  border: 1px solid rgba(238, 214, 47, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.35);
 }
 
 .gold-border-focus:focus {
-  border-color: #EED62F;
+  border-color: #D4AF37;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(238, 214, 47, 0.25);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
-/* Button Overhaul */
-button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+button { transition: all 0.3s ease; }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f0f0f0; }
+::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 999px; }
 
-::-webkit-scrollbar-track {
-  background: #192957;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #EED62F;
-  border-radius: 999px;
-}
+.dark ::-webkit-scrollbar-track { background: #1a1a1a; }
+.dark ::-webkit-scrollbar-thumb { background: #D4AF37; }
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(238, 214, 47, 0.8) rgba(25, 41, 87, 0.5);
+  scrollbar-color: #D4AF37 #f0f0f0;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #d6be20;
+.dark .custom-scrollbar {
+  scrollbar-color: #D4AF37 #1a1a1a;
 }

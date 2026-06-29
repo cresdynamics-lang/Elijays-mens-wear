@@ -62,8 +62,8 @@ const PosInventoryHub = ({ initialTab = 'stock', forcedModule, hideModulePicker 
               onClick={() => setModule(m.id)}
               className={`px-4 py-2 rounded-xl text-xs font-bold   border transition-all ${
                 module === m.id
-                  ? 'bg-gold-600 text-navy-950 border-gold-600'
-                  : 'bg-navy-900/50 text-gold-500/70 border-gold-500/15 hover:border-gold-500/40'
+                  ? 'bg-accent text-primary border-accent'
+                  : 'bg-utility-gray/50 text-accent/70 border-accent/20 hover:border-accent/40'
               }`}
             >
               {m.label}
@@ -72,10 +72,10 @@ const PosInventoryHub = ({ initialTab = 'stock', forcedModule, hideModulePicker 
         </div>
       )}
 
-      <div className="bg-navy-900/50 border border-gold-500/10 rounded-2xl p-4 sm:p-6">
-        <p className="text-[10px] font-black  tracking-[0.3em] text-gold-500/40">Inventory</p>
-        <h2 className="text-xl sm:text-2xl font-serif font-bold text-gold-100 mt-1">{current.label}</h2>
-        <p className="text-xs text-gold-500/50 mt-1 max-w-xl">{current.description}</p>
+      <div className="bg-utility-gray/30 border border-accent/10 rounded-2xl p-4 sm:p-6">
+        <p className="text-[10px] font-black  tracking-[0.3em] text-accent/40">Inventory</p>
+        <h2 className="text-xl sm:text-2xl font-serif font-bold text-secondary mt-1">{current.label}</h2>
+        <p className="text-xs text-accent/60 mt-1 max-w-xl">{current.description}</p>
       </div>
 
       <div className="min-h-[400px]">{renderModule()}</div>

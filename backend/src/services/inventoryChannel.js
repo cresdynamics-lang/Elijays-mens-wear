@@ -62,6 +62,8 @@ const createPosInventoryItem = async (
   return r.rows[0];
 };
 
+const isExcelBucketMode = () => process.env.ELIJAYS_EXCEL_INVENTORY === 'true';
+
 /** When an admin creates a website product, ensure a dedicated POS inventory row exists. */
 const ensurePosForEcommerceProduct = async (product, options = {}) => {
   const shopPriceOverride = options.shop_price ?? options.shopPrice;
@@ -70,6 +72,9 @@ const ensurePosForEcommerceProduct = async (product, options = {}) => {
     const linked = await db.query('SELECT * FROM pos_products WHERE id = $1', [product.pos_stock_product_id]);
     if (linked.rows.length) {
       const pos = linked.rows[0];
+      if (isExcelBucketMode()) {
+        return pos;
+      }
       const posSku = String(pos.sku || '');
       const productSku = String(product.sku || '').trim();
       if (posSku.startsWith('POS-') && productSku && !productSku.startsWith('POS-')) {
@@ -258,6 +263,8 @@ const seedPosOpeningStockIfEmpty = async (posProductId, qty) => {
 
 /** Backfill POS rows for every website product — safe to run repeatedly. */
 const needsDedicatedInventoryRow = async (product) => {
+  if (isExcelBucketMode()) return false;
+
   if (!product.pos_stock_product_id) return false;
 
   const posR = await db.query(

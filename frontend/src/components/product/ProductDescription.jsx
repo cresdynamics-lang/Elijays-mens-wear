@@ -2,8 +2,8 @@
 
 const Section = ({ title, icon, children, className = '' }) => (
   <div className={`space-y-4 ${className}`}>
-    <h3 className="text-[10px] font-bold tracking-[0.25em] text-gold-500 flex items-center gap-2">
-      {icon && <span aria-hidden className="text-gold-600/80">{icon}</span>}
+    <h3 className="text-[10px] font-bold tracking-[0.22em] text-accent flex items-center gap-2.5 uppercase">
+      {icon && <span aria-hidden className="text-accent/70">{icon}</span>}
       {title}
     </h3>
     {children}
@@ -11,7 +11,7 @@ const Section = ({ title, icon, children, className = '' }) => (
 );
 
 const Callout = ({ children }) => (
-  <div className="rounded-sm border border-gold-600/15 bg-navy-900/60 px-5 py-4">
+  <div className="rounded-lg border border-utility-gray/60 bg-utility-gray/40 px-5 py-4">
     {children}
   </div>
 );
@@ -39,15 +39,15 @@ const ProductDescription = ({
 
   return (
     <div className="space-y-10">
-      <div className="space-y-2">
-        <p className="text-[9px] font-bold tracking-[0.3em] text-gold-600/60">Product Details</p>
-        {brandName && <p className="text-[9px] text-gold-500/80">{brandName}</p>}
-        <h2 className="text-base md:text-lg font-serif text-white leading-snug">{productName}</h2>
+      <div className="space-y-3">
+        <p className="text-[9px] font-bold tracking-[0.28em] text-accent uppercase">Product Details</p>
+        {brandName && <p className="text-[10px] text-accent/70 font-bold tracking-wider">{brandName}</p>}
+        <h2 className="text-base md:text-lg font-serif font-bold text-secondary leading-snug tracking-tight">{productName}</h2>
       </div>
 
-      <div className="space-y-5 text-[15px] font-light leading-[1.75] text-slate-300/90">
+      <div className="space-y-5 text-[15px] font-semibold leading-[1.75] text-secondary">
         {sections.intro.map((para) => (
-          <p key={para.slice(0, 48)} className="text-slate-200/90">
+          <p key={para.slice(0, 48)} className="text-secondary/80">
             {para}
           </p>
         ))}
@@ -55,11 +55,11 @@ const ProductDescription = ({
 
       {sections.features.length > 0 && (
         <Section title="Key Features" icon="*">
-          <ul className="space-y-3 pl-1 text-[15px] leading-relaxed text-slate-300/90 font-light">
+          <ul className="space-y-3 pl-1 text-[15px] leading-relaxed text-secondary font-semibold">
             {sections.features.map((item) => (
               <li key={item} className="flex gap-3">
-                <span className="text-gold-500 shrink-0 mt-1">•</span>
-                <span>{item}</span>
+                <span className="text-accent shrink-0 mt-1 font-bold">•</span>
+                <span className="font-semibold">{item}</span>
               </li>
             ))}
           </ul>
@@ -68,11 +68,11 @@ const ProductDescription = ({
 
       {colorLines.length > 0 && (
         <Section title="Available Color Variants" icon="*">
-          <ul className="grid grid-cols-1 gap-2 pl-1 text-[14px] font-light text-slate-300/90 sm:grid-cols-2">
+          <ul className="grid grid-cols-1 gap-2 pl-1 text-[14px] font-semibold text-secondary sm:grid-cols-2">
             {colorLines.map((c) => (
-              <li key={c} className="flex items-center gap-2 border border-gold-600/10 bg-navy-900/40 px-3 py-1.5">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500/70" />
-                <span>{c}</span>
+              <li key={c} className="flex items-center gap-2.5 border border-utility-gray/60 bg-utility-gray/30 px-3.5 py-2 rounded-lg">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                <span className="font-semibold">{c}</span>
               </li>
             ))}
           </ul>
@@ -82,11 +82,11 @@ const ProductDescription = ({
       {sizeLines.length > 0 && (
         <Section title={isShoe ? 'Available Sizes (EU)' : 'Available Sizes'} icon="*">
           <Callout>
-            <p className="text-[14px] font-light leading-relaxed text-slate-300/90">
+            <p className="text-[14px] font-semibold leading-relaxed text-secondary">
               {Array.isArray(sizeLines) ? sizeLines.join(', ') : sizeLines}
             </p>
             {isShoe && (
-              <p className="mt-2 text-[12px] text-slate-500">
+              <p className="mt-3 text-[12px] text-secondary/70 font-medium">
                 Unisex fit suitable for men and women. Select your size above before adding to cart.
               </p>
             )}
@@ -94,18 +94,18 @@ const ProductDescription = ({
         </Section>
       )}
 
-        <Section title="Delivery and Service" icon="*">
+      <Section title="Delivery and Service" icon="*">
         <Callout>
-          <ul className="space-y-2 text-[14px] font-light leading-relaxed text-slate-300/90">
+          <ul className="space-y-2.5 text-[14px] font-semibold leading-relaxed text-secondary">
             {(deliveryLines.length ? deliveryLines : [
               'All orders are confirmed by our team before dispatch.',
               'Nairobi CBD and surrounding areas may qualify for in house rider delivery.',
               'Prepaid orders are shipped via your preferred courier nationwide.',
               'Fulfilment is subject to availability of your selected size and colour.',
             ]).map((line) => (
-              <li key={line} className="flex gap-2">
-                <span className="shrink-0 text-gold-500/70">•</span>
-                <span>{line}</span>
+              <li key={line} className="flex gap-2.5">
+                <span className="shrink-0 text-accent font-bold">•</span>
+                <span className="font-semibold">{line}</span>
               </li>
             ))}
           </ul>
@@ -113,23 +113,23 @@ const ProductDescription = ({
       </Section>
 
       <Section title="Why ELIJAY'S Men's Wear" icon="*">
-        <ul className="space-y-2 text-[14px] font-light text-slate-300/90">
+        <ul className="space-y-2.5 text-[14px] font-semibold text-secondary">
           {(whyLines.length ? whyLines : [
             'Curated luxury fashion with transparent pricing',
             'Fast, reliable delivery across Kenya',
             'In store availability at our Nairobi location',
             'Dedicated customer support before and after your purchase',
           ]).map((line) => (
-            <li key={line} className="flex gap-2">
-                <span className="shrink-0 text-gold-500">•</span>
-                <span>{line.replace(/^[-•]\s*/, '')}</span>
+            <li key={line} className="flex gap-2.5">
+                <span className="shrink-0 text-accent font-bold">•</span>
+                <span className="font-semibold">{line.replace(/^[-•]\s*/, '')}</span>
             </li>
           ))}
         </ul>
       </Section>
 
       {otherFooter.map((para) => (
-        <p key={para.slice(0, 48)} className="text-[14px] font-light leading-relaxed text-slate-400/80">{para}</p>
+        <p key={para.slice(0, 48)} className="text-[14px] font-semibold leading-relaxed text-secondary/80">{para}</p>
       ))}
     </div>
   );

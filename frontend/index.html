@@ -5,15 +5,75 @@
     <link rel="icon" type="image/png" href="/elijays-logo.png" />
     <link rel="apple-touch-icon" href="/elijays-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#F7D138" />
+    <meta name="theme-color" content="#0a0a0a" />
     <meta name="format-detection" content="telephone=no" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <title>Luxury Fashion Kenya | ELIJAY'S Men's Wear</title>
+    <title>ELIJAY'S Men's Wear — Nairobi Luxury Fashion</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://res.cloudinary.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else {
+            document.documentElement.classList.add('dark');
+          }
+        } catch(e) {}
+      })();
+    </script>
+    <style>
+      /* ONLY fix the specific utility classes, not everything */
+      html:not(.dark) body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+      html.dark body {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+      }
+      /* bg-primary in light mode = white */
+      html:not(.dark) .bg-primary {
+        background-color: #ffffff !important;
+      }
+      /* bg-utility-gray in light mode = very light gray */
+      html:not(.dark) .bg-utility-gray {
+        background-color: #f5f5f5 !important;
+      }
+      /* text-secondary in light mode = near-black */
+      html:not(.dark) .text-secondary {
+        color: #171717 !important;
+      }
+      /* All text variants in light mode = dark */
+      html:not(.dark) .text-base-400,
+      html:not(.dark) .text-base-500,
+      html:not(.dark) .text-base-600,
+      html:not(.dark) .text-base-700 {
+        color: #171717 !important;
+      }
+      /* accent stays gold in light */
+      html:not(.dark) .text-accent {
+        color: #b8962e !important;
+      }
+      /* borders in light */
+      html:not(.dark) .border-utility-gray {
+        border-color: #e5e5e5 !important;
+      }
+      /* FIX: semi-transparent text that was invisible */
+      html:not(.dark) .text-secondary\/50,
+      html:not(.dark) .text-secondary\/60,
+      html:not(.dark) .text-secondary\/70,
+      html:not(.dark) .text-secondary\/80,
+      html:not(.dark) .text-accent\/50,
+      html:not(.dark) .text-accent\/60,
+      html:not(.dark) .text-accent\/70,
+      html:not(.dark) .text-accent\/80 {
+        color: #262626 !important;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

@@ -24,15 +24,15 @@ const INVENTORY_ITEMS = [
 
 const MOVEMENT_LABELS = {
   opening_stock: { label: 'Opening Stock', color: 'text-blue-400 bg-blue-400/10' },
-  sales: { label: 'Sales', color: 'text-red-400 bg-red-400/10' },
-  stock_in: { label: 'Stock In', color: 'text-green-400 bg-green-400/10' },
+  sales: { label: 'Sales', color: 'text-red-600 dark:text-red-600 dark:text-red-400 bg-red-400/10' },
+  stock_in: { label: 'Stock In', color: 'text-green-600 dark:text-green-600 dark:text-green-400 bg-green-400/10' },
   stock_out: { label: 'Stock Out', color: 'text-orange-400 bg-orange-400/10' },
   transfer_in: { label: 'Transfer In', color: 'text-cyan-400 bg-cyan-400/10' },
   transfer_out: { label: 'Transfer Out', color: 'text-purple-400 bg-purple-400/10' },
 };
 
 const Badge = ({ type }) => {
-  const cfg = MOVEMENT_LABELS[type] || { label: type, color: 'text-gold-400 bg-gold-400/10' };
+  const cfg = MOVEMENT_LABELS[type] || { label: type, color: 'text-accent-400 bg-accent-400/10' };
   return (
     <span className={`text-[10px] font-black   px-2 py-1 rounded-lg ${cfg.color}`}>
       {cfg.label}
@@ -42,13 +42,13 @@ const Badge = ({ type }) => {
 
 const Spinner = () => (
   <div className="py-20 flex justify-center">
-    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500" />
+    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500" />
   </div>
 );
 
 const EmptyRow = ({ cols, msg }) => (
   <tr>
-    <td colSpan={cols} className="px-6 py-12 text-center text-gold-500/40 text-sm">{msg}</td>
+    <td colSpan={cols} className="px-6 py-12 text-center text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 text-sm">{msg}</td>
   </tr>
 );
 
@@ -88,9 +88,9 @@ const ShopsPanel = ({ shops, onRefresh }) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h5 className="text-sm font-black   text-gold-500/60">Shops / Branches</h5>
+        <h5 className="text-sm font-black   text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60">Shops / Branches</h5>
         <button onClick={() => setShowForm(v => !v)}
-          className="flex items-center gap-2 px-4 py-2 bg-gold-600 text-navy-950 rounded-xl text-[10px] font-black  ">
+          className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-base-950 rounded-xl text-[10px] font-black  ">
           <Plus size={14} /> Add Shop
         </button>
       </div>
@@ -98,18 +98,18 @@ const ShopsPanel = ({ shops, onRefresh }) => {
       <AnimatePresence>
         {showForm && (
           <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-            className="bg-navy-950/60 border border-gold-500/10 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+            className="bg-primary dark:bg-primary/60 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
             {[['name', 'Shop Name *'], ['code', 'Shop Code *'], ['address', 'Address'], ['phone', 'Phone'], ['email', 'Email']].map(([k, lbl]) => (
               <input key={k} placeholder={lbl} value={form[k]}
                 onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))}
-                className="bg-navy-900 border border-gold-500/10 rounded-xl px-4 py-3 text-sm text-gold-100 placeholder:text-gold-500/30 outline-none focus:border-gold-500/40" />
+                className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 placeholder:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30 outline-none focus:border-accent-500/40" />
             ))}
             <div className="flex gap-3 items-center">
               <button onClick={handleSave} disabled={saving}
-                className="px-5 py-3 bg-gold-600 text-navy-950 rounded-xl text-[10px] font-black  disabled:opacity-50">
+                className="px-5 py-3 bg-accent-600 text-base-950 rounded-xl text-[10px] font-black  disabled:opacity-50">
                 {saving ? 'Saving...' : 'Save'}
               </button>
-              <button onClick={() => setShowForm(false)} className="px-4 py-3 bg-navy-800 text-gold-500 rounded-xl text-[10px] font-black ">
+              <button onClick={() => setShowForm(false)} className="px-4 py-3 bg-utility-gray dark:bg-base-800 text-accent-500 rounded-xl text-[10px] font-black ">
                 Cancel
               </button>
             </div>
@@ -119,24 +119,24 @@ const ShopsPanel = ({ shops, onRefresh }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {shops.map(shop => (
-          <div key={shop.id} className="bg-navy-950/60 border border-gold-500/10 rounded-2xl p-5 flex items-start justify-between gap-3">
+          <div key={shop.id} className="bg-primary dark:bg-primary/60 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl p-5 flex items-start justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-gold-600/10 border border-gold-500/10 flex items-center justify-center shrink-0">
-                <Building2 size={18} className="text-gold-500" />
+              <div className="w-10 h-10 rounded-xl bg-accent-600/10 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex items-center justify-center shrink-0">
+                <Building2 size={18} className="text-accent-500" />
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-black text-gold-100  truncate">{shop.name}</p>
-                <p className="text-[10px] text-gold-500/40  ">{shop.code}</p>
-                {shop.address && <p className="text-[10px] text-gold-500/30 truncate">{shop.address}</p>}
+                <p className="text-sm font-black text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  truncate">{shop.name}</p>
+                <p className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  ">{shop.code}</p>
+                {shop.address && <p className="text-[10px] text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30 truncate">{shop.address}</p>}
               </div>
             </div>
-            <button onClick={() => handleDelete(shop.id)} className="text-red-400/50 hover:text-red-400 transition-colors shrink-0">
+            <button onClick={() => handleDelete(shop.id)} className="text-red-600 dark:text-red-600 dark:text-red-400/50 hover:text-red-600 dark:text-red-600 dark:text-red-400 transition-colors shrink-0">
               <X size={16} />
             </button>
           </div>
         ))}
         {!shops.length && (
-          <div className="col-span-3 py-10 text-center text-gold-500/30 text-sm">No shops yet. Add one to start tracking inventory.</div>
+          <div className="col-span-3 py-10 text-center text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30 text-sm">No shops yet. Add one to start tracking inventory.</div>
         )}
       </div>
     </div>
@@ -193,9 +193,9 @@ const OpeningStockModal = ({ shops, onClose, onDone }) => {
         )}
 
         <div className="flex justify-end gap-3 pt-2">
-          <button onClick={onClose} className="px-5 py-3 bg-navy-800 text-gold-500 rounded-xl text-[10px] font-black ">Cancel</button>
+          <button onClick={onClose} className="px-5 py-3 bg-utility-gray dark:bg-base-800 text-accent-500 rounded-xl text-[10px] font-black ">Cancel</button>
           <button onClick={handleSubmit} disabled={saving}
-            className={`px-5 py-3 rounded-xl text-[10px] font-black  disabled:opacity-50 ${confirmed ? 'bg-amber-500 text-navy-950' : 'bg-gold-600 text-navy-950'}`}>
+            className={`px-5 py-3 rounded-xl text-[10px] font-black  disabled:opacity-50 ${confirmed ? 'bg-amber-500 text-base-950' : 'bg-accent-600 text-base-950'}`}>
             {saving ? 'Saving...' : confirmed ? 'Confirm & Lock' : 'Set Opening Stock'}
           </button>
         </div>
@@ -246,9 +246,9 @@ const MovementModal = ({ type, shops, onClose, onDone }) => {
         <InputField label="Description" value={form.description} onChange={v => setForm(f => ({ ...f, description: v }))} placeholder="Optional note" />
 
         <div className="flex justify-end gap-3 pt-2">
-          <button onClick={onClose} className="px-5 py-3 bg-navy-800 text-gold-500 rounded-xl text-[10px] font-black ">Cancel</button>
+          <button onClick={onClose} className="px-5 py-3 bg-utility-gray dark:bg-base-800 text-accent-500 rounded-xl text-[10px] font-black ">Cancel</button>
           <button onClick={handleSubmit} disabled={saving}
-            className="px-5 py-3 bg-gold-600 text-navy-950 rounded-xl text-[10px] font-black  disabled:opacity-50">
+            className="px-5 py-3 bg-accent-600 text-base-950 rounded-xl text-[10px] font-black  disabled:opacity-50">
             {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
@@ -303,31 +303,31 @@ const TransferModal = ({ shops, onClose, onDone }) => {
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-[10px] font-black   text-gold-500/50">Items</p>
-            <button onClick={addItem} className="flex items-center gap-1 text-gold-500 text-[10px] font-black ">
+            <p className="text-[10px] font-black   text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50">Items</p>
+            <button onClick={addItem} className="flex items-center gap-1 text-accent-500 text-[10px] font-black ">
               <Plus size={12} /> Add Item
             </button>
           </div>
           {items.map((item, idx) => (
-            <div key={idx} className="grid grid-cols-[1fr_auto_auto] gap-3 items-center bg-navy-950/40 border border-gold-500/5 rounded-xl p-3">
+            <div key={idx} className="grid grid-cols-[1fr_auto_auto] gap-3 items-center bg-primary dark:bg-primary/40 border border-accent-500/5 rounded-xl p-3">
               <SelectField label="" value={item.item_name} onChange={v => updateItem(idx, 'item_name', v)}>
                 <option value="">Select item</option>
                 {INVENTORY_ITEMS.map(name => <option key={name} value={name}>{name}</option>)}
               </SelectField>
               <input type="number" min="1" placeholder="Qty" value={item.quantity}
                 onChange={e => updateItem(idx, 'quantity', e.target.value)}
-                className="w-20 bg-navy-900 border border-gold-500/10 rounded-xl px-3 py-3 text-sm text-gold-100 outline-none focus:border-gold-500/40 text-center" />
+                className="w-20 bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-3 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 text-center" />
               {items.length > 1 && (
-                <button onClick={() => removeItem(idx)} className="text-red-400/50 hover:text-red-400"><X size={16} /></button>
+                <button onClick={() => removeItem(idx)} className="text-red-600 dark:text-red-600 dark:text-red-400/50 hover:text-red-600 dark:text-red-600 dark:text-red-400"><X size={16} /></button>
               )}
             </div>
           ))}
         </div>
 
         <div className="flex justify-end gap-3 pt-2">
-          <button onClick={onClose} className="px-5 py-3 bg-navy-800 text-gold-500 rounded-xl text-[10px] font-black ">Cancel</button>
+          <button onClick={onClose} className="px-5 py-3 bg-utility-gray dark:bg-base-800 text-accent-500 rounded-xl text-[10px] font-black ">Cancel</button>
           <button onClick={handleSubmit} disabled={saving}
-            className="flex items-center gap-2 px-5 py-3 bg-gold-600 text-navy-950 rounded-xl text-[10px] font-black  disabled:opacity-50">
+            className="flex items-center gap-2 px-5 py-3 bg-accent-600 text-base-950 rounded-xl text-[10px] font-black  disabled:opacity-50">
             <ArrowRightLeft size={14} /> {saving ? 'Processing...' : 'Transfer'}
           </button>
         </div>
@@ -364,27 +364,27 @@ const StockSummaryTable = ({ shops }) => {
           {['daily', 'weekly', 'monthly'].map(p => (
             <button key={p} onClick={() => setPeriod(p)}
               className={`px-4 py-2 rounded-xl text-[10px] font-black   border transition-all ${
-                period === p ? 'bg-gold-600 text-navy-950 border-gold-600' : 'bg-navy-900/50 text-gold-500/60 border-gold-500/10 hover:border-gold-500/30'
+                period === p ? 'bg-accent-600 text-base-950 border-accent-600' : 'bg-utility-gray dark:bg-utility-gray/50 text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 hover:border-accent-500/30'
               }`}>{p}</button>
           ))}
         </div>
         <select value={shopFilter} onChange={e => setShopFilter(e.target.value)}
-          className="bg-navy-900 border border-gold-500/10 rounded-xl px-4 py-2 text-sm text-gold-300 outline-none cursor-pointer">
+          className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-4 py-2 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-300 outline-none cursor-pointer">
           <option value="">All Shops</option>
           {shops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
-        <button onClick={fetchSummary} className="p-2 text-gold-500/50 hover:text-gold-500 bg-navy-800/50 border border-gold-500/10 rounded-xl transition-colors">
+        <button onClick={fetchSummary} className="p-2 text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 hover:text-accent-500 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl transition-colors">
           <RefreshCw size={16} />
         </button>
-        <span className="text-[10px]   text-gold-500/30">{periodLabels[period]}</span>
+        <span className="text-[10px]   text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30">{periodLabels[period]}</span>
       </div>
 
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden">
+      <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden">
         {loading ? <Spinner /> : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-left">
-              <thead className="bg-navy-800/50">
-                <tr className="text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+              <thead className="bg-utility-gray dark:bg-utility-gray/50">
+                <tr className="text-[10px] font-bold text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-[0.2em]">
                   <th className="px-5 py-4">Product</th>
                   <th className="px-5 py-4">Variant</th>
                   <th className="px-5 py-4">Shop</th>
@@ -395,20 +395,20 @@ const StockSummaryTable = ({ shops }) => {
                   <th className="px-5 py-4 text-right">Closing</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gold-500/5">
+              <tbody className="divide-y divide-accent-500/5">
                 {data.length ? data.map((row, i) => (
-                  <tr key={i} className="hover:bg-navy-800/20 transition-colors">
-                    <td className="px-5 py-4 text-sm font-bold text-gold-100">{row.product_name}</td>
-                    <td className="px-5 py-4 text-xs text-gold-500/60">{row.variant_label || '—'}</td>
+                  <tr key={i} className="hover:bg-utility-gray dark:bg-utility-gray/20 transition-colors">
+                    <td className="px-5 py-4 text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{row.product_name}</td>
+                    <td className="px-5 py-4 text-xs text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60">{row.variant_label || '—'}</td>
                     <td className="px-5 py-4">
-                      <span className="text-[10px] font-black  text-gold-500 bg-gold-500/10 px-2 py-1 rounded-lg">{row.shop_code}</span>
+                      <span className="text-[10px] font-black  text-accent-500 bg-accent-500/10 px-2 py-1 rounded-lg">{row.shop_code}</span>
                     </td>
-                    <td className="px-5 py-4 text-right text-gold-100 font-bold">{row.opening_stock}</td>
-                    <td className="px-5 py-4 text-right text-green-400 font-bold">+{row.stock_in}</td>
+                    <td className="px-5 py-4 text-right text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 font-bold">{row.opening_stock}</td>
+                    <td className="px-5 py-4 text-right text-green-600 dark:text-green-600 dark:text-green-400 font-bold">+{row.stock_in}</td>
                     <td className="px-5 py-4 text-right text-orange-400 font-bold">-{row.stock_out}</td>
-                    <td className="px-5 py-4 text-right text-red-400 font-bold">-{row.sales}</td>
+                    <td className="px-5 py-4 text-right text-red-600 dark:text-red-600 dark:text-red-400 font-bold">-{row.sales}</td>
                     <td className="px-5 py-4 text-right">
-                      <span className={`font-black text-sm ${parseInt(row.closing_stock) <= 5 ? 'text-red-400' : 'text-gold-100'}`}>
+                      <span className={`font-black text-sm ${parseInt(row.closing_stock) <= 5 ? 'text-red-600 dark:text-red-600 dark:text-red-400' : 'text-secondary dark:text-secondary dark:text-accent-100'}`}>
                         {row.closing_stock ?? '—'}
                       </span>
                     </td>
@@ -421,7 +421,7 @@ const StockSummaryTable = ({ shops }) => {
       </div>
 
       {/* Formula hint */}
-      <p className="text-[10px] text-gold-500/30  ">
+      <p className="text-[10px] text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30  ">
         Closing Stock = Opening Stock + Stock In − Stock Out − Sales
       </p>
     </div>
@@ -450,41 +450,41 @@ const CurrentStockPanel = ({ shops }) => {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <select value={shopFilter} onChange={e => setShopFilter(e.target.value)}
-          className="bg-navy-900 border border-gold-500/10 rounded-xl px-4 py-2 text-sm text-gold-300 outline-none cursor-pointer">
+          className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-4 py-2 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-300 outline-none cursor-pointer">
           <option value="">All Shops</option>
           {shops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
-        <button onClick={fetchData} className="p-2 text-gold-500/50 hover:text-gold-500 bg-navy-800/50 border border-gold-500/10 rounded-xl transition-colors">
+        <button onClick={fetchData} className="p-2 text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 hover:text-accent-500 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl transition-colors">
           <RefreshCw size={16} />
         </button>
       </div>
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden">
+      <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden">
         {loading ? <Spinner /> : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px] text-left">
-              <thead className="bg-navy-800/50">
-                <tr className="text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+              <thead className="bg-utility-gray dark:bg-utility-gray/50">
+                <tr className="text-[10px] font-bold text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-[0.2em]">
                   <th className="px-5 py-4">Product</th>
                   <th className="px-5 py-4">Variant</th>
                   <th className="px-5 py-4">Shop</th>
                   <th className="px-5 py-4 text-right">Current Stock</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gold-500/5">
+              <tbody className="divide-y divide-accent-500/5">
                 {data.length ? data.map((row, i) => (
-                  <tr key={i} className="hover:bg-navy-800/20 transition-colors">
+                  <tr key={i} className="hover:bg-utility-gray dark:bg-utility-gray/20 transition-colors">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        {row.thumbnail && <img src={row.thumbnail} alt={row.product_name} className="w-8 h-8 rounded-lg object-cover border border-gold-500/10" />}
-                        <span className="text-sm font-bold text-gold-100">{row.product_name}</span>
+                        {row.thumbnail && <img src={row.thumbnail} alt={row.product_name} className="w-8 h-8 rounded-lg object-cover border border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10" />}
+                        <span className="text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{row.product_name}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-xs text-gold-500/60">{row.variant_label || '—'}</td>
+                    <td className="px-5 py-4 text-xs text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60">{row.variant_label || '—'}</td>
                     <td className="px-5 py-4">
-                      <span className="text-[10px] font-black  text-gold-500 bg-gold-500/10 px-2 py-1 rounded-lg">{row.shop_code}</span>
+                      <span className="text-[10px] font-black  text-accent-500 bg-accent-500/10 px-2 py-1 rounded-lg">{row.shop_code}</span>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <span className={`text-base font-black ${parseInt(row.current_stock) <= 5 ? 'text-red-400' : parseInt(row.current_stock) <= 15 ? 'text-amber-400' : 'text-green-400'}`}>
+                      <span className={`text-base font-black ${parseInt(row.current_stock) <= 5 ? 'text-red-600 dark:text-red-600 dark:text-red-400' : parseInt(row.current_stock) <= 15 ? 'text-amber-600 dark:text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-600 dark:text-green-400'}`}>
                         {row.current_stock}
                       </span>
                     </td>
@@ -526,26 +526,26 @@ const MovementHistory = ({ shops }) => {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <select value={shopFilter} onChange={e => setShopFilter(e.target.value)}
-          className="bg-navy-900 border border-gold-500/10 rounded-xl px-4 py-2 text-sm text-gold-300 outline-none cursor-pointer">
+          className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-4 py-2 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-300 outline-none cursor-pointer">
           <option value="">All Shops</option>
           {shops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
         <select value={itemFilter} onChange={e => setItemFilter(e.target.value)}
-          className="bg-navy-900 border border-gold-500/10 rounded-xl px-4 py-2 text-sm text-gold-300 outline-none cursor-pointer">
+          className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-4 py-2 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-300 outline-none cursor-pointer">
           <option value="">All Items</option>
           {INVENTORY_ITEMS.map(item => <option key={item} value={item}>{item}</option>)}
         </select>
-        <button onClick={fetchData} className="p-2 text-gold-500/50 hover:text-gold-500 bg-navy-800/50 border border-gold-500/10 rounded-xl transition-colors">
+        <button onClick={fetchData} className="p-2 text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 hover:text-accent-500 bg-utility-gray dark:bg-utility-gray/50 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl transition-colors">
           <RefreshCw size={16} />
         </button>
       </div>
 
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden">
+      <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden">
         {loading ? <Spinner /> : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-left">
-              <thead className="bg-navy-800/50">
-                <tr className="text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+              <thead className="bg-utility-gray dark:bg-utility-gray/50">
+                <tr className="text-[10px] font-bold text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-[0.2em]">
                   <th className="px-5 py-4">Date</th>
                   <th className="px-5 py-4">Type</th>
                   <th className="px-5 py-4">Product</th>
@@ -556,19 +556,19 @@ const MovementHistory = ({ shops }) => {
                   <th className="px-5 py-4">Note</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gold-500/5">
+              <tbody className="divide-y divide-accent-500/5">
                 {data.length ? data.map((row) => (
-                  <tr key={row.id} className="hover:bg-navy-800/20 transition-colors">
-                    <td className="px-5 py-4 text-xs text-gold-500/50">{new Date(row.created_at).toLocaleString()}</td>
+                  <tr key={row.id} className="hover:bg-utility-gray dark:bg-utility-gray/20 transition-colors">
+                    <td className="px-5 py-4 text-xs text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50">{new Date(row.created_at).toLocaleString()}</td>
                     <td className="px-5 py-4"><Badge type={row.movement_type} /></td>
-                    <td className="px-5 py-4 text-sm font-bold text-gold-100">{row.product_name}</td>
-                    <td className="px-5 py-4 text-xs text-gold-500/60">{row.variant_label || '—'}</td>
+                    <td className="px-5 py-4 text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{row.product_name}</td>
+                    <td className="px-5 py-4 text-xs text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60">{row.variant_label || '—'}</td>
                     <td className="px-5 py-4">
-                      <span className="text-[10px] font-black  text-gold-500 bg-gold-500/10 px-2 py-1 rounded-lg">{row.shop_name}</span>
+                      <span className="text-[10px] font-black  text-accent-500 bg-accent-500/10 px-2 py-1 rounded-lg">{row.shop_name}</span>
                     </td>
-                    <td className="px-5 py-4 text-right font-black text-gold-100">{row.quantity}</td>
-                    <td className="px-5 py-4 text-right font-black text-gold-400">{row.closing_stock}</td>
-                    <td className="px-5 py-4 text-xs text-gold-500/40 max-w-[160px] truncate">{row.description || '—'}</td>
+                    <td className="px-5 py-4 text-right font-black text-secondary dark:text-secondary dark:text-accent-100">{row.quantity}</td>
+                    <td className="px-5 py-4 text-right font-black text-accent-400">{row.closing_stock}</td>
+                    <td className="px-5 py-4 text-xs text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 max-w-[160px] truncate">{row.description || '—'}</td>
                   </tr>
                 )) : <EmptyRow cols={8} msg="No movements found." />}
               </tbody>
@@ -594,12 +594,12 @@ const TransferHistory = () => {
   }, []);
 
   return (
-    <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden">
+    <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden">
       {loading ? <Spinner /> : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[700px] text-left">
-            <thead className="bg-navy-800/50">
-              <tr className="text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+            <thead className="bg-utility-gray dark:bg-utility-gray/50">
+              <tr className="text-[10px] font-bold text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-[0.2em]">
                 <th className="px-5 py-4">Date</th>
                 <th className="px-5 py-4">From</th>
                 <th className="px-5 py-4">To</th>
@@ -608,16 +608,16 @@ const TransferHistory = () => {
                 <th className="px-5 py-4">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gold-500/5">
+            <tbody className="divide-y divide-accent-500/5">
               {data.length ? data.map(row => (
-                <tr key={row.id} className="hover:bg-navy-800/20 transition-colors">
-                  <td className="px-5 py-4 text-xs text-gold-500/50">{new Date(row.created_at).toLocaleDateString()}</td>
-                  <td className="px-5 py-4 text-sm font-bold text-gold-100">{row.from_shop_name}</td>
-                  <td className="px-5 py-4 text-sm font-bold text-gold-100">{row.to_shop_name}</td>
-                  <td className="px-5 py-4 text-right font-black text-gold-400">{row.total_quantity}</td>
-                  <td className="px-5 py-4 text-right text-gold-500/60">{row.item_count}</td>
+                <tr key={row.id} className="hover:bg-utility-gray dark:bg-utility-gray/20 transition-colors">
+                  <td className="px-5 py-4 text-xs text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50">{new Date(row.created_at).toLocaleDateString()}</td>
+                  <td className="px-5 py-4 text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{row.from_shop_name}</td>
+                  <td className="px-5 py-4 text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">{row.to_shop_name}</td>
+                  <td className="px-5 py-4 text-right font-black text-accent-400">{row.total_quantity}</td>
+                  <td className="px-5 py-4 text-right text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60">{row.item_count}</td>
                   <td className="px-5 py-4">
-                    <span className="text-[10px] font-black  text-green-400 bg-green-400/10 px-2 py-1 rounded-lg">{row.status}</span>
+                    <span className="text-[10px] font-black  text-green-600 dark:text-green-600 dark:text-green-400 bg-green-400/10 px-2 py-1 rounded-lg">{row.status}</span>
                   </td>
                 </tr>
               )) : <EmptyRow cols={6} msg="No transfers yet." />}
@@ -632,11 +632,11 @@ const TransferHistory = () => {
 // ── Small Shared UI ────────────────────────────────────────────────────
 
 const ModalWrap = ({ title, onClose, children, wide }) => (
-  <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-navy-950/90 backdrop-blur-sm">
-    <div className={`bg-navy-900 border border-gold-500/20 rounded-3xl p-6 w-full ${wide ? 'max-w-3xl' : 'max-w-lg'} max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl`}>
+  <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-primary dark:bg-primary/90 backdrop-blur-sm">
+    <div className={`bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-3xl p-6 w-full ${wide ? 'max-w-3xl' : 'max-w-lg'} max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl`}>
       <div className="flex items-center justify-between mb-6">
-        <h4 className="text-lg font-serif font-bold text-gold-100">{title}</h4>
-        <button onClick={onClose} className="text-gold-500/40 hover:text-gold-500"><X size={20} /></button>
+        <h4 className="text-lg font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">{title}</h4>
+        <button onClick={onClose} className="text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 hover:text-accent-500"><X size={20} /></button>
       </div>
       {children}
     </div>
@@ -645,9 +645,9 @@ const ModalWrap = ({ title, onClose, children, wide }) => (
 
 const SelectField = ({ label, value, onChange, children }) => (
   <div>
-    {label && <label className="block text-[10px] font-black   text-gold-500/50 mb-1">{label}</label>}
+    {label && <label className="block text-[10px] font-black   text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 mb-1">{label}</label>}
     <select value={value} onChange={e => onChange(e.target.value)}
-      className="w-full bg-navy-900 border border-gold-500/10 rounded-xl px-4 py-3 text-sm text-gold-200 outline-none focus:border-gold-500/40 cursor-pointer">
+      className="w-full bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-4 py-3 text-sm text-accent-200 outline-none focus:border-accent-500/40 cursor-pointer">
       {children}
     </select>
   </div>
@@ -655,10 +655,10 @@ const SelectField = ({ label, value, onChange, children }) => (
 
 const InputField = ({ label, value, onChange, type = 'text', placeholder }) => (
   <div>
-    {label && <label className="block text-[10px] font-black   text-gold-500/50 mb-1">{label}</label>}
+    {label && <label className="block text-[10px] font-black   text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 mb-1">{label}</label>}
     <input type={type} value={value} placeholder={placeholder}
       onChange={e => onChange(e.target.value)}
-      className="w-full bg-navy-900 border border-gold-500/10 rounded-xl px-4 py-3 text-sm text-gold-100 placeholder:text-gold-500/30 outline-none focus:border-gold-500/40" />
+      className="w-full bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 placeholder:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30 outline-none focus:border-accent-500/40" />
   </div>
 );
 
@@ -696,16 +696,16 @@ const InventoryView = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
         <div>
-          <span className="text-[10px] font-black  tracking-[0.3em] text-gold-500/40">Multi-Shop · Real-Time</span>
-          <h3 className="text-2xl font-serif font-bold text-gold-100 mt-1">Inventory Management</h3>
+          <span className="text-[10px] font-black  tracking-[0.3em] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Multi-Shop · Real-Time</span>
+          <h3 className="text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 mt-1">Inventory Management</h3>
         </div>
         <div className="flex flex-wrap gap-2">
           {[
             { id: 'opening', label: 'Opening Stock', icon: Package, color: 'bg-blue-500/20 text-blue-300 border-blue-500/20 hover:bg-blue-500/30' },
-            { id: 'sales', label: 'Record Sales', icon: ShoppingCart, color: 'bg-red-500/20 text-red-300 border-red-500/20 hover:bg-red-500/30' },
+            { id: 'sales', label: 'Record Sales', icon: ShoppingCart, color: 'bg-red-500/20 text-red-600 dark:text-red-600 dark:text-red-300 border-red-500/20 hover:bg-red-500/30' },
             { id: 'stock_in', label: 'Stock In', icon: ArrowDown, color: 'bg-green-500/20 text-green-300 border-green-500/20 hover:bg-green-500/30' },
             { id: 'stock_out', label: 'Stock Out', icon: ArrowUp, color: 'bg-orange-500/20 text-orange-300 border-orange-500/20 hover:bg-orange-500/30' },
-            { id: 'transfer', label: 'Transfer', icon: ArrowRightLeft, color: 'bg-gold-600 text-navy-950 border-gold-600 hover:bg-gold-500' },
+            { id: 'transfer', label: 'Transfer', icon: ArrowRightLeft, color: 'bg-accent-600 text-base-950 border-accent-600 hover:bg-accent-500' },
           ].map(btn => (
             <button key={btn.id} onClick={() => setModal(btn.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black   border transition-all ${btn.color}`}>
@@ -719,15 +719,15 @@ const InventoryView = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Item Types', value: INVENTORY_ITEMS.length, icon: Package, color: 'text-blue-400' },
-          { label: 'Shops', value: shops.length, icon: Building2, color: 'text-gold-400' },
-          { label: 'Active Shops', value: shops.filter(s => s.is_active !== false).length, icon: CheckCircle2, color: 'text-green-400' },
-          { label: 'Low Stock', value: '—', icon: AlertCircle, color: 'text-red-400' },
+          { label: 'Shops', value: shops.length, icon: Building2, color: 'text-accent-400' },
+          { label: 'Active Shops', value: shops.filter(s => s.is_active !== false).length, icon: CheckCircle2, color: 'text-green-600 dark:text-green-600 dark:text-green-400' },
+          { label: 'Low Stock', value: '—', icon: AlertCircle, color: 'text-red-600 dark:text-red-600 dark:text-red-400' },
         ].map(s => (
-          <div key={s.label} className="bg-navy-900/40 border border-gold-500/10 rounded-2xl p-4 flex items-center gap-4">
+          <div key={s.label} className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl p-4 flex items-center gap-4">
             <div className={`${s.color} opacity-80`}><s.icon size={22} /></div>
             <div>
-              <p className="text-[10px] font-black   text-gold-500/40">{s.label}</p>
-              <p className="text-xl font-serif font-bold text-gold-100">{loading ? '—' : s.value}</p>
+              <p className="text-[10px] font-black   text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">{s.label}</p>
+              <p className="text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">{loading ? '—' : s.value}</p>
             </div>
           </div>
         ))}
@@ -738,7 +738,7 @@ const InventoryView = () => {
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black   border transition-all ${
-              tab === t.id ? 'bg-gold-600 text-navy-950 border-gold-600' : 'bg-navy-900/50 text-gold-500/60 border-gold-500/10 hover:border-gold-500/30'
+              tab === t.id ? 'bg-accent-600 text-base-950 border-accent-600' : 'bg-utility-gray dark:bg-utility-gray/50 text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 hover:border-accent-500/30'
             }`}>
             <t.icon size={14} /> {t.label}
           </button>

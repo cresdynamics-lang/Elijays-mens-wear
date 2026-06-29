@@ -29,8 +29,8 @@ export default function BlogArticle() {
             method: 'PATCH',
             credentials: 'include',
           });
-        } catch (err) {
-          console.warn('Could not update views:', err);
+        } catch {
+          console.warn('Could not update views');
         }
       } catch (err) {
         setError(err.message);
@@ -46,19 +46,19 @@ export default function BlogArticle() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-navy-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold-500"></div>
+      <div className="flex justify-center items-center min-h-screen bg-primary">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent/60"></div>
       </div>
     );
   }
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center bg-navy-950 text-white px-6">
-        <h1 className="text-2xl font-serif font-bold text-white mb-4 text-center">
+      <div className="min-h-screen flex flex-col justify-center items-center bg-primary text-secondary px-6">
+        <h1 className="text-2xl font-serif font-bold text-secondary mb-5 text-center tracking-tight">
           {error || 'Blog post not found'}
         </h1>
-        <Link to="/blog" className="text-gold-400 hover:text-gold-300 font-medium underline">
+        <Link to="/blog" className="text-accent hover:text-accent/80 font-semibold transition-colors duration-300">
           Back to blog
         </Link>
       </div>
@@ -69,7 +69,7 @@ export default function BlogArticle() {
   const imageUrl = resolveDisplayImageUrl(blog.featured_image_url, { width: 1600 }) || fallbackImage;
 
   return (
-    <div className="min-h-screen bg-navy-950 text-white">
+    <div className="min-h-screen bg-primary">
       <SEO
         title={blog.title}
         description={blog.excerpt || blog.title}
@@ -87,7 +87,7 @@ export default function BlogArticle() {
       />
 
       {imageUrl && (
-        <div className="relative w-full h-96 bg-navy-900 overflow-hidden">
+        <div className="relative w-full h-96 bg-utility-gray overflow-hidden">
           <img
             src={imageUrl}
             alt={blog.title}
@@ -96,23 +96,23 @@ export default function BlogArticle() {
               e.currentTarget.src = fallbackImage;
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy-950/70 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/30 to-transparent" />
         </div>
       )}
 
-      <div className="max-w-3xl mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto px-4 py-12 md:py-16">
         <div className="mb-8">
-          <Link to="/blog" className="text-gold-400 hover:text-gold-300 text-sm font-medium">
+          <Link to="/blog" className="text-accent hover:text-accent/80 text-sm font-semibold transition-colors duration-300">
             Back to blog
           </Link>
         </div>
 
-        <header className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-serif font-bold text-white mb-4">
+        <header className="mb-10">
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-secondary mb-5 tracking-tight">
             {blog.title}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-navy-200 mb-4">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-secondary/70">
             <time dateTime={blog.published_date}>
               {new Date(blog.published_date).toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -120,38 +120,40 @@ export default function BlogArticle() {
                 day: 'numeric',
               })}
             </time>
-            <span>|</span>
-            <span className="inline-block bg-gold-600/10 px-3 py-1 rounded-full border border-gold-600/15 text-gold-400">
+            <span className="text-accent/60">|</span>
+            <span className="inline-block bg-accent/10 px-3.5 py-1 rounded-full border border-accent/15 text-accent text-xs font-bold tracking-wide">
               {blog.category}
             </span>
-            <span>|</span>
-            <span>{blog.views || 0} views</span>
+            <span className="text-accent/60">|</span>
+            <span className="text-secondary/60 font-medium">{blog.views || 0} views</span>
           </div>
         </header>
 
-        <div className="mb-8 text-lg text-navy-200 italic border-l-4 border-gold-500 pl-4">
-          {blog.excerpt}
-        </div>
+        {blog.excerpt && (
+          <div className="mb-10 text-lg text-secondary/80 italic border-l-2 border-accent/50 pl-5 leading-relaxed font-medium">
+            {blog.excerpt}
+          </div>
+        )}
 
-        <article className="max-w-none mb-12">
-          <div className="text-navy-100 leading-relaxed whitespace-pre-wrap">
+        <article className="max-w-none mb-14">
+          <div className="text-secondary leading-[1.8] whitespace-pre-wrap text-[15px] font-medium">
             {blog.content}
           </div>
         </article>
 
-        <div className="bg-navy-900/70 border border-gold-600/10 rounded-lg p-6 mb-8">
-          <h3 className="text-base md:text-lg font-serif font-bold text-white mb-2">
+        <div className="bg-utility-gray/40 border border-utility-gray/60 p-7 mb-10 rounded-2xl">
+          <h3 className="text-base md:text-lg font-serif font-bold text-secondary mb-3 tracking-tight">
             Style note
           </h3>
-          <p className="text-navy-200">
+          <p className="text-secondary/70 font-medium leading-relaxed">
             This article is built around the category and product imagery already on the site so the visual story matches the written one.
           </p>
         </div>
 
-        <div className="text-center py-8 border-t border-gold-600/10">
+        <div className="text-center py-10 border-t border-utility-gray/60">
           <Link
             to={`/blog?category=${encodeURIComponent(blog.category)}`}
-            className="inline-block px-6 py-3 bg-gold-600 text-navy-950 rounded-lg hover:bg-gold-500 transition-colors font-medium"
+            className="btn-primary inline-block px-7 py-3 text-[10px] tracking-wider"
           >
             Explore more {blog.category} articles
           </Link>
@@ -160,4 +162,3 @@ export default function BlogArticle() {
     </div>
   );
 }
-

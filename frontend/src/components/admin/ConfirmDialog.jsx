@@ -6,16 +6,16 @@ const ConfirmContext = createContext(null);
 
 const variantStyles = {
   danger: {
-    icon: 'bg-red-500/15 text-red-400 border-red-500/20',
+    icon: 'bg-red-500/15 text-red-600 dark:text-red-600 dark:text-red-400 border-red-500/20',
     button: 'bg-red-500 hover:bg-red-400 text-white',
   },
   warning: {
-    icon: 'bg-gold-600/15 text-gold-500 border-gold-500/20',
-    button: 'bg-gold-600 hover:bg-gold-500 text-navy-950',
+    icon: 'bg-accent-600/15 text-accent-500 border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20',
+    button: 'bg-accent-600 hover:bg-accent-500 text-base-950',
   },
   default: {
-    icon: 'bg-gold-600/15 text-gold-500 border-gold-500/20',
-    button: 'bg-gold-600 hover:bg-gold-500 text-navy-950',
+    icon: 'bg-accent-600/15 text-accent-500 border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20',
+    button: 'bg-accent-600 hover:bg-accent-500 text-base-950',
   },
 };
 
@@ -71,7 +71,7 @@ export function ConfirmProvider({ children }) {
             <button
               type="button"
               aria-label="Close"
-              className="absolute inset-0 bg-navy-950/75 backdrop-blur-sm"
+              className="absolute inset-0 bg-primary dark:bg-primary/75 backdrop-blur-sm"
               onClick={() => close(false)}
             />
 
@@ -80,9 +80,9 @@ export function ConfirmProvider({ children }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-md bg-navy-900 border border-gold-500/15 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden"
+              className="relative w-full max-w-md bg-utility-gray dark:bg-base-900 border border-accent-500/15 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden"
             >
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/40 to-transparent" />
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-500/40 to-transparent" />
 
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4">
@@ -92,18 +92,18 @@ export function ConfirmProvider({ children }) {
                   <div className="flex-1 min-w-0 pt-1">
                     <h3
                       id="confirm-dialog-title"
-                      className="text-lg font-serif font-bold text-gold-100  tracking-wide"
+                      className="text-lg font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  tracking-wide"
                     >
                       {state.title}
                     </h3>
-                    <p className="mt-3 text-sm text-gold-500/60 leading-relaxed whitespace-pre-line">
+                    <p className="mt-3 text-sm text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 leading-relaxed whitespace-pre-line">
                       {state.message}
                     </p>
                   </div>
                   <button
                     type="button"
                     onClick={() => close(false)}
-                    className="shrink-0 p-1.5 rounded-lg text-gold-500/40 hover:text-gold-500 hover:bg-navy-800 transition-colors"
+                    className="shrink-0 p-1.5 rounded-lg text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 hover:text-accent-500 hover:bg-utility-gray dark:bg-base-800 transition-colors"
                     aria-label="Close"
                   >
                     <X size={18} />
@@ -114,7 +114,7 @@ export function ConfirmProvider({ children }) {
                   <button
                     type="button"
                     onClick={() => close(false)}
-                    className="w-full sm:w-auto px-6 py-3 rounded-xl border border-gold-500/20 text-gold-500/80 text-[10px] font-black  tracking-[0.2em] hover:border-gold-500/40 hover:text-gold-500 transition-all"
+                    className="w-full sm:w-auto px-6 py-3 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 text-accent dark:text-secondary dark:text-secondary dark:text-accent-500/80 text-[10px] font-black  tracking-[0.2em] hover:border-accent-500/40 hover:text-accent-500 transition-all"
                   >
                     {state.cancelLabel}
                   </button>

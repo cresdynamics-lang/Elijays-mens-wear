@@ -14,12 +14,12 @@ const SizeChip = ({ size, stock, outOfStockStyle }) => {
           ? 'border-red-500/40 bg-red-500/10 text-red-400/90 line-through opacity-70'
           : out
             ? 'border-slate-600/40 bg-slate-800/40 text-slate-500'
-            : 'border-gold-500/30 bg-gold-500/10 text-gold-200'
+            : 'border-accent-500/30 bg-accent-500/10 text-accent-200'
       }`}
     >
       <span>{size}</span>
       {qty != null && !out && (
-        <span className="text-[9px] font-normal text-gold-400/80 tabular-nums">{qty}</span>
+        <span className="text-[9px] font-normal text-accent-400/80 tabular-nums">{qty}</span>
       )}
       {out && outOfStockStyle && (
         <span className="text-[8px] font-normal text-red-400/70 no-underline">OUT</span>
@@ -33,7 +33,7 @@ const publishStatus = (p) => {
   if (live) return { label: 'Live on website', cls: 'bg-emerald-500/15 text-emerald-400' };
   if (p.website_product_id) return { label: 'Hidden on website', cls: 'bg-amber-500/15 text-amber-400' };
   if (p.website_details || p.description) return { label: 'Draft — ready to publish', cls: 'bg-sky-500/15 text-sky-300' };
-  return { label: 'Inventory only', cls: 'bg-navy-800 text-gold-500/50' };
+  return { label: 'Inventory only', cls: 'bg-base-800 text-accent-500/50' };
 };
 
 const InventoryProductCard = ({
@@ -60,7 +60,7 @@ const InventoryProductCard = ({
   const isLow = product.low_stock_threshold != null && (product.currentQty ?? 0) <= product.low_stock_threshold;
 
   return (
-    <article className={`bg-navy-950/60 border rounded-xl overflow-hidden ${selected ? 'border-gold-500/50 ring-1 ring-gold-500/20' : 'border-gold-500/15'}`}>
+    <article className={`bg-base-950/60 border rounded-xl overflow-hidden ${selected ? 'border-accent-500/50 ring-1 ring-accent-500/20' : 'border-accent-500/15'}`}>
       <div className="flex flex-col sm:flex-row gap-4 p-4">
         {onSelectToggle && (
           <label className="flex items-start pt-1 shrink-0 cursor-pointer">
@@ -68,17 +68,17 @@ const InventoryProductCard = ({
               type="checkbox"
               checked={selected}
               onChange={onSelectToggle}
-              className="mt-1 rounded border-gold-500/30 bg-navy-950 text-gold-500 focus:ring-gold-500/40"
+              className="mt-1 rounded border-accent-500/30 bg-base-950 text-accent-500 focus:ring-accent-500/40"
             />
           </label>
         )}
         {showImage ? (
-          <div className="shrink-0 w-full sm:w-28 h-28 bg-white rounded-lg overflow-hidden border border-gold-500/10">
+          <div className="shrink-0 w-full sm:w-28 h-28 bg-white rounded-lg overflow-hidden border border-accent-500/10">
             <img src={product.website_thumbnail} alt="" className="w-full h-full object-contain p-1" />
           </div>
         ) : (
-          <div className="shrink-0 w-full sm:w-44 min-h-[7rem] bg-navy-900/80 rounded-lg border border-gold-500/10 p-3 flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5 text-gold-500/50">
+          <div className="shrink-0 w-full sm:w-44 min-h-[7rem] bg-base-900/80 rounded-lg border border-accent-500/10 p-3 flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5 text-accent-500/50">
               <FileText size={12} />
               <span className="text-[10px]   font-bold">Inventory record</span>
             </div>
@@ -108,17 +108,17 @@ const InventoryProductCard = ({
                   </button>
                 )}
               </div>
-              <p className="text-[10px] text-gold-500/50 font-mono mt-0.5">{product.sku}</p>
-              <p className="text-[10px] text-gold-500/40 mt-0.5">
+              <p className="text-[10px] text-accent-500/50 font-mono mt-0.5">{product.sku}</p>
+              <p className="text-[10px] text-accent-500/40 mt-0.5">
                 {product.website_category_name || product.category}
               </p>
             </div>
             <div className="text-right shrink-0">
-              <p className="text-gold-400 text-sm">{formatKES(product.website_price ?? product.shop_price)}</p>
+              <p className="text-accent-400 text-sm">{formatKES(product.website_price ?? product.shop_price)}</p>
               {product.website_discount_price && (
                 <p className="text-[10px] text-slate-500 line-through">{formatKES(product.website_price)}</p>
               )}
-              <p className="text-[10px] text-gold-500/40 mt-0.5">Shop {formatKES(product.shop_price)}</p>
+              <p className="text-[10px] text-accent-500/40 mt-0.5">Shop {formatKES(product.shop_price)}</p>
               {product.store_price != null && product.store_price !== product.shop_price && (
                 <p className="text-[10px] text-violet-400/80 mt-0.5">Store {formatKES(product.store_price)}</p>
               )}
@@ -142,25 +142,25 @@ const InventoryProductCard = ({
             <span className="text-[10px] text-sky-300/90 flex items-center gap-1">
               <Store size={11} /> Store {product.storeQty ?? 0}
             </span>
-            <span className="text-[10px] text-gold-400/90 flex items-center gap-1">
+            <span className="text-[10px] text-accent-400/90 flex items-center gap-1">
               <ShoppingBag size={11} /> Shop {product.currentQty ?? 0}
             </span>
           </div>
 
           {onThresholdChange && !readOnly && (
             <div className="flex items-center gap-2 text-[10px]">
-              <span className="text-gold-500/50  ">Low at</span>
+              <span className="text-accent-500/50  ">Low at</span>
               <input
                 type="number"
                 min={0}
                 value={thresholdDraft}
                 onChange={(e) => setThresholdDraft(e.target.value)}
-                className="w-14 bg-navy-950 border border-gold-500/20 rounded px-2 py-1 text-white"
+                className="w-14 bg-base-950 border border-accent-500/20 rounded px-2 py-1 text-white"
               />
               <button
                 type="button"
                 onClick={() => onThresholdChange(product, Number(thresholdDraft) || 0)}
-                className="text-gold-400 hover:text-gold-300 underline"
+                className="text-accent-400 hover:text-accent-300 underline"
               >
                 Save
               </button>
@@ -174,8 +174,8 @@ const InventoryProductCard = ({
       </div>
 
       {hasVariants && (
-        <div className="px-4 pb-4 space-y-3 border-t border-gold-500/10 pt-3 mx-4">
-          <p className="text-[10px]   text-gold-500/50">
+        <div className="px-4 pb-4 space-y-3 border-t border-accent-500/10 pt-3 mx-4">
+          <p className="text-[10px]   text-accent-500/50">
             {liveOnWeb ? 'Colors & sizes (shop floor count)' : 'Colors & sizes (draft — publish to go live)'}
           </p>
           {colorGroups.map((group) => {
@@ -185,14 +185,14 @@ const InventoryProductCard = ({
               <div
                 key={group.color || 'default'}
                 className={`rounded-lg p-3 border ${
-                  allOut ? 'border-red-500/25 bg-red-500/5' : 'border-gold-500/10 bg-navy-900/40'
+                  allOut ? 'border-red-500/25 bg-red-500/5' : 'border-accent-500/10 bg-base-900/40'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
                   {liveOnWeb && group.image_url && (
-                    <img src={group.image_url} alt="" className="w-8 h-8 rounded object-cover border border-gold-500/10" />
+                    <img src={group.image_url} alt="" className="w-8 h-8 rounded object-cover border border-accent-500/10" />
                   )}
-                  <p className={`text-xs font-medium ${allOut ? 'text-red-400/90 line-through' : 'text-gold-300/90'}`}>
+                  <p className={`text-xs font-medium ${allOut ? 'text-red-400/90 line-through' : 'text-accent-300/90'}`}>
                     {group.color || 'Original'}
                     {allOut && <span className="ml-2 text-[10px] no-underline text-red-400/70">(color out of stock)</span>}
                   </p>
@@ -214,7 +214,7 @@ const InventoryProductCard = ({
       )}
 
       {!hasVariants && product.variant_count > 0 && !addOpen && (
-        <p className="px-4 pb-3 text-[10px] text-gold-500/40">Click Add to update stock by size.</p>
+        <p className="px-4 pb-3 text-[10px] text-accent-500/40">Click Add to update stock by size.</p>
       )}
 
       {addOpen && !readOnly && (
@@ -228,19 +228,19 @@ const InventoryProductCard = ({
         />
       )}
 
-      <div className="flex flex-wrap gap-2 px-4 pb-4 pt-1 border-t border-gold-500/5 mx-0">
+      <div className="flex flex-wrap gap-2 px-4 pb-4 pt-1 border-t border-accent-500/5 mx-0">
         {!readOnly && (
           <>
         <button type="button" onClick={() => onEdit(product)} className="flex items-center gap-1 px-3 py-1.5 bg-sky-600 text-white rounded text-[10px] font-medium">
           <Pencil size={12} /> Edit details
         </button>
-        <button type="button" onClick={() => onTransferIn(product)} className="px-3 py-1.5 bg-gold-600/20 text-gold-300 border border-gold-500/30 rounded text-[10px]">
+        <button type="button" onClick={() => onTransferIn(product)} className="px-3 py-1.5 bg-accent-600/20 text-accent-300 border border-accent-500/30 rounded text-[10px]">
           Store → Shop
         </button>
-        <button type="button" onClick={() => onTransferOut(product)} className="px-3 py-1.5 border border-gold-500/20 text-gold-400 rounded text-[10px]">
+        <button type="button" onClick={() => onTransferOut(product)} className="px-3 py-1.5 border border-accent-500/20 text-accent-400 rounded text-[10px]">
           Shop → Store
         </button>
-        <button type="button" onClick={() => onPublish(product)} className="flex items-center gap-1 px-3 py-1.5 border border-gold-500/25 text-gold-400 rounded text-[10px] ml-auto">
+        <button type="button" onClick={() => onPublish(product)} className="flex items-center gap-1 px-3 py-1.5 border border-accent-500/25 text-accent-400 rounded text-[10px] ml-auto">
           <Globe size={12} />
           {product.website_product_id ? 'Update web' : 'Publish to website'}
         </button>

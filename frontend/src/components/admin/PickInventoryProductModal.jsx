@@ -62,24 +62,24 @@ const PickInventoryProductModal = ({ open, onClose, onSelect }) => {
       <button
         type="button"
         aria-label="Close"
-        className="fixed inset-0 bg-navy-950/85 backdrop-blur-sm"
+        className="fixed inset-0 bg-primary dark:bg-primary/85 backdrop-blur-sm"
         onClick={onClose}
       />
       <div className="relative flex min-h-full items-center justify-center p-4 py-8">
         <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative w-full max-w-lg max-h-[min(90dvh,640px)] flex flex-col bg-navy-900 border border-gold-500/20 rounded-2xl shadow-2xl"
+          className="relative w-full max-w-lg max-h-[min(90dvh,640px)] flex flex-col bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-2xl shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="shrink-0 flex justify-between items-center p-5 border-b border-gold-500/10">
+          <div className="shrink-0 flex justify-between items-center p-5 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">
             <div>
-              <h3 className="font-serif font-bold text-gold-100 text-lg">Add product from inventory</h3>
-              <p className="text-[11px] text-gold-500/50 mt-1">
+              <h3 className="font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-lg">Add product from inventory</h3>
+              <p className="text-[11px] text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 mt-1">
                 Choose an inventory item that is not live on the website yet. Add images and publish when ready.
               </p>
             </div>
-            <button type="button" onClick={onClose} className="text-gold-500/40 hover:text-gold-500">
+            <button type="button" onClick={onClose} className="text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 hover:text-accent-500">
               <X size={20} />
             </button>
           </div>
@@ -87,7 +87,7 @@ const PickInventoryProductModal = ({ open, onClose, onSelect }) => {
           <div className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="space-y-1">
-                <span className="text-[10px] font-bold   text-gold-500/50">Category</span>
+                <span className="text-[10px] font-bold   text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50">Category</span>
                 <div className="relative">
                   <select
                     value={category}
@@ -95,33 +95,33 @@ const PickInventoryProductModal = ({ open, onClose, onSelect }) => {
                       setCategory(e.target.value);
                       setSelectedId('');
                     }}
-                    className="w-full appearance-none bg-navy-950 border border-gold-500/20 rounded-xl px-3 py-2.5 pr-9 text-sm text-gold-100"
+                    className="w-full appearance-none bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-3 py-2.5 pr-9 text-sm text-secondary dark:text-secondary dark:text-accent-100"
                   >
                     <option value="">All categories</option>
                     {categories.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
-                  <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gold-500/40 pointer-events-none" />
+                  <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 pointer-events-none" />
                 </div>
               </label>
               <label className="space-y-1">
-                <span className="text-[10px] font-bold   text-gold-500/50">Search</span>
+                <span className="text-[10px] font-bold   text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50">Search</span>
                 <div className="relative">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gold-500/40" />
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40" />
                   <input
                     type="search"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Name or SKU…"
-                    className="w-full bg-navy-950 border border-gold-500/20 rounded-xl pl-9 pr-3 py-2.5 text-sm text-gold-100"
+                    className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl pl-9 pr-3 py-2.5 text-sm text-secondary dark:text-secondary dark:text-accent-100"
                   />
                 </div>
               </label>
             </div>
 
             <label className="block space-y-1">
-              <span className="text-[10px] font-bold   text-gold-500/50">
+              <span className="text-[10px] font-bold   text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50">
                 Product ({unpublished.length} not published)
               </span>
               <div className="relative">
@@ -129,7 +129,7 @@ const PickInventoryProductModal = ({ open, onClose, onSelect }) => {
                   value={selectedId}
                   onChange={(e) => setSelectedId(e.target.value)}
                   disabled={loading || unpublished.length === 0}
-                  className="w-full appearance-none bg-navy-950 border border-gold-500/20 rounded-xl px-3 py-3 pr-9 text-sm text-gold-100 disabled:opacity-50"
+                  className="w-full appearance-none bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-3 py-3 pr-9 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 disabled:opacity-50"
                 >
                   <option value="">
                     {loading ? 'Loading inventory…' : unpublished.length ? 'Select a product…' : 'No unpublished items in this category'}
@@ -141,16 +141,16 @@ const PickInventoryProductModal = ({ open, onClose, onSelect }) => {
                     </option>
                   ))}
                 </select>
-                <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gold-500/40 pointer-events-none" />
+                <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 pointer-events-none" />
               </div>
             </label>
           </div>
 
-          <div className="shrink-0 p-5 border-t border-gold-500/10 flex gap-3">
+          <div className="shrink-0 p-5 border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 border border-gold-500/20 text-gold-400 rounded-xl text-sm font-medium"
+              className="flex-1 py-3 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 text-accent-400 rounded-xl text-sm font-medium"
             >
               Cancel
             </button>
@@ -158,7 +158,7 @@ const PickInventoryProductModal = ({ open, onClose, onSelect }) => {
               type="button"
               disabled={!selectedId}
               onClick={handleContinue}
-              className="flex-1 py-3 bg-gold-600 text-navy-950 rounded-xl text-sm font-bold   disabled:opacity-40"
+              className="flex-1 py-3 bg-accent-600 text-base-950 rounded-xl text-sm font-bold   disabled:opacity-40"
             >
               Continue
             </button>

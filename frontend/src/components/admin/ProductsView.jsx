@@ -603,37 +603,37 @@ const ProductsView = () => {
     <div className="space-y-6 relative">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h3 className="text-lg sm:text-xl font-serif font-bold text-gold-100  ">
+          <h3 className="text-lg sm:text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  ">
             Products ({filteredProducts.length}{filteredProducts.length !== products.length ? ` of ${products.length}` : ''})
           </h3>
-          <p className="text-xs text-gold-500/50 mt-1">
+          <p className="text-xs text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 mt-1">
             Add product details and sizes here. Admin sets stock quantities in Inventory.
           </p>
         </div>
         <button
           type="button"
           onClick={() => handleOpenModal()}
-          className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-gold-600 text-navy-950 rounded-xl font-black  tracking-[0.2em] hover:bg-gold-500 transition-all shadow-lg shadow-gold-600/20 text-xs sm:text-sm"
+          className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 bg-accent-600 text-base-950 rounded-xl font-black  tracking-[0.2em] hover:bg-accent-500 transition-all shadow-lg shadow-accent-600/20 text-xs sm:text-sm"
         >
           <Plus size={20} /> Add Product
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-3 p-4 bg-navy-900/40 border border-gold-500/10 rounded-2xl">
+      <div className="flex flex-wrap gap-3 p-4 bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gold-500/40" size={14} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40" size={14} />
           <input
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search name, SKU, slugâ€¦"
-            className="w-full pl-9 pr-3 py-2.5 bg-navy-950 border border-gold-500/20 rounded-xl text-white text-sm outline-none focus:border-gold-500/40"
+            className="w-full pl-9 pr-3 py-2.5 bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white text-sm outline-none focus:border-accent-500/40"
           />
         </div>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="bg-navy-950 border border-gold-500/20 rounded-xl px-3 py-2.5 text-white text-sm min-w-[160px]"
+          className="bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-3 py-2.5 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white text-sm min-w-[160px]"
         >
           <option value="">All categories</option>
           {categories.map((c) => (
@@ -643,7 +643,7 @@ const ProductsView = () => {
         <select
           value={stockFilter}
           onChange={(e) => setStockFilter(e.target.value)}
-          className="bg-navy-950 border border-gold-500/20 rounded-xl px-3 py-2.5 text-white text-sm"
+          className="bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-3 py-2.5 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white text-sm"
         >
           <option value="all">All stock</option>
           <option value="in_stock">In stock</option>
@@ -652,7 +652,7 @@ const ProductsView = () => {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-navy-950 border border-gold-500/20 rounded-xl px-3 py-2.5 text-white text-sm"
+          className="bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-xl px-3 py-2.5 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white text-sm"
         >
           <option value="all">All status</option>
           <option value="active">Published</option>
@@ -661,15 +661,15 @@ const ProductsView = () => {
       </div>
 
       {selectedCount > 0 && (
-        <div className="flex flex-wrap items-center gap-3 p-4 bg-gold-600/10 border border-gold-500/30 rounded-2xl">
-          <span className="text-sm font-bold text-gold-200">
+        <div className="flex flex-wrap items-center gap-3 p-4 bg-accent-600/10 border border-accent-500/30 rounded-2xl">
+          <span className="text-sm font-bold text-accent-200">
             {selectedCount} selected
           </span>
           <button
             type="button"
             disabled={bulkBusy}
             onClick={() => runBulkAction('publish')}
-            className="px-3 py-1.5 text-xs font-black   border border-green-500/30 text-green-400 rounded-lg hover:bg-navy-800/50 disabled:opacity-50"
+            className="px-3 py-1.5 text-xs font-black   border border-green-500/30 text-green-600 dark:text-green-600 dark:text-green-400 rounded-lg hover:bg-utility-gray dark:bg-utility-gray/50 disabled:opacity-50"
           >
             Publish
           </button>
@@ -677,7 +677,7 @@ const ProductsView = () => {
             type="button"
             disabled={bulkBusy}
             onClick={() => runBulkAction('unpublish')}
-            className="px-3 py-1.5 text-xs font-black   border border-gold-500/20 text-gold-500/60 rounded-lg hover:bg-navy-800/50 disabled:opacity-50"
+            className="px-3 py-1.5 text-xs font-black   border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 rounded-lg hover:bg-utility-gray dark:bg-utility-gray/50 disabled:opacity-50"
           >
             Unpublish
           </button>
@@ -685,7 +685,7 @@ const ProductsView = () => {
             type="button"
             disabled={bulkBusy}
             onClick={() => runBulkAction('delete')}
-            className="px-3 py-1.5 text-xs font-black   border border-red-500/40 text-red-400 rounded-lg hover:bg-red-400/10 disabled:opacity-50"
+            className="px-3 py-1.5 text-xs font-black   border border-red-500/40 text-red-600 dark:text-red-600 dark:text-red-400 rounded-lg hover:bg-red-400/10 disabled:opacity-50"
           >
             <Trash2 size={12} className="inline mr-1 -mt-0.5" />
             Delete selected
@@ -694,30 +694,30 @@ const ProductsView = () => {
             type="button"
             disabled={bulkBusy}
             onClick={clearSelection}
-            className="ml-auto text-xs text-gold-500/50 hover:text-gold-400 underline"
+            className="ml-auto text-xs text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50 hover:text-accent-400 underline"
           >
             Clear selection
           </button>
         </div>
       )}
 
-      <div className="bg-navy-900/40 border border-gold-500/10 rounded-2xl overflow-hidden backdrop-blur-sm text-gold-100">
+      <div className="bg-utility-gray dark:bg-utility-gray/40 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl overflow-hidden backdrop-blur-sm text-secondary dark:text-secondary dark:text-accent-100">
         {loading ? (
           <div className="py-24 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gold-500 mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent dark:border-accent-500 mx-auto"></div>
           </div>
         ) : filteredProducts.length > 0 ? (
           <AdminTable>
           <table className="w-full text-left min-w-[800px]">
-            <thead className="bg-navy-800/50">
-              <tr className="text-[10px] font-bold text-gold-500/40  tracking-[0.2em]">
+            <thead className="bg-utility-gray dark:bg-utility-gray/50">
+              <tr className="text-[10px] font-bold text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-[0.2em]">
                 <th className="px-4 py-4 w-12">
                   <input
                     type="checkbox"
                     checked={allFilteredSelected}
                     onChange={toggleSelectAllFiltered}
                     aria-label="Select all filtered products"
-                    className="w-4 h-4 rounded border-gold-500/30 bg-navy-950 text-gold-600 focus:ring-0"
+                    className="w-4 h-4 rounded border-accent-500/30 bg-primary dark:bg-base-950 text-accent-600 focus:ring-0"
                   />
                 </th>
                 <th className="px-6 py-4">Product Details</th>
@@ -729,13 +729,13 @@ const ProductsView = () => {
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gold-500/5">
+            <tbody className="divide-y divide-accent-500/5">
               {filteredProducts.map((p) => {
                 const variantColors = [...new Set((p.variants || []).map((v) => v.color).filter(Boolean))];
                 return (
                 <tr
                   key={p.id}
-                  className={`hover:bg-navy-800/30 transition-colors ${selectedIds.has(p.id) ? 'bg-gold-600/5' : ''}`}
+                  className={`hover:bg-utility-gray dark:bg-utility-gray/30 transition-colors ${selectedIds.has(p.id) ? 'bg-accent-600/5' : ''}`}
                 >
                   <td className="px-4 py-4">
                     <input
@@ -743,12 +743,12 @@ const ProductsView = () => {
                       checked={selectedIds.has(p.id)}
                       onChange={() => toggleSelected(p.id)}
                       aria-label={`Select ${p.name}`}
-                      className="w-4 h-4 rounded border-gold-500/30 bg-navy-950 text-gold-600 focus:ring-0"
+                      className="w-4 h-4 rounded border-accent-500/30 bg-primary dark:bg-base-950 text-accent-600 focus:ring-0"
                     />
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-navy-800 rounded-xl border border-gold-500/10 overflow-hidden flex items-center justify-center">
+                      <div className="w-12 h-12 bg-utility-gray dark:bg-base-800 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 overflow-hidden flex items-center justify-center">
                         {resolveDisplayImageUrl(p.thumbnail, { width: 96 }) ? (
                           <img
                             src={resolveDisplayImageUrl(p.thumbnail, { width: 96 })}
@@ -758,30 +758,30 @@ const ProductsView = () => {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <ShoppingBag size={24} className="text-gold-500/40" />
+                          <ShoppingBag size={24} className="text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40" />
                         )}
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-gold-100 ">{p.name}</div>
-                        <div className="text-[10px] font-mono text-gold-500/40  mt-1">{p.slug}</div>
+                        <div className="text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 ">{p.name}</div>
+                        <div className="text-[10px] font-mono text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  mt-1">{p.slug}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 font-mono text-[10px] text-gold-500/70 ">{p.sku || 'â€”'}</td>
-                  <td className="px-6 py-4 text-[10px] font-bold text-gold-500/60 ">{p.category_name || 'Uncategorized'}</td>
-                  <td className="px-6 py-4 font-bold text-gold-100">KSh {parseFloat(p.price).toLocaleString()}</td>
+                  <td className="px-6 py-4 font-mono text-[10px] text-accent dark:text-secondary dark:text-secondary dark:text-accent-500/70 ">{p.sku || 'â€”'}</td>
+                  <td className="px-6 py-4 text-[10px] font-bold text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 ">{p.category_name || 'Uncategorized'}</td>
+                  <td className="px-6 py-4 font-bold text-secondary dark:text-secondary dark:text-accent-100">KSh {parseFloat(p.price).toLocaleString()}</td>
                   <td className="px-6 py-4">
-                    <div className={`text-[10px] font-black  ${p.stock_quantity === 0 ? 'text-red-400' : p.stock_quantity < 10 ? 'text-gold-500' : 'text-green-400'}`}>
+                    <div className={`text-[10px] font-black  ${p.stock_quantity === 0 ? 'text-red-600 dark:text-red-600 dark:text-red-400' : p.stock_quantity < 10 ? 'text-accent-500' : 'text-green-600 dark:text-green-600 dark:text-green-400'}`}>
                       {p.stock_quantity === 0 ? 'Out of Stock' : `${p.stock_quantity} units`}
                     </div>
                     {variantColors.length > 0 && (
-                      <p className="text-[9px] text-gold-500/40 mt-1  tracking-wider">
+                      <p className="text-[9px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 mt-1  tracking-wider">
                         {variantColors.length} color{variantColors.length !== 1 ? 's' : ''}
                       </p>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`text-[10px] font-bold  px-2 py-1 rounded-full ${p.is_active ? 'bg-green-400/10 text-green-400' : 'bg-navy-800 text-gold-500/30'}`}>
+                    <span className={`text-[10px] font-bold  px-2 py-1 rounded-full ${p.is_active ? 'bg-green-400/10 text-green-600 dark:text-green-600 dark:text-green-400' : 'bg-utility-gray dark:bg-base-800 text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30'}`}>
                       {p.is_active ? 'Active' : 'Hidden'}
                     </span>
                   </td>
@@ -789,14 +789,14 @@ const ProductsView = () => {
                     <div className="flex justify-end gap-2">
                       <button 
                         onClick={() => handleOpenModal(p)}
-                        className="p-2 text-gold-500/60 hover:text-gold-500 hover:bg-navy-800 rounded-lg transition-all"
+                        className="p-2 text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 hover:text-accent-500 hover:bg-utility-gray dark:bg-base-800 rounded-lg transition-all"
                       >
                         <Edit size={16} />
                       </button>
                       <button 
                         onClick={() => handleDelete(p.id)}
                         disabled={deletingIds.has(p.id)}
-                        className="p-2 text-red-400/60 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all disabled:opacity-40"
+                        className="p-2 text-red-600 dark:text-red-600 dark:text-red-400/60 hover:text-red-600 dark:text-red-600 dark:text-red-400 hover:bg-red-400/10 rounded-lg transition-all disabled:opacity-40"
                       >
                         {deletingIds.has(p.id) ? (
                           <span className="inline-block w-4 h-4 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
@@ -813,7 +813,7 @@ const ProductsView = () => {
           </table>
           </AdminTable>
         ) : (
-          <div className="py-24 text-center text-gold-500/40 text-sm  ">
+          <div className="py-24 text-center text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 text-sm  ">
             No products match your filters.
           </div>
         )}
@@ -821,17 +821,17 @@ const ProductsView = () => {
 
       {/* Product Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 lg:p-6 bg-navy-950/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 lg:p-6 bg-primary dark:bg-primary/80 backdrop-blur-sm">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-navy-900 border border-gold-500/20 rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl custom-scrollbar"
+            className="bg-utility-gray dark:bg-base-900 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-t-3xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl custom-scrollbar"
           >
             <div className="flex items-center justify-between mb-8">
-              <h4 className="text-2xl font-serif font-bold text-gold-100  ">
+              <h4 className="text-2xl font-serif font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  ">
                 {currentProduct ? 'Edit Product' : 'Add New Product'}
               </h4>
-              <button type="button" onClick={closeProductModal} className="text-gold-500/40 hover:text-gold-500">
+              <button type="button" onClick={closeProductModal} className="text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 hover:text-accent-500">
                 <X size={24} />
               </button>
             </div>
@@ -839,11 +839,11 @@ const ProductsView = () => {
             <form onSubmit={handleSubmit} className="space-y-10">
               {/* Basic Info */}
               <div className="space-y-6">
-                <h5 className="text-xs font-black text-gold-500  tracking-[0.3em] border-b border-gold-500/10 pb-2">General Information</h5>
+                <h5 className="text-xs font-black text-accent-500  tracking-[0.3em] border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 pb-2">General Information</h5>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Product Name</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Product Name</label>
                     <input 
                       type="text" 
                       required
@@ -857,17 +857,17 @@ const ProductsView = () => {
                           sku: formData.sku ? formData.sku : buildProductSku(val),
                         });
                       }}
-                      className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold "
+                      className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold "
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Slug</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Slug</label>
                     <input 
                       type="text" 
                       required
                       value={formData.slug}
                       onChange={(e) => setFormData({...formData, slug: e.target.value})}
-                      className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all"
+                      className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all"
                     />
                   </div>
                 </div>
@@ -876,29 +876,29 @@ const ProductsView = () => {
                   {currentProduct ? (
                     <>
                       <div className="space-y-2">
-                        <label className="text-[10px] text-gold-500/40   font-black">Retail Price (KSh)</label>
+                        <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Retail Price (KSh)</label>
                         <input
                           type="number"
                           min="0"
                           required
                           value={formData.price}
                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                          className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold"
+                          className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] text-gold-500/40   font-black">Cost Price (KSh)</label>
+                        <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Cost Price (KSh)</label>
                         <input
                           type="number"
                           min="0"
                           value={formData.cost_price}
                           onChange={(e) => setFormData({ ...formData, cost_price: e.target.value })}
                           placeholder="What you paid"
-                          className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold"
+                          className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold"
                         />
                       </div>
-                      <div className="md:col-span-2 rounded-xl border border-gold-500/10 bg-navy-950/80 p-4 flex flex-col justify-center">
-                        <p className="text-[10px] text-gold-500/40 font-black mb-1">Profit estimate</p>
+                      <div className="md:col-span-2 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary/80 p-4 flex flex-col justify-center">
+                        <p className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40 font-black mb-1">Profit estimate</p>
                         {(() => {
                           const retail = Number(formData.price) || 0;
                           const cost = Number(formData.cost_price) || 0;
@@ -906,8 +906,8 @@ const ProductsView = () => {
                           const margin = retail > 0 ? ((profit / retail) * 100).toFixed(1) : '0.0';
                           return (
                             <div className="flex flex-wrap gap-4 text-sm">
-                              <span className="text-green-400 font-bold">KSh {profit.toLocaleString()}</span>
-                              <span className="text-gold-500/60">Margin {margin}%</span>
+                              <span className="text-green-600 dark:text-green-600 dark:text-green-400 font-bold">KSh {profit.toLocaleString()}</span>
+                              <span className="text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60">Margin {margin}%</span>
                             </div>
                           );
                         })()}
@@ -916,37 +916,37 @@ const ProductsView = () => {
                   ) : (
                     <>
                       <div className="space-y-2">
-                        <label className="text-[10px] text-gold-500/40   font-black">Website Price (KSh)</label>
+                        <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Website Price (KSh)</label>
                         <input
                           type="number"
                           required
                           value={formData.price}
                           onChange={(e) => setFormData({...formData, price: e.target.value})}
-                          className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold"
+                          className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] text-gold-500/40   font-black">POS / Shop Price (KSh)</label>
+                        <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">POS / Shop Price (KSh)</label>
                         <input
                           type="number"
                           min="0"
                           placeholder="Same as website if empty"
                           value={formData.pos_sell_price}
                           onChange={(e) => setFormData({ ...formData, pos_sell_price: e.target.value })}
-                          className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold"
+                          className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold"
                         />
-                        <p className="text-[9px] text-gold-500/35">In-store price for this product â€” not the category bucket average.</p>
+                        <p className="text-[9px] text-accent-500/35">In-store price for this product â€” not the category bucket average.</p>
                       </div>
                     </>
                   )}
                 </div>
 
                 {!currentProduct && (
-                <div className="rounded-2xl border border-gold-500/10 bg-navy-950/60 p-5 space-y-4">
+                <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary/60 p-5 space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <p className="text-[10px] font-black  tracking-[0.25em] text-gold-400">Offers</p>
-                      <p className="text-[9px]  tracking-wider text-gold-500/35 mt-1">Enable when this product has a sale or special price.</p>
+                      <p className="text-[10px] font-black  tracking-[0.25em] text-accent-400">Offers</p>
+                      <p className="text-[9px]  tracking-wider text-accent-500/35 mt-1">Enable when this product has a sale or special price.</p>
                     </div>
                     <button
                       type="button"
@@ -955,7 +955,7 @@ const ProductsView = () => {
                         show_offer: !formData.show_offer,
                         discount_price: formData.show_offer ? '' : formData.discount_price
                       })}
-                      className={`relative h-8 w-16 rounded-full border transition-all ${formData.show_offer ? 'bg-gold-600 border-gold-500' : 'bg-navy-900 border-gold-500/20'}`}
+                      className={`relative h-8 w-16 rounded-full border transition-all ${formData.show_offer ? 'bg-accent-600 border-accent-500' : 'bg-utility-gray dark:bg-base-900 border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20'}`}
                       aria-pressed={formData.show_offer}
                     >
                       <span className={`absolute top-1 h-6 w-6 rounded-full bg-white transition-all ${formData.show_offer ? 'left-9' : 'left-1'}`} />
@@ -964,23 +964,23 @@ const ProductsView = () => {
 
                   {formData.show_offer && (
                     <div className="space-y-2">
-                      <label className="text-[10px] text-gold-500/40   font-black">Offer Price (KSh)</label>
+                      <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Offer Price (KSh)</label>
                       <input
                         type="number"
                         min="0"
                         value={formData.discount_price}
                         onChange={(e) => setFormData({ ...formData, discount_price: e.target.value })}
-                        className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all font-bold"
+                        className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all font-bold"
                       />
                     </div>
                   )}
                 </div>
                 )}
 
-                <div className="rounded-2xl border border-gold-500/10 bg-navy-950/60 p-5 space-y-5">
+                <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary/60 p-5 space-y-5">
                   <div>
-                    <p className="text-[10px] font-black  tracking-[0.25em] text-gold-400">Category</p>
-                    <p className="text-[9px]  tracking-wider text-gold-500/35 mt-1">Tick the main category first, then tick a subcategory when it applies.</p>
+                    <p className="text-[10px] font-black  tracking-[0.25em] text-accent-400">Category</p>
+                    <p className="text-[9px]  tracking-wider text-accent-500/35 mt-1">Tick the main category first, then tick a subcategory when it applies.</p>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -989,15 +989,15 @@ const ProductsView = () => {
                         key={category.id}
                         className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition-all ${
                           formData.parent_category_id === category.id
-                            ? 'border-gold-500 bg-gold-600/10 text-gold-100'
-                            : 'border-gold-500/10 bg-navy-900/50 text-gold-500/60 hover:border-gold-500/30'
+                            ? 'border-accent dark:border-accent-500 bg-accent-600/10 text-secondary dark:text-secondary dark:text-accent-100'
+                            : 'border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray dark:bg-utility-gray/50 text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 hover:border-accent-500/30'
                         }`}
                       >
                         <input
                           type="checkbox"
                           checked={formData.parent_category_id === category.id}
                           onChange={() => handleCategorySelect(category)}
-                          className="h-4 w-4 rounded border-gold-500/30 bg-navy-950 text-gold-600 focus:ring-0"
+                          className="h-4 w-4 rounded border-accent-500/30 bg-primary dark:bg-base-950 text-accent-600 focus:ring-0"
                         />
                         <span className="text-[10px] font-black  ">{category.name}</span>
                       </label>
@@ -1005,23 +1005,23 @@ const ProductsView = () => {
                   </div>
 
                   {subCategories.length > 0 && (
-                    <div className="space-y-3 pt-4 border-t border-gold-500/10">
-                      <p className="text-[9px] font-black  tracking-[0.25em] text-gold-500/50">Subcategory</p>
+                    <div className="space-y-3 pt-4 border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">
+                      <p className="text-[9px] font-black  tracking-[0.25em] text-secondary/50 dark:text-secondary/50 dark:text-accent-500/50">Subcategory</p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {subCategories.map((category) => (
                           <label
                             key={category.id}
                             className={`flex items-center gap-3 rounded-xl border p-3 cursor-pointer transition-all ${
                               formData.category_id === category.id
-                                ? 'border-gold-500 bg-gold-600/10 text-gold-100'
-                                : 'border-gold-500/10 bg-navy-900/50 text-gold-500/60 hover:border-gold-500/30'
+                                ? 'border-accent dark:border-accent-500 bg-accent-600/10 text-secondary dark:text-secondary dark:text-accent-100'
+                                : 'border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray dark:bg-utility-gray/50 text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 hover:border-accent-500/30'
                             }`}
                           >
                             <input
                               type="checkbox"
                               checked={formData.category_id === category.id}
                               onChange={() => handleSubCategorySelect(category)}
-                              className="h-4 w-4 rounded border-gold-500/30 bg-navy-950 text-gold-600 focus:ring-0"
+                              className="h-4 w-4 rounded border-accent-500/30 bg-primary dark:bg-base-950 text-accent-600 focus:ring-0"
                             />
                             <span className="text-[10px] font-black  ">{category.name}</span>
                           </label>
@@ -1032,45 +1032,45 @@ const ProductsView = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] text-gold-500/40   font-black">Description</label>
+                  <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Description</label>
                   <textarea 
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value.toUpperCase()})}
-                    className="w-full bg-navy-950 border border-gold-500/10 rounded-xl py-3 px-4 text-gold-100 outline-none focus:border-gold-500/40 transition-all h-24 font-bold "
+                    className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-xl py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40 transition-all h-24 font-bold "
                   />
                 </div>
               </div>
 
               {/* Media Section */}
               <div className="space-y-6">
-                <h5 className="text-xs font-black text-gold-500  tracking-[0.3em] border-b border-gold-500/10 pb-2">Product Media</h5>
+                <h5 className="text-xs font-black text-accent-500  tracking-[0.3em] border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 pb-2">Product Media</h5>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Main Thumbnail</label>
-                    <div className="flex items-center gap-6 p-6 bg-navy-950 border-2 border-dashed border-gold-500/10 rounded-2xl group hover:border-gold-500/30 transition-all relative">
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Main Thumbnail</label>
+                    <div className="flex items-center gap-6 p-6 bg-primary dark:bg-base-950 border-2 border-dashed border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-2xl group hover:border-accent-500/30 transition-all relative">
                       {uploading && (
-                        <div className="absolute inset-0 bg-navy-950/60 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-2xl">
+                        <div className="absolute inset-0 bg-primary dark:bg-primary/60 backdrop-blur-[2px] z-20 flex items-center justify-center rounded-2xl">
                           <div className="flex flex-col items-center gap-2">
-                             <div className="w-6 h-6 border-2 border-gold-500 border-t-transparent animate-spin rounded-full" />
-                             <span className="text-[8px] font-black  text-gold-500 ">Uploading to Cloudinary...</span>
+                             <div className="w-6 h-6 border-2 border-accent dark:border-accent-500 border-t-transparent animate-spin rounded-full" />
+                             <span className="text-[8px] font-black  text-accent-500 ">Uploading to Cloudinary...</span>
                           </div>
                         </div>
                       )}
-                      <div className="w-24 h-24 rounded-xl border border-gold-500/20 overflow-hidden bg-navy-900 flex items-center justify-center relative group">
+                      <div className="w-24 h-24 rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 overflow-hidden bg-utility-gray dark:bg-base-900 flex items-center justify-center relative group">
                         {formData.thumbnailPreview ? (
                           <>
                             <img src={formData.thumbnailPreview} className="w-full h-full object-cover" />
                             <button 
                               type="button" 
                               onClick={removeThumbnail}
-                              className="absolute inset-0 bg-red-500/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="absolute inset-0 bg-red-500/40 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                               <Trash2 size={20} />
                             </button>
                           </>
                         ) : (
                           <>
-                            <ImageIcon className="text-gold-500/20" size={32} />
+                            <ImageIcon className="text-accent-500/20" size={32} />
                             <input 
                               type="file" 
                               accept="image/*"
@@ -1081,10 +1081,10 @@ const ProductsView = () => {
                         )}
                       </div>
                       <div className="flex-1 space-y-2">
-                        <p className="text-[10px] font-black text-gold-100  ">
+                        <p className="text-[10px] font-black text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  ">
                           {formData.thumbnailPreview ? 'Current Thumbnail' : 'Select Thumbnail'}
                         </p>
-                        <p className="text-[9px] text-gold-500/40  tracking-wider">
+                        <p className="text-[9px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-wider">
                           {formData.thumbnailPreview ? 'Hover to remove and select a different one' : 'Drag and drop or click to upload'}
                         </p>
                       </div>
@@ -1093,9 +1093,9 @@ const ProductsView = () => {
                   
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] text-gold-500/40   font-black">Additional Gallery Images</label>
+                      <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Additional Gallery Images</label>
                       <div className="relative">
-                        <button type="button" className="text-[10px] text-gold-500 hover:text-gold-300 font-black  flex items-center gap-2 transition-colors">
+                        <button type="button" className="text-[10px] text-accent-500 hover:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-300 font-black  flex items-center gap-2 transition-colors">
                           <Plus size={14} /> {uploading ? 'Processing...' : 'Attach Photos'}
                         </button>
                         <input 
@@ -1111,17 +1111,17 @@ const ProductsView = () => {
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {formData.gallery.map((item, idx) => (
-                        <div key={item.id || item.preview || idx} className="aspect-square rounded-xl border border-gold-500/10 overflow-hidden relative group">
+                        <div key={item.id || item.preview || idx} className="aspect-square rounded-xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 overflow-hidden relative group">
                           <img src={item.preview || item.url} className={`w-full h-full object-cover ${item.isUploading ? 'opacity-40 grayscale blur-[2px]' : ''}`} />
                           {item.isUploading && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-5 h-5 border-2 border-gold-500 border-t-transparent animate-spin rounded-full" />
+                              <div className="w-5 h-5 border-2 border-accent dark:border-accent-500 border-t-transparent animate-spin rounded-full" />
                             </div>
                           )}
                           <button 
                             type="button" 
                             onClick={() => removeGalleryFile(idx)} 
-                            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                            className="absolute top-2 right-2 p-1.5 bg-red-500 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all shadow-lg"
                           >
                             <Trash2 size={14} />
                           </button>
@@ -1134,10 +1134,10 @@ const ProductsView = () => {
 
               {/* Variants â€” colors & sizes */}
               <div className="space-y-6">
-                <div className="flex items-center justify-between border-b border-gold-500/10 pb-2">
+                <div className="flex items-center justify-between border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 pb-2">
                   <div>
-                    <h5 className="text-xs font-black text-gold-500  tracking-[0.3em]">Colors & Sizes</h5>
-                    <p className="text-[9px] text-gold-500/40  tracking-wider mt-1">
+                    <h5 className="text-xs font-black text-accent-500  tracking-[0.3em]">Colors & Sizes</h5>
+                    <p className="text-[9px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40  tracking-wider mt-1">
                       Choose which colors and sizes this product has. Stock is set in Inventory.
                     </p>
                   </div>
@@ -1147,30 +1147,30 @@ const ProductsView = () => {
                       ...prev,
                       color_groups: [...prev.color_groups, newColorGroup('')],
                     }))}
-                    className="flex items-center gap-1 text-[10px] text-gold-400 hover:text-gold-300 font-black  "
+                    className="flex items-center gap-1 text-[10px] text-accent-400 hover:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-300 font-black  "
                   >
                     <Plus size={14} /> Add color
                   </button>
                 </div>
 
-                <div className="bg-navy-950/50 border border-gold-500/15 rounded-2xl p-6 space-y-5">
+                <div className="bg-primary dark:bg-primary/50 border border-accent-500/15 rounded-2xl p-6 space-y-5">
                   <div className="space-y-2">
-                    <label className="text-[10px] text-gold-500/40   font-black">Base SKU</label>
+                    <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Base SKU</label>
                     <input
                       type="text"
                       required
                       placeholder="E.G. CLARKS-TAN-WINGTIP"
                       value={formData.sku}
                       onChange={(e) => setFormData({ ...formData, sku: e.target.value.toUpperCase() })}
-                      className="w-full bg-navy-900 border border-gold-500/5 rounded-lg py-3 px-4 text-gold-100 text-[11px] outline-none focus:border-gold-500/20 font-bold  font-mono"
+                      className="w-full bg-utility-gray dark:bg-base-900 border border-accent-500/5 rounded-lg py-3 px-4 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-[11px] outline-none focus:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 font-bold  font-mono"
                     />
                   </div>
 
                   {formData.color_groups.map((group) => (
-                    <div key={group._key} className="border border-gold-500/15 rounded-xl p-4 space-y-4 bg-navy-900/40">
+                    <div key={group._key} className="border border-accent-500/15 rounded-xl p-4 space-y-4 bg-utility-gray dark:bg-utility-gray/40">
                       <div className="flex flex-wrap gap-3 items-start">
                         <div className="flex-1 min-w-[160px] space-y-1">
-                          <label className="text-[10px] text-gold-500/40   font-black">Color name</label>
+                          <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Color name</label>
                           <input
                             type="text"
                             placeholder="e.g. Black, Navy, Tan"
@@ -1181,16 +1181,16 @@ const ProductsView = () => {
                                 g._key === group._key ? { ...g, color: e.target.value } : g
                               ),
                             }))}
-                            className="w-full bg-navy-950 border border-gold-500/10 rounded-lg py-2.5 px-3 text-gold-100 text-sm outline-none focus:border-gold-500/30"
+                            className="w-full bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-lg py-2.5 px-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-sm outline-none focus:border-accent-500/30"
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-[10px] text-gold-500/40   font-black">Color image</label>
+                          <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Color image</label>
                           <div className="flex items-center gap-2">
                             {group.imagePreview && (
-                              <img src={group.imagePreview} alt="" className="w-12 h-12 object-cover rounded border border-gold-500/20" />
+                              <img src={group.imagePreview} alt="" className="w-12 h-12 object-cover rounded border border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20" />
                             )}
-                            <label className="px-3 py-2 border border-gold-500/20 rounded-lg text-[10px] text-gold-500/70 cursor-pointer hover:border-gold-500/40">
+                            <label className="px-3 py-2 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 rounded-lg text-[10px] text-accent dark:text-secondary dark:text-secondary dark:text-accent-500/70 cursor-pointer hover:border-accent-500/40">
                               Upload
                               <input type="file" accept="image/*" className="hidden" onChange={(e) => handleColorImage(group._key, e)} />
                             </label>
@@ -1203,7 +1203,7 @@ const ProductsView = () => {
                               ...prev,
                               color_groups: prev.color_groups.filter((g) => g._key !== group._key),
                             }))}
-                            className="text-red-400/70 hover:text-red-400 p-2 mt-5"
+                            className="text-red-600 dark:text-red-600 dark:text-red-400/70 hover:text-red-600 dark:text-red-600 dark:text-red-400 p-2 mt-5"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -1211,14 +1211,14 @@ const ProductsView = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-[10px] text-gold-500/40   font-black">Sizes for this color</label>
+                        <label className="text-[10px] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40   font-black">Sizes for this color</label>
                         <div className="flex flex-wrap gap-1.5">
                           {sizeOptions.map((sz) => (
                             <button
                               key={sz}
                               type="button"
                               onClick={() => addSizeToGroup(group._key, sz)}
-                              className="px-2.5 py-1 text-[10px] border border-gold-500/25 text-gold-400 rounded hover:bg-gold-500/10"
+                              className="px-2.5 py-1 text-[10px] border border-accent-500/25 text-accent-400 rounded hover:bg-accent-500/10"
                             >
                               {sz}
                             </button>
@@ -1236,12 +1236,12 @@ const ProductsView = () => {
                               }
                             }}
                             placeholder="Custom size"
-                            className="max-w-[120px] bg-navy-950 border border-gold-500/10 rounded-lg py-2 px-3 text-gold-100 text-[10px] outline-none"
+                            className="max-w-[120px] bg-primary dark:bg-base-950 border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 rounded-lg py-2 px-3 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 text-[10px] outline-none"
                           />
                           <button
                             type="button"
                             onClick={() => addSizeToGroup(group._key, customSize)}
-                            className="px-3 py-2 text-[10px] border border-gold-500/30 text-gold-400 rounded-lg"
+                            className="px-3 py-2 text-[10px] border border-accent-500/30 text-accent-400 rounded-lg"
                           >
                             Add size
                           </button>
@@ -1251,7 +1251,7 @@ const ProductsView = () => {
                       {group.sizes.length > 0 && (
                         <div className="overflow-x-auto">
                           <table className="w-full text-xs">
-                            <thead className="text-gold-500/40">
+                            <thead className="text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">
                               <tr>
                                 <th className="text-left p-2">Size</th>
                                 <th className="p-2 w-10" />
@@ -1259,10 +1259,10 @@ const ProductsView = () => {
                             </thead>
                             <tbody>
                               {group.sizes.map((row) => (
-                                <tr key={row._key} className="border-t border-gold-500/10">
-                                  <td className="p-2 font-bold text-gold-100">{row.size}</td>
+                                <tr key={row._key} className="border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10">
+                                  <td className="p-2 font-bold text-secondary dark:text-secondary dark:text-accent-100">{row.size}</td>
                                   <td className="p-2 text-right">
-                                    <button type="button" onClick={() => removeSizeFromGroup(group._key, row._key)} className="text-red-400/60 hover:text-red-400">
+                                    <button type="button" onClick={() => removeSizeFromGroup(group._key, row._key)} className="text-red-600 dark:text-red-600 dark:text-red-400/60 hover:text-red-600 dark:text-red-600 dark:text-red-400">
                                       <Trash2 size={14} />
                                     </button>
                                   </td>
@@ -1278,16 +1278,16 @@ const ProductsView = () => {
               </div>
 
               {/* Status & Submit */}
-              <div className="pt-10 border-t border-gold-500/10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="pt-10 border-t border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="flex gap-8">
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <input 
                       type="checkbox" 
                       checked={formData.is_featured}
                       onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
-                      className="w-4 h-4 rounded border-gold-500/20 bg-navy-950 text-gold-600 focus:ring-0 focus:ring-offset-0"
+                      className="w-4 h-4 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-primary dark:bg-base-950 text-accent-600 focus:ring-0 focus:ring-offset-0"
                     />
-                    <span className="text-[10px] font-black  text-gold-100  group-hover:text-gold-500 transition-colors">Featured (homepage carousel)</span>
+                    <span className="text-[10px] font-black  text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  group-hover:text-accent-500 transition-colors">Featured (homepage carousel)</span>
                   </label>
                   {canPublish && (
                   <label className="flex items-center gap-3 cursor-pointer group">
@@ -1295,9 +1295,9 @@ const ProductsView = () => {
                       type="checkbox" 
                       checked={formData.is_active}
                       onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
-                      className="w-4 h-4 rounded border-gold-500/20 bg-navy-950 text-gold-600 focus:ring-0 focus:ring-offset-0"
+                      className="w-4 h-4 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-primary dark:bg-base-950 text-accent-600 focus:ring-0 focus:ring-offset-0"
                     />
-                    <span className="text-[10px] font-black  text-gold-100  group-hover:text-gold-500 transition-colors">Active / Published</span>
+                    <span className="text-[10px] font-black  text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100  group-hover:text-accent-500 transition-colors">Active / Published</span>
                   </label>
                   )}
                 </div>
@@ -1306,14 +1306,14 @@ const ProductsView = () => {
                   <button 
                     type="button"
                     onClick={closeProductModal}
-                    className="px-8 py-4 bg-navy-800 text-gold-500/60 rounded-xl font-black  tracking-[0.2em] hover:bg-navy-700 hover:text-gold-500 transition-all border border-gold-500/10"
+                    className="px-8 py-4 bg-utility-gray dark:bg-base-800 text-accent/80 dark:text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60 rounded-xl font-black  tracking-[0.2em] hover:bg-base-700 hover:text-accent-500 transition-all border border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10"
                   >
                     Cancel
                   </button>
                   <button 
                     type="submit" 
                     disabled={submitting}
-                    className="px-12 py-4 bg-gold-600 text-navy-950 rounded-xl font-black  tracking-[0.2em] hover:bg-gold-500 transition-all disabled:opacity-50 shadow-xl shadow-gold-600/20"
+                    className="px-12 py-4 bg-accent-600 text-base-950 rounded-xl font-black  tracking-[0.2em] hover:bg-accent-500 transition-all disabled:opacity-50 shadow-xl shadow-accent-600/20"
                   >
                     {submitting ? 'COMMITTING...' : 'SAVE PRODUCT'}
                   </button>

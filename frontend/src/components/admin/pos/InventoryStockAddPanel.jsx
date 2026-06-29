@@ -250,7 +250,7 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
 
   if (loading) {
     return (
-      <div className="border-t border-emerald-500/20 bg-emerald-950/10 px-4 py-3 text-xs text-gold-500/50">
+      <div className="border-t border-emerald-500/20 bg-emerald-950/10 px-4 py-3 text-xs text-accent-500/50">
         Loading product sizes…
       </div>
     );
@@ -261,13 +261,13 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1 min-w-0">
           <p className="text-sm font-medium text-white leading-snug">{displayName}</p>
-          <p className="text-[10px] text-gold-500/50 font-mono">{displaySku}</p>
-          <p className="text-[10px] text-gold-500/40">{displayCategory}</p>
+          <p className="text-[10px] text-accent-500/50 font-mono">{displaySku}</p>
+          <p className="text-[10px] text-accent-500/40">{displayCategory}</p>
         </div>
         <div className="text-right text-[10px] space-y-0.5 shrink-0">
-          <p className="text-gold-400">{formatKES(displayPrice)}</p>
+          <p className="text-accent-400">{formatKES(displayPrice)}</p>
           <p className="text-sky-300/90">Store {product.storeQty ?? 0}</p>
-          <p className="text-gold-400/90">Shop {product.currentQty ?? 0}</p>
+          <p className="text-accent-400/90">Shop {product.currentQty ?? 0}</p>
         </div>
       </div>
 
@@ -278,12 +278,12 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
       {hasSizes ? (
         <div className="space-y-3">
           {colorGroups.map((group) => (
-            <div key={group.color || 'default'} className="rounded-lg border border-gold-500/15 bg-navy-950/50 p-3 space-y-2">
-              <p className="text-xs font-medium text-gold-300/90">{group.color || 'Original'}</p>
+            <div key={group.color || 'default'} className="rounded-lg border border-accent-500/15 bg-base-950/50 p-3 space-y-2">
+              <p className="text-xs font-medium text-accent-300/90">{group.color || 'Original'}</p>
               <div className="overflow-x-auto">
                 <table className="w-full text-[11px] min-w-[260px]">
                   <thead>
-                    <tr className="text-gold-500/50 border-b border-gold-500/10">
+                    <tr className="text-accent-500/50 border-b border-accent-500/10">
                       <th className="py-1 pr-2 text-left font-normal">Size</th>
                       <th className="py-1 pr-2 text-right font-normal">Now</th>
                       <th className="py-1 pr-2 text-center font-normal w-16">Add</th>
@@ -296,9 +296,9 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
                       const add = parseInt(additions[key], 10) || 0;
                       const now = Number(row.stock) || 0;
                       return (
-                        <tr key={key} className="border-b border-gold-500/5">
+                        <tr key={key} className="border-b border-accent-500/5">
                           <td className="py-1.5 pr-2 text-white font-medium">{row.size}</td>
-                          <td className="py-1.5 pr-2 text-right tabular-nums text-gold-400/80">{now}</td>
+                          <td className="py-1.5 pr-2 text-right tabular-nums text-accent-400/80">{now}</td>
                           <td className="py-1 pr-2">
                             <input
                               type="number"
@@ -306,7 +306,7 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
                               value={additions[key] ?? ''}
                               onChange={(e) => setAdd(key, e.target.value)}
                               placeholder="0"
-                              className="w-full bg-navy-900 border border-gold-500/25 rounded px-2 py-1 text-white text-center text-xs"
+                              className="w-full bg-base-900 border border-accent-500/25 rounded px-2 py-1 text-white text-center text-xs"
                             />
                           </td>
                           <td className="py-1.5 text-right tabular-nums text-emerald-300 font-medium">
@@ -323,15 +323,15 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
         </div>
       ) : (
         <div className="space-y-2">
-          <p className="text-xs text-gold-500/50">This product has no sizes. Manage stock as a single quantity.</p>
+          <p className="text-xs text-accent-500/50">This product has no sizes. Manage stock as a single quantity.</p>
           <label className="block space-y-1 max-w-xs">
-            <span className="text-[10px] text-gold-500/50">Shop stock to add</span>
+            <span className="text-[10px] text-accent-500/50">Shop stock to add</span>
             <input
               type="number"
               min={0}
               value={singleShopAdd}
               onChange={(e) => setSingleShopAdd(e.target.value.replace(/[^\d]/g, ''))}
-              className="w-full bg-navy-950 border border-gold-500/20 rounded px-2 py-1.5 text-white text-sm"
+              className="w-full bg-base-950 border border-accent-500/20 rounded px-2 py-1.5 text-white text-sm"
               placeholder="0"
             />
           </label>
@@ -339,13 +339,13 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
       )}
 
       <label className="block space-y-1 max-w-xs">
-        <span className="text-[10px] text-gold-500/50">Receive at store (warehouse) — optional</span>
+        <span className="text-[10px] text-accent-500/50">Receive at store (warehouse) — optional</span>
         <input
           type="number"
           min={0}
           value={storeAdd}
           onChange={(e) => setStoreAdd(e.target.value.replace(/[^\d]/g, ''))}
-          className="w-full bg-navy-950 border border-gold-500/20 rounded px-2 py-1.5 text-white text-sm"
+          className="w-full bg-base-950 border border-accent-500/20 rounded px-2 py-1.5 text-white text-sm"
           placeholder="0"
         />
       </label>
@@ -371,7 +371,7 @@ const InventoryStockAddPanel = ({ product, onDone, onCancel }) => {
           type="button"
           onClick={onCancel}
           disabled={busy}
-          className="px-4 py-1.5 border border-gold-500/25 text-gold-400 rounded text-xs disabled:opacity-50"
+          className="px-4 py-1.5 border border-accent-500/25 text-accent-400 rounded text-xs disabled:opacity-50"
         >
           Cancel
         </button>

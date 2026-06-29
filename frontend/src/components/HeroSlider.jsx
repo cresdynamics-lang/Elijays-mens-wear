@@ -37,17 +37,14 @@ const HeroSlider = ({ heroSlides }) => {
 
   useEffect(() => {
     if (!slides.length) return undefined;
-
     const preload = (idx) => {
       const slide = slides[idx];
       if (!slide?.image) return;
       const img = new Image();
       img.src = slide.image;
     };
-
     preload(0);
     preload(1);
-
     const timer = setInterval(() => {
       setCurrent((prev) => {
         const next = prev === slides.length - 1 ? 0 : prev + 1;
@@ -55,7 +52,6 @@ const HeroSlider = ({ heroSlides }) => {
         return next;
       });
     }, 6000);
-
     return () => clearInterval(timer);
   }, [slides]);
 
@@ -63,18 +59,17 @@ const HeroSlider = ({ heroSlides }) => {
   const prevSlide = () => setCurrent((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
 
   if (!slides.length) return null;
-
   const slide = slides[current];
 
   return (
-    <section className="hero-section relative min-h-[95vh] bg-navy-950 overflow-hidden">
+    <section className="hero-section relative min-h-[90vh] bg-surface-900 overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={`${slide.link}-${current}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 1 }}
           className="absolute inset-0"
         >
           {slide.image && (
@@ -87,47 +82,47 @@ const HeroSlider = ({ heroSlides }) => {
               fetchPriority={current === 0 ? 'high' : 'auto'}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/55 to-navy-950/15" />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface-900/90 via-surface-900/50 to-surface-900/20" />
         </motion.div>
       </AnimatePresence>
 
       <div className="absolute inset-x-0 bottom-0 z-10">
-        <div className="container mx-auto px-6 pb-8 md:pb-10 lg:pb-12 w-full max-w-7xl space-y-10 text-left pl-0 md:pl-4 lg:pl-8">
+        <div className="container mx-auto px-6 pb-10 md:pb-14 lg:pb-16 w-full max-w-7xl space-y-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={`content-${slide.link}-${current}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.45 }}
-              className="space-y-8 max-w-5xl"
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-6 max-w-4xl"
             >
               <div className="flex items-center space-x-4">
-                <div className="h-px w-12 bg-gold-600" />
-                <p className="text-gold-500 tracking-[0.4em] text-[11px] font-bold">
+                <div className="h-px w-10 bg-accent-500" />
+                <p className="text-accent-400 tracking-[0.4em] text-[10px] font-bold uppercase">
                   {slide.subtitle}
                 </p>
               </div>
 
-              <h1 className="text-8xl md:text-[8.75rem] lg:text-[10rem] font-serif text-white leading-[0.88] tracking-tighter max-w-4xl">
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif text-secondary leading-[0.85] tracking-tight max-w-4xl">
                 {slide.title.split(' ').map((word, i) => (
-                  <span key={i} className={i % 2 === 1 ? 'text-gold-500 italic' : ''}>
+                  <span key={i} className={i % 2 === 1 ? 'text-accent italic font-medium' : ''}>
                     {word}{' '}
                   </span>
                 ))}
               </h1>
 
-              <p className="text-3xl md:text-4xl text-slate-300 max-w-2xl font-light leading-relaxed line-clamp-3">
+              <p className="text-xl md:text-2xl text-secondary/80 max-w-2xl font-medium leading-relaxed">
                 {slide.desc}
               </p>
 
-              <div className="pt-4 md:pt-6">
+              <div className="pt-4">
                 <Link
                   to={slide.link}
-                  className="bg-gold-600 text-navy-950 px-12 py-5 text-[11px] font-bold tracking-[0.2em] hover:bg-gold-500 transition-all flex items-center space-x-4 w-fit group"
+                  className="bg-accent text-primary px-12 py-5 text-[10px] font-bold tracking-[0.22em] inline-flex items-center space-x-4 group shadow-lg shadow-accent/20 hover:bg-accent/80 transition-colors"
                 >
                   <span>{slide.cta}</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </motion.div>
@@ -136,14 +131,14 @@ const HeroSlider = ({ heroSlides }) => {
       </div>
 
       {slides.length > 1 && (
-        <div className="absolute bottom-12 right-12 flex items-center space-x-6 z-20">
-          <div className="flex items-center space-x-2 mr-8">
+        <div className="absolute bottom-10 right-6 md:right-10 flex items-center space-x-5 z-20">
+          <div className="flex items-center space-x-2 mr-6">
             {slides.map((_, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => setCurrent(i)}
-                className={`h-1 transition-all duration-500 ${current === i ? 'w-12 bg-gold-500' : 'w-4 bg-gold-500/20'}`}
+                className={`h-[3px] transition-all duration-500 ${current === i ? 'w-10 bg-accent-500' : 'w-6 bg-white/20 hover:bg-white/40'}`}
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
@@ -151,18 +146,18 @@ const HeroSlider = ({ heroSlides }) => {
           <button
             type="button"
             onClick={prevSlide}
-            className="w-12 h-12 border border-gold-500/30 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-navy-950 transition-all"
+            className="w-11 h-11 border border-white/20 flex items-center justify-center text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white hover:bg-white/10 transition-all"
             aria-label="Previous slide"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={18} />
           </button>
           <button
             type="button"
             onClick={nextSlide}
-            className="w-12 h-12 border border-gold-500/30 flex items-center justify-center text-gold-500 hover:bg-gold-500 hover:text-navy-950 transition-all"
+            className="w-11 h-11 border border-white/20 flex items-center justify-center text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-white hover:bg-white/10 transition-all"
             aria-label="Next slide"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={18} />
           </button>
         </div>
       )}
@@ -171,6 +166,3 @@ const HeroSlider = ({ heroSlides }) => {
 };
 
 export default HeroSlider;
-
-
-

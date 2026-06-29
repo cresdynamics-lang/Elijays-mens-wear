@@ -101,7 +101,7 @@ const DEDICATED_CATEGORY_ROUTES = {
 const HOMEPAGE_HIDDEN_CATEGORY_SLUGS = new Set(['casual', 'caps-hats']);
 
 /** Homepage category rows shown first (replaces hidden categories in prominence). */
-const HOMEPAGE_PRIORITY_CATEGORY_SLUGS = ['knitted-polos'];
+const HOMEPAGE_PRIORITY_CATEGORY_SLUGS = ['polo-t-shirts', 'sweaters', 'jackets', 'suits', 'shirts', 'trousers'];
 
 const categoryViewAllPath = (row) => {
   const parentSlug = row.parent_slug;
@@ -128,32 +128,31 @@ const buildCategoryProductRows = async () => {
      JOIN categories c ON p.category_id = c.id
      LEFT JOIN categories parent ON c.parent_id = parent.id
      LEFT JOIN brands b ON p.brand_id = b.id
-     WHERE p.is_active = true
-       AND p.thumbnail IS NOT NULL
-       AND COALESCE(p.stock_quantity, 0) > 0
-     ORDER BY c.name ASC, p.is_featured DESC, p.created_at DESC`
+      WHERE p.thumbnail IS NOT NULL
+      ORDER BY c.name ASC, p.is_featured DESC, p.created_at DESC`
   );
 
   const groups = new Map();
 
   for (const row of result.rows) {
     if (HOMEPAGE_HIDDEN_CATEGORY_SLUGS.has(row.category_slug)) continue;
-    if ((row.category_slug === 'belts-ties' || row.parent_category_slug === 'belts-ties') && !isBeltContent(row.slug) && !isBeltContent(row.name)) {
+    if ((row.parent_category_slug === 'belts-ties' || row.category_slug === 'belts-ties') && !isBeltContent(row.slug) && !isBeltContent(row.name)) {
       continue;
     }
 
-    const key = row.category_slug;
-    if (!groups.has(key)) {
-      groups.set(key, {
-        title: row.category_name,
-        slug: row.category_slug,
+    const parentSlug = row.parent_category_slug || row.category_slug;
+    const displaySlug = parentSlug;
+    if (!groups.has(displaySlug)) {
+      groups.set(displaySlug, {
+        title: row.parent_category_name || row.category_name,
+        slug: displaySlug,
         parent_slug: row.parent_category_slug || null,
         parent_name: row.parent_category_name || null,
-        name: row.category_name,
+        name: row.parent_category_name || row.category_name,
         products: [],
       });
     }
-    const group = groups.get(key);
+    const group = groups.get(displaySlug);
     if (group.products.length < 6) {
       const thumb = row.thumbnail;
       group.products.push({

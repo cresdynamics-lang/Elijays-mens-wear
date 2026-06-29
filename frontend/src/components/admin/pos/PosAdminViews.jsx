@@ -24,7 +24,7 @@ const RevenueBarChart = ({ data = [] }) => {
   const max = Math.max(...rows.map((r) => r.value), 1);
 
   if (!rows.length) {
-    return <p className="text-gold-500/40 text-sm text-center py-16">No revenue data yet</p>;
+    return <p className="text-accent-500/40 text-sm text-center py-16">No revenue data yet</p>;
   }
 
   return (
@@ -32,10 +32,10 @@ const RevenueBarChart = ({ data = [] }) => {
       {rows.map((row) => (
         <div key={row.label} className="flex-1 min-w-0 flex flex-col items-center gap-1 h-full justify-end" title={`${row.label}: ${formatKES(row.value)}`}>
           <div
-            className="w-full rounded-t bg-gradient-to-t from-gold-700 to-gold-400 min-h-[4px]"
+            className="w-full rounded-t bg-gradient-to-t from-accent-700 to-accent-400 min-h-[4px]"
             style={{ height: `${Math.max(4, (row.value / max) * 100)}%` }}
           />
-          <span className="text-[9px] text-gold-500/50 truncate w-full text-center">{row.label}</span>
+          <span className="text-[9px] text-accent-500/50 truncate w-full text-center">{row.label}</span>
         </div>
       ))}
     </div>
@@ -52,7 +52,7 @@ const PaymentMixChart = ({ data = [] }) => {
   const total = rows.reduce((sum, r) => sum + r.value, 0);
 
   if (!rows.length) {
-    return <p className="text-gold-500/40 text-sm text-center py-16">No payment data yet</p>;
+    return <p className="text-accent-500/40 text-sm text-center py-16">No payment data yet</p>;
   }
 
   return (
@@ -62,10 +62,10 @@ const PaymentMixChart = ({ data = [] }) => {
         return (
           <div key={row.label}>
             <div className="flex justify-between text-xs mb-1">
-              <span className="text-gold-300">{row.label}</span>
-              <span className="text-gold-500/60">{formatKES(row.value)} ({pct}%)</span>
+              <span className="text-accent-300">{row.label}</span>
+              <span className="text-accent-500/60">{formatKES(row.value)} ({pct}%)</span>
             </div>
-            <div className="h-2 bg-navy-950 rounded-full overflow-hidden">
+            <div className="h-2 bg-base-950 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full"
                 style={{ width: `${pct}%`, backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
@@ -140,18 +140,18 @@ const StockExcelToolbar = ({ onImported, sheetDate, readOnly = false }) => {
   };
 
   return (
-    <div className="space-y-3 p-4 bg-navy-900/50 border border-gold-500/10 rounded-xl">
-      <h3 className="text-gold-400 text-sm font-medium  tracking-wider">Opening Stock — Excel Upload</h3>
+    <div className="space-y-3 p-4 bg-base-900/50 border border-accent-500/10 rounded-xl">
+      <h3 className="text-accent-400 text-sm font-medium  tracking-wider">Opening Stock — Excel Upload</h3>
       <div className="flex flex-wrap items-center gap-2">
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-navy-950 border border-gold-500/20 rounded px-2 py-1.5 text-white text-sm" title="Sheet date" />
+        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-base-950 border border-accent-500/20 rounded px-2 py-1.5 text-white text-sm" title="Sheet date" />
         {!readOnly && (
           <>
-        <select value={mode} onChange={(e) => setMode(e.target.value)} className="bg-navy-950 border border-gold-500/20 rounded px-2 py-1.5 text-white text-sm max-w-[220px]">
+        <select value={mode} onChange={(e) => setMode(e.target.value)} className="bg-base-950 border border-accent-500/20 rounded px-2 py-1.5 text-white text-sm max-w-[220px]">
           {IMPORT_MODES.map((m) => (
             <option key={m.id} value={m.id}>{m.label}</option>
           ))}
         </select>
-        <label className="px-4 py-1.5 bg-gold-600 text-navy-950 rounded text-sm font-medium cursor-pointer hover:bg-gold-500">
+        <label className="px-4 py-1.5 bg-accent-600 text-base-950 rounded text-sm font-medium cursor-pointer hover:bg-accent-500">
           {uploading ? 'Uploading…' : 'Upload Stock.xlsx'}
           <input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="hidden" onChange={handleUpload} disabled={uploading} />
         </label>
@@ -164,7 +164,7 @@ const StockExcelToolbar = ({ onImported, sheetDate, readOnly = false }) => {
             blobDownload(new Blob([res.data]), `Stock-${date}.xlsx`);
             toast.success('Stock exported');
           }}
-          className="px-3 py-1.5 border border-gold-500/30 text-gold-400 rounded text-sm"
+          className="px-3 py-1.5 border border-accent-500/30 text-accent-400 rounded text-sm"
         >
           Download Stock.xlsx
         </button>
@@ -174,7 +174,7 @@ const StockExcelToolbar = ({ onImported, sheetDate, readOnly = false }) => {
             const res = await inventoryAPI.downloadTemplate();
             blobDownload(new Blob([res.data]), 'Stock-Template.xlsx');
           }}
-          className="px-3 py-1.5 border border-gold-500/20 text-gold-500/50 rounded text-sm"
+          className="px-3 py-1.5 border border-accent-500/20 text-accent-500/50 rounded text-sm"
         >
           Template
         </button>
@@ -210,10 +210,10 @@ const UnifiedStockSheetToolbar = ({ category = '', readOnly = false, onAddProduc
   };
 
   return (
-    <div className="space-y-2 p-4 bg-navy-900/50 border border-gold-500/15 rounded-xl">
-      <h3 className="text-gold-400 text-sm font-medium tracking-wider">Inventory</h3>
-      <p className="text-[11px] text-gold-500/50 leading-relaxed">
-        Add products with full details (sizes, stock, prices) or use <strong className="text-gold-400/80 font-normal">Add</strong> on each card for quick stock updates. Download Excel for reports.
+    <div className="space-y-2 p-4 bg-base-900/50 border border-accent-500/15 rounded-xl">
+      <h3 className="text-accent-400 text-sm font-medium tracking-wider">Inventory</h3>
+      <p className="text-[11px] text-accent-500/50 leading-relaxed">
+        Add products with full details (sizes, stock, prices) or use <strong className="text-accent-400/80 font-normal">Add</strong> on each card for quick stock updates. Download Excel for reports.
       </p>
       <div className="flex flex-wrap items-center gap-2">
         {!readOnly && onAddProduct && (
@@ -229,7 +229,7 @@ const UnifiedStockSheetToolbar = ({ category = '', readOnly = false, onAddProduc
           type="button"
           onClick={handleDownload}
           disabled={downloading}
-          className="px-4 py-1.5 bg-gold-600 text-navy-950 rounded text-sm font-medium hover:bg-gold-500 disabled:opacity-50"
+          className="px-4 py-1.5 bg-accent-600 text-base-950 rounded text-sm font-medium hover:bg-accent-500 disabled:opacity-50"
         >
           {downloading ? 'Generating…' : 'Download Stock Report'}
         </button>
@@ -237,7 +237,7 @@ const UnifiedStockSheetToolbar = ({ category = '', readOnly = false, onAddProduc
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="bg-navy-950 border border-gold-500/20 rounded px-2 py-1.5 text-white text-sm"
+          className="bg-base-950 border border-accent-500/20 rounded px-2 py-1.5 text-white text-sm"
           title="Report date"
         />
       </div>
@@ -282,7 +282,7 @@ const ProductCatalogToolbar = ({ category = '', onImported, readOnly = false }) 
   };
 
   return (
-    <div className="space-y-2 p-4 bg-navy-900/50 border border-sky-500/15 rounded-xl">
+    <div className="space-y-2 p-4 bg-base-900/50 border border-sky-500/15 rounded-xl">
       <h3 className="text-sky-300 text-sm font-medium  tracking-wider">Product Catalog</h3>
       <div className="flex flex-wrap gap-2">
         <button
@@ -370,10 +370,10 @@ const VariantStockToolbar = ({ category = '', onImported, readOnly = false }) =>
   ).length ?? 0;
 
   return (
-    <div className="space-y-2 p-4 bg-navy-900/50 border border-emerald-500/20 rounded-xl">
+    <div className="space-y-2 p-4 bg-base-900/50 border border-emerald-500/20 rounded-xl">
       <h3 className="text-emerald-300 text-sm font-medium  tracking-wider">Variant Stock</h3>
       {summary && (transferNeeded > 0 || outCount > 0) && (
-        <p className="text-[11px] text-gold-500/60">
+        <p className="text-[11px] text-accent-500/60">
           {transferNeeded > 0 && (
             <span className="text-sky-300 mr-3">{transferNeeded} need warehouse → shop</span>
           )}
@@ -413,7 +413,7 @@ const VariantStockToolbar = ({ category = '', onImported, readOnly = false }) =>
 };
 
 const Empty = ({ icon: Icon, message }) => (
-  <div className="text-center py-16 text-gold-500/40">
+  <div className="text-center py-16 text-accent-500/40">
     {Icon && <Icon className="mx-auto mb-3 opacity-40" size={40} />}
     <p>{message}</p>
   </div>
@@ -445,9 +445,9 @@ export const AdminPosTerminalInfo = ({ onNavigateTab, onOpenInventory, onEnableT
             ['Open shifts', data.kpis.activeSellers],
             ['This month', data.kpis.monthRevenue],
           ].map(([label, val]) => (
-            <div key={label} className="bg-navy-900/50 border border-gold-500/10 rounded-xl p-4">
-              <p className="text-gold-500/50 text-[10px]  tracking-wider">{label}</p>
-              <p className="text-xl font-bold text-gold-400 mt-1">
+            <div key={label} className="bg-base-900/50 border border-accent-500/10 rounded-xl p-4">
+              <p className="text-accent-500/50 text-[10px]  tracking-wider">{label}</p>
+              <p className="text-xl font-bold text-accent-400 mt-1">
                 {typeof val === 'number' && !String(label).includes('seller')
                   ? formatKES(val)
                   : val ?? 0}
@@ -470,14 +470,14 @@ export const AdminPosTerminalInfo = ({ onNavigateTab, onOpenInventory, onEnableT
         <button
           type="button"
           onClick={() => go('pos-sales')}
-          className="px-5 py-3 rounded-xl bg-gold-600 text-navy-950 text-[10px] font-black  "
+          className="px-5 py-3 rounded-xl bg-accent-600 text-base-950 text-[10px] font-black  "
         >
           View POS Sales
         </button>
         <button
           type="button"
           onClick={() => go('sellers')}
-          className="px-5 py-3 rounded-xl border border-gold-500/30 text-gold-400 text-[10px] font-black   hover:bg-navy-800/50"
+          className="px-5 py-3 rounded-xl border border-accent-500/30 text-accent-400 text-[10px] font-black   hover:bg-base-800/50"
         >
           <Users size={14} className="inline mr-2 -mt-0.5" />
           Manage Sellers
@@ -485,7 +485,7 @@ export const AdminPosTerminalInfo = ({ onNavigateTab, onOpenInventory, onEnableT
         <button
           type="button"
           onClick={() => go('overview')}
-          className="px-5 py-3 rounded-xl border border-gold-500/30 text-gold-400 text-[10px] font-black   hover:bg-navy-800/50"
+          className="px-5 py-3 rounded-xl border border-accent-500/30 text-accent-400 text-[10px] font-black   hover:bg-base-800/50"
         >
           POS Overview
         </button>
@@ -519,9 +519,9 @@ export const PosOverviewView = () => {
           ['Active sellers', data.kpis.activeSellers],
           ['Low stock items', data.lowStockItems?.length ?? 0],
         ].map(([label, val]) => (
-          <div key={label} className="bg-navy-900/50 border border-gold-500/10 rounded-xl p-4">
-            <p className="text-gold-500/50 text-xs ">{label}</p>
-            <p className="text-2xl font-bold text-gold-400 mt-1">
+          <div key={label} className="bg-base-900/50 border border-accent-500/10 rounded-xl p-4">
+            <p className="text-accent-500/50 text-xs ">{label}</p>
+            <p className="text-2xl font-bold text-accent-400 mt-1">
               {typeof val === 'number' && label !== 'Active sellers' && label !== 'Low stock items'
                 ? formatKES(val)
                 : val}
@@ -530,14 +530,14 @@ export const PosOverviewView = () => {
         ))}
       </div>
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="bg-navy-900/50 border border-gold-500/10 rounded-xl p-4 h-64">
-          <p className="text-gold-500/50 text-xs mb-2">Revenue (30 days)</p>
+        <div className="bg-base-900/50 border border-accent-500/10 rounded-xl p-4 h-64">
+          <p className="text-accent-500/50 text-xs mb-2">Revenue (30 days)</p>
           <div className="h-[calc(100%-1.5rem)]">
             <RevenueBarChart data={data.dailyRevenue || []} />
           </div>
         </div>
-        <div className="bg-navy-900/50 border border-gold-500/10 rounded-xl p-4 h-64">
-          <p className="text-gold-500/50 text-xs mb-2">Payment mix</p>
+        <div className="bg-base-900/50 border border-accent-500/10 rounded-xl p-4 h-64">
+          <p className="text-accent-500/50 text-xs mb-2">Payment mix</p>
           <PaymentMixChart data={data.paymentBreakdown || []} />
         </div>
       </div>
@@ -573,12 +573,12 @@ export const PosSalesView = ({ channel = 'POS', readOnly = false }) => {
       {loading ? <TableSkeleton /> : sales.length === 0 ? <Empty message="No sales" /> : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="text-gold-500/50 text-xs ">
+            <thead className="text-accent-500/50 text-xs ">
               <tr><th className="p-2">Receipt</th><th>Date</th><th>Seller</th><th>Total</th><th>Payment</th><th>Status</th><th>Actions</th></tr>
             </thead>
             <tbody>
               {sales.map((s) => (
-                <tr key={s.id} className="border-t border-gold-500/10">
+                <tr key={s.id} className="border-t border-accent-500/10">
                   <td className="p-2">{s.receipt_number}</td>
                   <td>{format(new Date(s.created_at), 'dd MMM yyyy HH:mm')}</td>
                   <td>{s.seller?.full_name || 'Website'}</td>
@@ -586,7 +586,7 @@ export const PosSalesView = ({ channel = 'POS', readOnly = false }) => {
                   <td>{s.payment_method}</td>
                   <td>{s.is_voided ? <span className="text-red-400">Voided</span> : 'OK'}</td>
                   <td className="space-x-2">
-                    <button type="button" onClick={() => downloadReceiptPdf(s, s.seller?.full_name)} className="text-gold-400 text-xs">Receipt</button>
+                    <button type="button" onClick={() => downloadReceiptPdf(s, s.seller?.full_name)} className="text-accent-400 text-xs">Receipt</button>
                     {!readOnly && !s.is_voided && <button type="button" onClick={() => setVoidId(s.id)} className="text-red-400 text-xs">Void</button>}
                   </td>
                 </tr>
@@ -597,11 +597,11 @@ export const PosSalesView = ({ channel = 'POS', readOnly = false }) => {
       )}
       {voidId && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-navy-900 border border-gold-500/20 rounded-xl p-6 max-w-md w-full">
-            <h3 className="text-gold-400 font-medium">Void sale</h3>
-            <textarea value={voidReason} onChange={(e) => setVoidReason(e.target.value)} placeholder="Reason" className="w-full mt-3 bg-navy-950 border border-gold-500/20 rounded p-3 text-white text-sm" rows={3} />
+          <div className="bg-base-900 border border-accent-500/20 rounded-xl p-6 max-w-md w-full">
+            <h3 className="text-accent-400 font-medium">Void sale</h3>
+            <textarea value={voidReason} onChange={(e) => setVoidReason(e.target.value)} placeholder="Reason" className="w-full mt-3 bg-base-950 border border-accent-500/20 rounded p-3 text-white text-sm" rows={3} />
             <div className="flex gap-2 mt-4">
-              <button onClick={() => setVoidId(null)} className="flex-1 py-2 border border-gold-500/20 rounded text-gold-500/60">Cancel</button>
+              <button onClick={() => setVoidId(null)} className="flex-1 py-2 border border-accent-500/20 rounded text-accent-500/60">Cancel</button>
               <button onClick={doVoid} disabled={voidReason.length < 3} className="flex-1 py-2 bg-red-600 rounded text-white disabled:opacity-40">Confirm void</button>
             </div>
           </div>
@@ -669,7 +669,7 @@ export const StockMovementsView = () => {
         <select
           value={typeFilter}
           onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-          className="bg-navy-950 border border-gold-500/20 rounded-lg px-3 py-2 text-white text-sm"
+          className="bg-base-950 border border-accent-500/20 rounded-lg px-3 py-2 text-white text-sm"
         >
           <option value="">All movement types</option>
           <option value="STOCK_IN">Store → Shop</option>
@@ -679,22 +679,22 @@ export const StockMovementsView = () => {
           <option value="ADJUSTMENT">Stock take</option>
           <option value="VOID">Void / return</option>
         </select>
-        <button type="button" onClick={load} className="text-gold-400 text-sm underline">Refresh</button>
+        <button type="button" onClick={load} className="text-accent-400 text-sm underline">Refresh</button>
       </div>
       {loading ? <TableSkeleton /> : rows.length === 0 ? (
         <Empty message="No movements recorded yet" />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="text-gold-500/50 text-xs"><tr><th className="p-2 text-left">Date</th><th>Product</th><th>Type</th><th>Qty</th><th>Notes</th></tr></thead>
+            <thead className="text-accent-500/50 text-xs"><tr><th className="p-2 text-left">Date</th><th>Product</th><th>Type</th><th>Qty</th><th>Notes</th></tr></thead>
             <tbody>
               {rows.map((m) => (
-                <tr key={m.id} className={`border-t border-gold-500/10 ${color(m.movement_type)}`}>
+                <tr key={m.id} className={`border-t border-accent-500/10 ${color(m.movement_type)}`}>
                   <td className="p-2">{format(new Date(m.created_at), 'dd MMM yyyy HH:mm')}</td>
                   <td>{m.product?.name}</td>
                   <td>{label(m)}</td>
                   <td>{m.qty}</td>
-                  <td className="text-gold-500/50">{m.notes || '—'}</td>
+                  <td className="text-accent-500/50">{m.notes || '—'}</td>
                 </tr>
               ))}
             </tbody>
@@ -702,9 +702,9 @@ export const StockMovementsView = () => {
         </div>
       )}
       <div className="flex gap-2">
-        <button type="button" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className="px-3 py-1 border border-gold-500/20 rounded text-gold-400 text-sm disabled:opacity-40">Previous</button>
-        <span className="text-gold-500/50 text-sm self-center">Page {page}</span>
-        <button type="button" disabled={rows.length < limit} onClick={() => setPage((p) => p + 1)} className="px-3 py-1 border border-gold-500/20 rounded text-gold-400 text-sm disabled:opacity-40">Next</button>
+        <button type="button" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className="px-3 py-1 border border-accent-500/20 rounded text-accent-400 text-sm disabled:opacity-40">Previous</button>
+        <span className="text-accent-500/50 text-sm self-center">Page {page}</span>
+        <button type="button" disabled={rows.length < limit} onClick={() => setPage((p) => p + 1)} className="px-3 py-1 border border-accent-500/20 rounded text-accent-400 text-sm disabled:opacity-40">Next</button>
       </div>
     </div>
   );
@@ -729,29 +729,29 @@ const StockSummaryPieceRow = ({ piece, detailOpen, onToggleDetail, onViewFull, o
 
   return (
     <>
-      <tr className="border-t border-gold-500/5 hover:bg-white/[0.02]">
-        <td className="py-2 font-mono text-[10px] text-gold-500/50">{piece.sku}</td>
+      <tr className="border-t border-accent-500/5 hover:bg-white/[0.02]">
+        <td className="py-2 font-mono text-[10px] text-accent-500/50">{piece.sku}</td>
         <td className="py-2">
           <button
             type="button"
             onClick={() => onToggleDetail(piece.id)}
             className="text-left group"
           >
-            <span className="text-gold-200 group-hover:text-gold-100">{piece.name}</span>
+            <span className="text-accent-200 group-hover:text-accent-100">{piece.name}</span>
             {piece.description && (
-              <p className="text-[10px] text-gold-500/40 mt-0.5 line-clamp-1">{piece.description}</p>
+              <p className="text-[10px] text-accent-500/40 mt-0.5 line-clamp-1">{piece.description}</p>
             )}
           </button>
         </td>
-        <td className="py-2 text-gold-300/90">{piece.color || '—'}</td>
-        <td className="py-2 text-gold-300/90">{piece.size || '—'}</td>
+        <td className="py-2 text-accent-300/90">{piece.color || '—'}</td>
+        <td className="py-2 text-accent-300/90">{piece.size || '—'}</td>
         <td className="py-2 text-center tabular-nums">{piece.currentQty ?? 0}</td>
-        <td className="py-2 text-center tabular-nums text-gold-500/50">{piece.storeQty ?? 0}</td>
-        <td className="py-2 text-center text-gold-400/80">{formatKES(piece.shop_price)}</td>
+        <td className="py-2 text-center tabular-nums text-accent-500/50">{piece.storeQty ?? 0}</td>
+        <td className="py-2 text-center text-accent-400/80">{formatKES(piece.shop_price)}</td>
         <td className="py-2">
           <span className={`text-[10px] px-1.5 py-0.5 rounded ${loc.cls}`}>{loc.text}</span>
           {' '}
-          <span className={`text-[10px] px-1.5 py-0.5 rounded ${piece.on_website ? 'bg-sky-500/10 text-sky-300' : 'bg-navy-800 text-gold-500/50'}`}>
+          <span className={`text-[10px] px-1.5 py-0.5 rounded ${piece.on_website ? 'bg-sky-500/10 text-sky-300' : 'bg-base-800 text-accent-500/50'}`}>
             {piece.on_website ? 'On website' : 'Inventory only'}
           </span>
         </td>
@@ -759,33 +759,33 @@ const StockSummaryPieceRow = ({ piece, detailOpen, onToggleDetail, onViewFull, o
           <button
             type="button"
             onClick={() => onViewFull(piece.id)}
-            className="text-[10px] text-gold-400 hover:text-gold-300 underline"
+            className="text-[10px] text-accent-400 hover:text-accent-300 underline"
           >
             Full details
           </button>
         </td>
       </tr>
       {detailOpen && (
-        <tr className="border-t border-gold-500/5 bg-navy-900/60">
+        <tr className="border-t border-accent-500/5 bg-base-900/60">
           <td colSpan={9} className="px-4 py-3">
             <div className="flex flex-col sm:flex-row gap-4 text-xs">
               {piece.website_thumbnail ? (
-                <img src={piece.website_thumbnail} alt="" className="w-20 h-20 rounded-lg object-contain bg-white border border-gold-500/10 shrink-0" />
+                <img src={piece.website_thumbnail} alt="" className="w-20 h-20 rounded-lg object-contain bg-white border border-accent-500/10 shrink-0" />
               ) : (
-                <div className="w-20 h-20 rounded-lg bg-navy-950 border border-gold-500/10 flex items-center justify-center text-[10px] text-gold-500/30 shrink-0 text-center px-1">
+                <div className="w-20 h-20 rounded-lg bg-base-950 border border-accent-500/10 flex items-center justify-center text-[10px] text-accent-500/30 shrink-0 text-center px-1">
                   No image
                 </div>
               )}
               <div className="flex-1 space-y-2 min-w-0">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1">
-                  <p><span className="text-gold-500/50">Color</span> <span className="text-gold-200 ml-1">{piece.color || '—'}</span></p>
-                  <p><span className="text-gold-500/50">Size</span> <span className="text-gold-200 ml-1">{piece.size || '—'}</span></p>
-                  <p><span className="text-gold-500/50">Shop</span> <span className="text-gold-200 ml-1">{piece.currentQty ?? 0}</span></p>
-                  <p><span className="text-gold-500/50">Store</span> <span className="text-gold-200 ml-1">{piece.storeQty ?? 0}</span></p>
-                  <p><span className="text-gold-500/50">Price</span> <span className="text-gold-200 ml-1">{formatKES(piece.shop_price)}</span></p>
-                  <p><span className="text-gold-500/50">Category</span> <span className="text-gold-200 ml-1">{piece.category}</span></p>
+                  <p><span className="text-accent-500/50">Color</span> <span className="text-accent-200 ml-1">{piece.color || '—'}</span></p>
+                  <p><span className="text-accent-500/50">Size</span> <span className="text-accent-200 ml-1">{piece.size || '—'}</span></p>
+                  <p><span className="text-accent-500/50">Shop</span> <span className="text-accent-200 ml-1">{piece.currentQty ?? 0}</span></p>
+                  <p><span className="text-accent-500/50">Store</span> <span className="text-accent-200 ml-1">{piece.storeQty ?? 0}</span></p>
+                  <p><span className="text-accent-500/50">Price</span> <span className="text-accent-200 ml-1">{formatKES(piece.shop_price)}</span></p>
+                  <p><span className="text-accent-500/50">Category</span> <span className="text-accent-200 ml-1">{piece.category}</span></p>
                   {piece.unit_number != null && (
-                    <p><span className="text-gold-500/50">Piece #</span> <span className="text-gold-200 ml-1">{piece.unit_number}</span></p>
+                    <p><span className="text-accent-500/50">Piece #</span> <span className="text-accent-200 ml-1">{piece.unit_number}</span></p>
                   )}
                 </div>
                 {piece.description && (
@@ -797,7 +797,7 @@ const StockSummaryPieceRow = ({ piece, detailOpen, onToggleDetail, onViewFull, o
                       type="button"
                       disabled={transferBusy}
                       onClick={() => onTransfer('toShop', piece)}
-                      className="px-2 py-1 text-[10px] bg-gold-600/20 text-gold-300 border border-gold-500/30 rounded disabled:opacity-50"
+                      className="px-2 py-1 text-[10px] bg-accent-600/20 text-accent-300 border border-accent-500/30 rounded disabled:opacity-50"
                     >
                       Store → Shop
                     </button>
@@ -807,7 +807,7 @@ const StockSummaryPieceRow = ({ piece, detailOpen, onToggleDetail, onViewFull, o
                       type="button"
                       disabled={transferBusy}
                       onClick={() => onTransfer('toStore', piece)}
-                      className="px-2 py-1 text-[10px] border border-gold-500/25 text-gold-400 rounded disabled:opacity-50"
+                      className="px-2 py-1 text-[10px] border border-accent-500/25 text-accent-400 rounded disabled:opacity-50"
                     >
                       Shop → Store
                     </button>
@@ -841,7 +841,7 @@ const StockSummaryCategoryRow = ({ row, expanded, onToggle, piecesState, onLoadM
 
   return (
     <>
-      <tr className="border-t border-gold-500/10 hover:bg-white/[0.02]">
+      <tr className="border-t border-accent-500/10 hover:bg-white/[0.02]">
         <td className="p-2 font-medium">
           <button
             type="button"
@@ -849,12 +849,12 @@ const StockSummaryCategoryRow = ({ row, expanded, onToggle, piecesState, onLoadM
             className="flex items-center gap-2 text-left w-full group"
           >
             {isOpen ? (
-              <ChevronDown size={16} className="text-gold-500 shrink-0" />
+              <ChevronDown size={16} className="text-accent-500 shrink-0" />
             ) : (
-              <ChevronRight size={16} className="text-gold-500/50 group-hover:text-gold-500 shrink-0" />
+              <ChevronRight size={16} className="text-accent-500/50 group-hover:text-accent-500 shrink-0" />
             )}
             <span className="text-white">{category}</span>
-            <span className="text-[10px] text-gold-500/40 font-normal ml-1">
+            <span className="text-[10px] text-accent-500/40 font-normal ml-1">
               ({row.shop_piece_count ?? 0} shop
               {(row.warehouse_piece_count ?? 0) > 0 && ` + ${row.warehouse_piece_count} store`}
               )
@@ -865,36 +865,36 @@ const StockSummaryCategoryRow = ({ row, expanded, onToggle, piecesState, onLoadM
         <td className="p-2 text-center tabular-nums">{row.stock_in_qty}</td>
         <td className="p-2 text-center tabular-nums">{row.sales_qty}</td>
         <td className="p-2 text-center tabular-nums">{row.stock_out_qty}</td>
-        <td className="p-2 text-center tabular-nums font-medium text-gold-300">{row.closing_qty}</td>
-        <td className="p-2 text-center tabular-nums text-gold-300">{row.target_qty ?? row.closing_qty ?? '—'}</td>
+        <td className="p-2 text-center tabular-nums font-medium text-accent-300">{row.closing_qty}</td>
+        <td className="p-2 text-center tabular-nums text-accent-300">{row.target_qty ?? row.closing_qty ?? '—'}</td>
         <td className="p-2 text-center tabular-nums text-violet-300/90">{row.store_qty ?? 0}</td>
       </tr>
 
       {isOpen && (
-        <tr className="border-t border-gold-500/5 bg-navy-950/40">
+        <tr className="border-t border-accent-500/5 bg-base-950/40">
           <td colSpan={8} className="p-0">
-            <div className="px-4 py-3 border-l-2 border-gold-500/30 ml-3">
+            <div className="px-4 py-3 border-l-2 border-accent-500/30 ml-3">
               {onBulkToShop && (
                 <div className="mb-3 flex justify-end">
                   <button
                     type="button"
                     disabled={transferBusy}
                     onClick={() => onBulkToShop(category)}
-                    className="text-[10px] font-bold   px-3 py-1.5 rounded border border-gold-500/30 text-gold-400 hover:bg-gold-600/10 disabled:opacity-50"
+                    className="text-[10px] font-bold   px-3 py-1.5 rounded border border-accent-500/30 text-accent-400 hover:bg-accent-600/10 disabled:opacity-50"
                   >
                     Move all warehouse → shop
                   </button>
                 </div>
               )}
               {cache?.loading && !cache?.items?.length && (
-                <p className="text-gold-500/40 text-xs py-4 text-center">Loading pieces…</p>
+                <p className="text-accent-500/40 text-xs py-4 text-center">Loading pieces…</p>
               )}
               {cache?.error && (
                 <p className="text-red-400 text-xs py-2">{cache.error}</p>
               )}
               {cache?.items?.length > 0 && (
                 <table className="w-full text-xs">
-                  <thead className="text-gold-500/40">
+                  <thead className="text-accent-500/40">
                     <tr>
                       <th className="py-1.5 text-left font-normal">SKU</th>
                       <th className="py-1.5 text-left font-normal">Name</th>
@@ -923,14 +923,14 @@ const StockSummaryCategoryRow = ({ row, expanded, onToggle, piecesState, onLoadM
                 </table>
               )}
               {cache && !cache.loading && cache.items?.length === 0 && (
-                <p className="text-gold-500/40 text-xs py-3">No pieces in this category.</p>
+                <p className="text-accent-500/40 text-xs py-3">No pieces in this category.</p>
               )}
               {cache && cache.total > (cache.items?.length ?? 0) && (
                 <button
                   type="button"
                   onClick={() => onLoadMore(category)}
                   disabled={cache.loading}
-                  className="mt-2 text-[10px] text-gold-400 hover:text-gold-300 underline disabled:opacity-50"
+                  className="mt-2 text-[10px] text-accent-400 hover:text-accent-300 underline disabled:opacity-50"
                 >
                   {cache.loading
                     ? 'Loading…'
@@ -1100,8 +1100,8 @@ export const DailyStockSheetView = () => {
             onClick={() => setInventoryMode(id)}
             className={`px-3 py-1.5 rounded-lg text-xs border ${
               inventoryMode === id
-                ? 'bg-gold-600/20 border-gold-500/40 text-gold-300'
-                : 'border-gold-500/15 text-gold-500/50 hover:text-gold-400'
+                ? 'bg-accent-600/20 border-accent-500/40 text-accent-300'
+                : 'border-accent-500/15 text-accent-500/50 hover:text-accent-400'
             }`}
           >
             {label}
@@ -1111,18 +1111,18 @@ export const DailyStockSheetView = () => {
 
       <StockExcelToolbar sheetDate={date} onImported={load} />
       <div className="flex flex-wrap items-center gap-2">
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-navy-950 border border-gold-500/20 rounded px-3 py-2 text-white" />
-        <button onClick={async () => { await inventoryAPI.closeDay(); toast.success('Day closed'); load(); }} className="px-4 py-2 border border-gold-500/30 text-gold-400 rounded text-sm">Force close day</button>
-        <button type="button" onClick={() => downloadReport(reportsAPI.stockReport, `stock-report-${date}.xlsx`, { date })} className="text-gold-400 text-sm underline">Download Excel</button>
-        <button type="button" onClick={load} className="text-gold-500/50 text-sm underline">Refresh</button>
+        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-base-950 border border-accent-500/20 rounded px-3 py-2 text-white" />
+        <button onClick={async () => { await inventoryAPI.closeDay(); toast.success('Day closed'); load(); }} className="px-4 py-2 border border-accent-500/30 text-accent-400 rounded text-sm">Force close day</button>
+        <button type="button" onClick={() => downloadReport(reportsAPI.stockReport, `stock-report-${date}.xlsx`, { date })} className="text-accent-400 text-sm underline">Download Excel</button>
+        <button type="button" onClick={load} className="text-accent-500/50 text-sm underline">Refresh</button>
       </div>
       {error && <p className="text-red-400 text-sm">{error}</p>}
       {loading ? <TableSkeleton /> : rows.length === 0 ? (
         <Empty message="No stock summary for this date" />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gold-500/10">
+        <div className="overflow-x-auto rounded-xl border border-accent-500/10">
           <table className="w-full text-sm">
-            <thead className="text-gold-500/50 text-xs bg-navy-950/50">
+            <thead className="text-accent-500/50 text-xs bg-base-950/50">
               <tr>
                 <th className="p-2 text-left">Category</th>
                 <th className="p-2 text-center">Open</th>
@@ -1302,7 +1302,7 @@ export const StockTakeView = ({ readOnly = false }) => {
           type="date"
           value={sheetDate}
           onChange={(e) => setSheetDate(e.target.value)}
-          className="bg-navy-950 border border-gold-500/20 rounded-lg px-3 py-1.5 text-white text-sm"
+          className="bg-base-950 border border-accent-500/20 rounded-lg px-3 py-1.5 text-white text-sm"
         />
         {[
           ['shop', 'Shop floor'],
@@ -1313,7 +1313,7 @@ export const StockTakeView = ({ readOnly = false }) => {
             type="button"
             onClick={() => setLocation(id)}
             className={`px-3 py-1.5 rounded-lg text-xs border ${
-              location === id ? 'bg-gold-600/20 border-gold-500/40 text-gold-300' : 'border-gold-500/15 text-gold-500/50'
+              location === id ? 'bg-accent-600/20 border-accent-500/40 text-accent-300' : 'border-accent-500/15 text-accent-500/50'
             }`}
           >
             {label}
@@ -1322,7 +1322,7 @@ export const StockTakeView = ({ readOnly = false }) => {
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="bg-navy-950 border border-gold-500/20 rounded-lg px-3 py-1.5 text-white text-sm"
+          className="bg-base-950 border border-accent-500/20 rounded-lg px-3 py-1.5 text-white text-sm"
         >
           <option value="">All categories</option>
           {categories.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -1331,7 +1331,7 @@ export const StockTakeView = ({ readOnly = false }) => {
           type="button"
           onClick={handleDownload}
           disabled={downloading || loading}
-          className="px-3 py-1.5 border border-gold-500/30 text-gold-400 rounded-lg text-xs"
+          className="px-3 py-1.5 border border-accent-500/30 text-accent-400 rounded-lg text-xs"
         >
           {downloading ? 'Downloading…' : 'Download Excel'}
         </button>
@@ -1341,43 +1341,43 @@ export const StockTakeView = ({ readOnly = false }) => {
           <input type="file" accept=".xlsx" className="hidden" onChange={handleUpload} disabled={uploading} />
         </label>
         )}
-        <button type="button" onClick={handleTemplate} className="text-gold-500/50 text-xs underline">
+        <button type="button" onClick={handleTemplate} className="text-accent-500/50 text-xs underline">
           Template
         </button>
         {!readOnly && (
-        <button onClick={save} className="px-4 py-2 bg-gold-600 text-navy-950 rounded text-sm font-medium ml-auto">
+        <button onClick={save} className="px-4 py-2 bg-accent-600 text-base-950 rounded text-sm font-medium ml-auto">
           Save on screen
         </button>
         )}
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-        <div className="bg-navy-900/50 border border-gold-500/10 rounded-lg p-3">
-          <p className="text-gold-500/40  tracking-wider">Cost value (counted)</p>
-          <p className="text-gold-200 font-semibold mt-1">{fmt(totals.costValue)}</p>
+        <div className="bg-base-900/50 border border-accent-500/10 rounded-lg p-3">
+          <p className="text-accent-500/40  tracking-wider">Cost value (counted)</p>
+          <p className="text-accent-200 font-semibold mt-1">{fmt(totals.costValue)}</p>
         </div>
-        <div className="bg-navy-900/50 border border-gold-500/10 rounded-lg p-3">
-          <p className="text-gold-500/40  tracking-wider">Retail value (counted)</p>
-          <p className="text-gold-200 font-semibold mt-1">{fmt(totals.retailValue)}</p>
+        <div className="bg-base-900/50 border border-accent-500/10 rounded-lg p-3">
+          <p className="text-accent-500/40  tracking-wider">Retail value (counted)</p>
+          <p className="text-accent-200 font-semibold mt-1">{fmt(totals.retailValue)}</p>
         </div>
-        <div className="bg-navy-900/50 border border-gold-500/10 rounded-lg p-3">
-          <p className="text-gold-500/40  tracking-wider">Potential profit</p>
+        <div className="bg-base-900/50 border border-accent-500/10 rounded-lg p-3">
+          <p className="text-accent-500/40  tracking-wider">Potential profit</p>
           <p className="text-emerald-400 font-semibold mt-1">{fmt(totals.profit)}</p>
         </div>
-        <div className="bg-navy-900/50 border border-gold-500/10 rounded-lg p-3">
-          <p className="text-gold-500/40  tracking-wider">Net variance (units)</p>
-          <p className={`font-semibold mt-1 ${totals.varianceUnits < 0 ? 'text-red-400' : totals.varianceUnits > 0 ? 'text-green-400' : 'text-gold-200'}`}>
+        <div className="bg-base-900/50 border border-accent-500/10 rounded-lg p-3">
+          <p className="text-accent-500/40  tracking-wider">Net variance (units)</p>
+          <p className={`font-semibold mt-1 ${totals.varianceUnits < 0 ? 'text-red-400' : totals.varianceUnits > 0 ? 'text-green-400' : 'text-accent-200'}`}>
             {totals.varianceUnits > 0 ? '+' : ''}{totals.varianceUnits}
           </p>
         </div>
       </div>
 
       {loading ? (
-        <p className="text-gold-500/40 text-sm py-8 text-center">Loading stock list…</p>
+        <p className="text-accent-500/40 text-sm py-8 text-center">Loading stock list…</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[900px]">
-            <thead className="text-gold-500/50 text-xs">
+            <thead className="text-accent-500/50 text-xs">
               <tr>
                 <th className="p-2 text-left">Product</th>
                 <th className="p-2">SKU</th>
@@ -1406,14 +1406,14 @@ export const StockTakeView = ({ readOnly = false }) => {
                 const retail = p.retailPrice ?? p.shop_price ?? 0;
                 const lineProfit = (retail - cost) * physical;
                 return (
-                  <tr key={p.id} className="border-t border-gold-500/10">
+                  <tr key={p.id} className="border-t border-accent-500/10">
                     <td className="p-2 max-w-[200px] truncate" title={p.name}>{p.name}</td>
-                    <td className="p-2 text-gold-500/60 text-xs">{p.sku}</td>
+                    <td className="p-2 text-accent-500/60 text-xs">{p.sku}</td>
                     <td className="p-2 text-right text-xs">{cost ? fmt(cost) : '—'}</td>
                     <td className="p-2 text-right text-xs">{fmt(retail)}</td>
                     {location === 'shop' && (
                       <>
-                        <td className="p-2 text-center text-gold-500/70">{p.shopOpening ?? system}</td>
+                        <td className="p-2 text-center text-accent-500/70">{p.shopOpening ?? system}</td>
                         <td className="p-2 text-center text-green-400/80">{p.stockInQty ?? 0}</td>
                         <td className="p-2 text-center text-orange-400/80">{p.stockOutQty ?? 0}</td>
                         <td className="p-2 text-center text-red-400/80">{p.salesQty ?? 0}</td>
@@ -1427,7 +1427,7 @@ export const StockTakeView = ({ readOnly = false }) => {
                         value={physical}
                         disabled={readOnly}
                         onChange={(e) => setCounts({ ...counts, [p.id]: Number(e.target.value) })}
-                        className="w-20 bg-navy-950 border border-gold-500/20 rounded px-2 py-1 text-white text-center disabled:opacity-60"
+                        className="w-20 bg-base-950 border border-accent-500/20 rounded px-2 py-1 text-white text-center disabled:opacity-60"
                       />
                     </td>
                     <td className={`p-2 text-center font-medium ${variance < 0 ? 'text-red-400' : variance > 0 ? 'text-green-400' : 'text-gray-400'}`}>
@@ -1460,14 +1460,14 @@ export const ShiftsView = () => {
   return (
     <div className="p-2 overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="text-gold-500/50 text-xs">
+        <thead className="text-accent-500/50 text-xs">
           <tr><th className="p-2">Seller</th><th>Clock In</th><th>Clock Out</th><th>Cash</th><th>M-Pesa</th><th>Total</th><th></th></tr>
         </thead>
         <tbody>
           {shifts.map((s) => (
-            <tr key={s.id} className="border-t border-gold-500/10 hover:bg-navy-800/30">
+            <tr key={s.id} className="border-t border-accent-500/10 hover:bg-base-800/30">
               <td className="p-2">
-                <button type="button" onClick={() => openDetail(s.id)} className="text-gold-400 hover:underline">{s.seller?.full_name}</button>
+                <button type="button" onClick={() => openDetail(s.id)} className="text-accent-400 hover:underline">{s.seller?.full_name}</button>
               </td>
               <td>{format(new Date(s.clock_in), 'dd MMM HH:mm')}</td>
               <td>{s.clock_out ? format(new Date(s.clock_out), 'dd MMM HH:mm') : 'Open'}</td>
@@ -1475,7 +1475,7 @@ export const ShiftsView = () => {
               <td>{formatKES(s.total_mpesa)}</td>
               <td>{formatKES(s.total_sales)}</td>
               <td>
-                <button type="button" onClick={() => downloadReport(reportsAPI.shiftReport, `shift-${s.id}.xlsx`, { shiftId: s.id })} className="text-gold-400 text-xs">Report</button>
+                <button type="button" onClick={() => downloadReport(reportsAPI.shiftReport, `shift-${s.id}.xlsx`, { shiftId: s.id })} className="text-accent-400 text-xs">Report</button>
               </td>
             </tr>
           ))}
@@ -1484,14 +1484,14 @@ export const ShiftsView = () => {
 
       {detail && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setDetail(null)}>
-          <div className="bg-navy-900 border border-gold-500/20 rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-gold-400 font-medium">{detail.seller?.full_name} — Shift</h3>
-            <p className="text-gold-500/50 text-xs mt-1">{format(new Date(detail.clock_in), 'PPpp')} → {detail.clock_out ? format(new Date(detail.clock_out), 'PPpp') : 'Open'}</p>
+          <div className="bg-base-900 border border-accent-500/20 rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-accent-400 font-medium">{detail.seller?.full_name} — Shift</h3>
+            <p className="text-accent-500/50 text-xs mt-1">{format(new Date(detail.clock_in), 'PPpp')} → {detail.clock_out ? format(new Date(detail.clock_out), 'PPpp') : 'Open'}</p>
             <table className="w-full text-sm mt-4">
-              <thead className="text-gold-500/50 text-xs"><tr><th className="p-2 text-left">Receipt</th><th>Total</th><th>Payment</th></tr></thead>
+              <thead className="text-accent-500/50 text-xs"><tr><th className="p-2 text-left">Receipt</th><th>Total</th><th>Payment</th></tr></thead>
               <tbody>
                 {(detail.sales || []).map((sale) => (
-                  <tr key={sale.id} className="border-t border-gold-500/10">
+                  <tr key={sale.id} className="border-t border-accent-500/10">
                     <td className="p-2">{sale.receipt_number}</td>
                     <td>{formatKES(sale.total_amount)}</td>
                     <td>{sale.payment_method}</td>
@@ -1499,7 +1499,7 @@ export const ShiftsView = () => {
                 ))}
               </tbody>
             </table>
-            <button type="button" onClick={() => setDetail(null)} className="mt-4 px-4 py-2 border border-gold-500/20 rounded text-gold-500/60 text-sm">Close</button>
+            <button type="button" onClick={() => setDetail(null)} className="mt-4 px-4 py-2 border border-accent-500/20 rounded text-accent-500/60 text-sm">Close</button>
           </div>
         </div>
       )}
@@ -1515,28 +1515,28 @@ export const SellersView = () => {
   useEffect(() => { load(); }, []);
   return (
     <div className="p-2">
-      <button onClick={() => setShowAdd(true)} className="mb-4 px-4 py-2 bg-gold-600 text-navy-950 rounded text-sm font-medium">Add Seller</button>
+      <button onClick={() => setShowAdd(true)} className="mb-4 px-4 py-2 bg-accent-600 text-base-950 rounded text-sm font-medium">Add Seller</button>
       <table className="w-full text-sm">
-        <thead className="text-gold-500/50 text-xs"><tr><th className="p-2">Name</th><th>Email</th><th>Status</th><th>Sales</th><th></th></tr></thead>
+        <thead className="text-accent-500/50 text-xs"><tr><th className="p-2">Name</th><th>Email</th><th>Status</th><th>Sales</th><th></th></tr></thead>
         <tbody>
           {sellers.map((s) => (
-            <tr key={s.id} className="border-t border-gold-500/10">
+            <tr key={s.id} className="border-t border-accent-500/10">
               <td className="p-2">{s.fullName}</td>
               <td>{s.email}</td>
               <td>{s.is_active ? 'Active' : 'Inactive'}</td>
               <td>{s.totalSales}</td>
-              <td><button onClick={async () => { await sellersAPI.toggle(s.id); load(); }} className="text-gold-400 text-xs">Toggle</button></td>
+              <td><button onClick={async () => { await sellersAPI.toggle(s.id); load(); }} className="text-accent-400 text-xs">Toggle</button></td>
             </tr>
           ))}
         </tbody>
       </table>
       {showAdd && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-navy-900 border border-gold-500/20 rounded-xl p-6 max-w-md w-full space-y-3">
-            <input placeholder="Full name" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white" />
-            <input placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white" />
-            <input type="password" placeholder="Password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full bg-navy-950 border border-gold-500/20 rounded p-2 text-white" />
-            <button onClick={async () => { await sellersAPI.create(form); setShowAdd(false); load(); toast.success('Seller added'); }} className="w-full py-2 bg-gold-600 text-navy-950 rounded">Create</button>
+          <div className="bg-base-900 border border-accent-500/20 rounded-xl p-6 max-w-md w-full space-y-3">
+            <input placeholder="Full name" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white" />
+            <input placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white" />
+            <input type="password" placeholder="Password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white" />
+            <button onClick={async () => { await sellersAPI.create(form); setShowAdd(false); load(); toast.success('Seller added'); }} className="w-full py-2 bg-accent-600 text-base-950 rounded">Create</button>
           </div>
         </div>
       )}
@@ -1573,14 +1573,14 @@ export const PosReportsView = () => {
   return (
     <div className="p-2 space-y-4">
       <div className="flex flex-wrap gap-3">
-        <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="bg-navy-950 border border-gold-500/20 rounded px-3 py-2 text-white text-sm" placeholder="From" />
-        <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="bg-navy-950 border border-gold-500/20 rounded px-3 py-2 text-white text-sm" placeholder="To" />
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-navy-950 border border-gold-500/20 rounded px-3 py-2 text-white text-sm" />
+        <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="bg-base-950 border border-accent-500/20 rounded px-3 py-2 text-white text-sm" placeholder="From" />
+        <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="bg-base-950 border border-accent-500/20 rounded px-3 py-2 text-white text-sm" placeholder="To" />
+        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-base-950 border border-accent-500/20 rounded px-3 py-2 text-white text-sm" />
       </div>
       <div className="grid md:grid-cols-2 gap-4">
         {reports.map((r) => (
-          <div key={r.key} className="bg-navy-900/50 border border-gold-500/10 rounded-xl p-4">
-            <h3 className="text-gold-400 font-medium">{r.title}</h3>
+          <div key={r.key} className="bg-base-900/50 border border-accent-500/10 rounded-xl p-4">
+            <h3 className="text-accent-400 font-medium">{r.title}</h3>
             <button
               type="button"
               disabled={busy === r.key}
@@ -1590,7 +1590,7 @@ export const PosReportsView = () => {
                 if (r.needsDate) params.date = date;
                 run(r.key, r.fn, r.file, params);
               }}
-              className="inline-block mt-3 text-sm bg-gold-600 text-navy-950 px-4 py-2 rounded disabled:opacity-50"
+              className="inline-block mt-3 text-sm bg-accent-600 text-base-950 px-4 py-2 rounded disabled:opacity-50"
             >
               {busy === r.key ? 'Generating…' : 'Download Excel'}
             </button>
@@ -1611,17 +1611,17 @@ export const PosSettingsView = () => {
   };
   return (
     <div className="p-2 space-y-6 max-w-lg">
-      <label className="flex items-center gap-3 text-gold-400">
+      <label className="flex items-center gap-3 text-accent-400">
         <input type="checkbox" checked={settings.pos_sellers_can_discount === 'true'} onChange={(e) => save('pos_sellers_can_discount', e.target.checked)} />
         Allow sellers to apply discounts
       </label>
       <div>
-        <label className="text-gold-500/50 text-xs">Low stock alert email</label>
-        <input value={settings.pos_low_stock_email || ''} onBlur={(e) => save('pos_low_stock_email', e.target.value)} onChange={(e) => setSettings({ ...settings, pos_low_stock_email: e.target.value })} className="w-full mt-1 bg-navy-950 border border-gold-500/20 rounded p-2 text-white" />
+        <label className="text-accent-500/50 text-xs">Low stock alert email</label>
+        <input value={settings.pos_low_stock_email || ''} onBlur={(e) => save('pos_low_stock_email', e.target.value)} onChange={(e) => setSettings({ ...settings, pos_low_stock_email: e.target.value })} className="w-full mt-1 bg-base-950 border border-accent-500/20 rounded p-2 text-white" />
       </div>
       <div>
-        <label className="text-gold-500/50 text-xs">Default low stock threshold</label>
-        <input type="number" value={settings.pos_low_stock_threshold || '5'} onBlur={(e) => save('pos_low_stock_threshold', e.target.value)} onChange={(e) => setSettings({ ...settings, pos_low_stock_threshold: e.target.value })} className="w-full mt-1 bg-navy-950 border border-gold-500/20 rounded p-2 text-white" />
+        <label className="text-accent-500/50 text-xs">Default low stock threshold</label>
+        <input type="number" value={settings.pos_low_stock_threshold || '5'} onBlur={(e) => save('pos_low_stock_threshold', e.target.value)} onChange={(e) => setSettings({ ...settings, pos_low_stock_threshold: e.target.value })} className="w-full mt-1 bg-base-950 border border-accent-500/20 rounded p-2 text-white" />
       </div>
     </div>
   );
@@ -1633,14 +1633,14 @@ export const AuditLogView = () => {
   return (
     <div className="p-2 overflow-x-auto text-sm">
       <table className="w-full">
-        <thead className="text-gold-500/50 text-xs"><tr><th className="p-2">Time</th><th>Action</th><th>Entity</th><th>Details</th></tr></thead>
+        <thead className="text-accent-500/50 text-xs"><tr><th className="p-2">Time</th><th>Action</th><th>Entity</th><th>Details</th></tr></thead>
         <tbody>
           {logs.map((l) => (
-            <tr key={l.id} className="border-t border-gold-500/10">
+            <tr key={l.id} className="border-t border-accent-500/10">
               <td className="p-2">{format(new Date(l.created_at), 'dd MMM yyyy HH:mm')}</td>
               <td>{l.action}</td>
               <td>{l.entity}</td>
-              <td className="text-gold-500/50 text-xs max-w-xs truncate">{JSON.stringify(l.details)}</td>
+              <td className="text-accent-500/50 text-xs max-w-xs truncate">{JSON.stringify(l.details)}</td>
             </tr>
           ))}
         </tbody>

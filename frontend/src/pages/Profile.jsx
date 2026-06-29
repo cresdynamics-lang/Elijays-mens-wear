@@ -100,30 +100,30 @@ const Profile = () => {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="bg-navy-950 min-h-screen font-serif">
+    <div className="bg-primary min-h-screen font-sans">
       <Navbar />
 
       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 max-w-7xl">
           {/* Profile Header */}
-          <div className="relative mb-16 overflow-hidden bg-navy-900 border border-gold-600/10 p-12">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gold-600/5 blur-[100px] rounded-full -mr-32 -mt-32" />
+          <div className="relative mb-16 overflow-hidden bg-utility-gray/40 border border-utility-gray/60 p-8 md:p-12">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 blur-[100px] rounded-full -mr-32 -mt-32" />
             
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-              <div className="w-32 h-32 bg-navy-800 border-2 border-gold-600/20 flex items-center justify-center relative group">
-                <div className="absolute inset-0 border border-gold-600/50 scale-110 opacity-0 group-hover:opacity-100 transition-all duration-500" />
+              <div className="w-32 h-32 bg-primary border-2 border-accent flex items-center justify-center relative group">
+                <div className="absolute inset-0 border border-accent scale-110 opacity-0 group-hover:opacity-100 transition-all duration-500" />
                 {user?.avatar ? (
                   <img src={user.avatar} alt="" className="absolute inset-0 w-full h-full object-cover" />
                 ) : (
-                  <span className="text-2xl font-bold text-gold-400 tracking-wider">{userInitials(user)}</span>
+                  <span className="text-2xl font-bold text-accent tracking-wider">{userInitials(user)}</span>
                 )}
               </div>
               
               <div className="text-center md:text-left space-y-2">
-                <h1 className="text-3xl md:text-4xl text-white">{user?.name}</h1>
-                <p className="text-gold-500/60 font-light italic">{user?.email}</p>
+                <h1 className="text-3xl md:text-4xl text-secondary">{user?.name}</h1>
+                <p className="text-accent font-light italic">{user?.email}</p>
                 <div className="flex items-center gap-4 pt-2">
-                  <span className="text-[10px] bg-gold-600/10 text-gold-500 border border-gold-600/20 px-3 py-1   font-bold">
+                  <span className="text-[10px] bg-accent/20 text-accent border border-accent px-3 py-1 font-bold">
                     Member Since {new Date(user?.created_at).getFullYear() || 2024}
                   </span>
                 </div>
@@ -134,7 +134,7 @@ const Profile = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleLogout}
-                  className="flex items-center gap-3 text-red-500/70 hover:text-red-400 text-[10px] font-bold   border border-red-500/20 px-6 py-3 transition-all"
+                  className="flex items-center gap-3 text-red-500 hover:text-red-600 text-[10px] font-bold border border-red-500/30 px-6 py-3 transition-all"
                 >
                   <LogOut size={14} />
                   Sign Out
@@ -150,10 +150,10 @@ const Profile = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center justify-between p-5 text-[11px] font-bold  tracking-[0.2em] transition-all border ${
+                  className={`w-full flex items-center justify-between p-5 text-[11px] font-bold tracking-[0.2em] transition-all border ${
                     activeTab === tab.id 
-                      ? 'bg-gold-600 text-navy-950 border-gold-600' 
-                      : 'text-gold-500/50 border-gold-600/10 hover:border-gold-600/40 hover:text-gold-500'
+                      ? 'bg-accent text-primary border-accent' 
+                      : 'text-accent/70 border-utility-gray/60 hover:border-accent hover:text-accent'
                   }`}
                 >
                   <div className="flex items-center gap-4">
@@ -168,7 +168,7 @@ const Profile = () => {
             {/* Content Area */}
             <div className="lg:col-span-9">
               {(profileMessage || profileError) && (
-                <div className={`mb-6 border px-4 py-3 text-sm ${profileError ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-green-500/30 bg-green-500/10 text-green-300'}`}>
+                <div className={`mb-6 border px-4 py-3 text-sm ${profileError ? 'border-red-500/30 bg-red-500/10 text-red-500' : 'border-green-500/30 bg-green-500/10 text-green-600'}`}>
                   {profileError || profileMessage}
                 </div>
               )}
@@ -182,26 +182,26 @@ const Profile = () => {
                 >
                   {activeTab === 'orders' && (
                     <div className="space-y-8">
-                      <div className="flex justify-between items-end border-b border-gold-600/10 pb-6">
-                        <h2 className="text-xl md:text-2xl text-white">Recent Orders</h2>
-                        <span className="text-[10px] text-gold-600/50  ">{orders.length} total</span>
+                      <div className="flex justify-between items-end border-b border-utility-gray/60 pb-6">
+                        <h2 className="text-xl md:text-2xl text-secondary">Recent Orders</h2>
+                        <span className="text-[10px] text-accent/70">{orders.length} total</span>
                       </div>
 
                       {loading ? (
                         <div className="flex flex-col items-center justify-center py-24 space-y-4">
-                          <div className="w-12 h-12 border-2 border-gold-600 border-t-transparent animate-spin" />
-                          <p className="text-gold-600/50 text-[10px]  ">Loading orders...</p>
+                          <div className="w-12 h-12 border-2 border-accent border-t-transparent animate-spin" />
+                          <p className="text-accent/70 text-[10px]">Loading orders...</p>
                         </div>
                       ) : orders.length === 0 ? (
-                        <div className="text-center py-24 border border-dashed border-gold-600/20 space-y-6">
-                          <ShoppingBag size={48} className="mx-auto text-gold-600/20" />
+                        <div className="text-center py-24 border border-dashed border-utility-gray/60 space-y-6">
+                          <ShoppingBag size={48} className="mx-auto text-utility-gray" />
                           <div className="space-y-2">
-                            <p className="text-white text-lg italic">Your collection is empty.</p>
-                            <p className="text-gold-600/50 text-[10px]  ">Begin your bespoke journey today.</p>
+                            <p className="text-secondary text-lg italic">Your collection is empty.</p>
+                            <p className="text-accent/70 text-[10px]">Begin your bespoke journey today.</p>
                           </div>
                           <button 
                             onClick={() => navigate('/products')}
-                            className="bg-gold-600 text-navy-950 px-8 py-4 text-[10px] font-bold   hover:bg-gold-500 transition-all"
+                            className="bg-accent text-primary px-8 py-4 text-[10px] font-bold hover:bg-accent/80 transition-all"
                           >
                             Explore Collection
                           </button>
@@ -211,26 +211,26 @@ const Profile = () => {
                           {orders.map((order) => (
                             <div 
                               key={order.id}
-                              className="bg-navy-900/50 border border-gold-600/10 p-8 hover:border-gold-600/30 transition-all group"
+                              className="bg-utility-gray/30 border border-utility-gray/60 p-8 hover:border-accent/40 transition-all group"
                             >
                               <div className="flex flex-col md:flex-row justify-between gap-6">
                                 <div className="space-y-4">
                                   <div className="flex items-center gap-4">
-                                    <span className="text-gold-500 text-[10px] font-bold  ">Order #{order.id.slice(-8).toUpperCase()}</span>
-                                    <span className={`text-[9px] px-3 py-1   font-bold ${
-                                      order.status === 'completed' ? 'bg-green-500/10 text-green-500' :
+                                    <span className="text-accent text-[10px] font-bold">Order #{order.id.slice(-8).toUpperCase()}</span>
+                                    <span className={`text-[9px] px-3 py-1 font-bold ${
+                                      order.status === 'completed' ? 'bg-green-500/10 text-green-600' :
                                       order.status === 'cancelled' ? 'bg-red-500/10 text-red-500' :
-                                      'bg-gold-600/10 text-gold-500'
+                                      'bg-accent/10 text-accent'
                                     } border border-current opacity-70`}>
                                       {order.status}
                                     </span>
                                   </div>
-                                  <div className="flex items-center gap-6 text-navy-400 text-xs">
+                                  <div className="flex items-center gap-6 text-secondary/70 text-xs">
                                     <div className="flex items-center gap-2">
                                       <Clock size={12} />
                                       {new Date(order.created_at).toLocaleDateString()}
                                     </div>
-                                    <div className="flex items-center gap-2 text-white font-serif italic">
+                                    <div className="flex items-center gap-2 text-secondary font-serif italic">
                                       KSh {parseFloat(order.total_amount).toLocaleString()}
                                     </div>
                                   </div>
@@ -238,7 +238,7 @@ const Profile = () => {
                                 <div className="flex items-center">
                                   <button 
                                     onClick={() => navigate(`/payment/${order.id}`)}
-                                    className="text-gold-500 text-[10px] font-bold   flex items-center gap-2 group-hover:gap-4 transition-all"
+                                    className="text-accent text-[10px] font-bold flex items-center gap-2 group-hover:gap-4 transition-all"
                                   >
                                     View Details <ChevronRight size={14} />
                                   </button>
@@ -252,54 +252,54 @@ const Profile = () => {
                   )}
 
                   {activeTab === 'details' && (
-                    <div className="space-y-8 bg-navy-900/30 border border-gold-600/10 p-12">
-                      <h2 className="text-xl md:text-2xl text-white border-b border-gold-600/10 pb-6">Personal Details</h2>
+                    <div className="space-y-8 bg-utility-gray/30 border border-utility-gray/60 p-8 md:p-12">
+                      <h2 className="text-xl md:text-2xl text-secondary border-b border-utility-gray/60 pb-6">Personal Details</h2>
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                           <div className="space-y-2">
-                            <label className="text-[10px] text-gold-600/50  tracking-[0.2em] font-bold">Full Name</label>
+                            <label className="text-[10px] text-accent/80 tracking-[0.2em] font-bold">Full Name</label>
                             <input
                               value={detailsForm.name}
                               onChange={(e) => setDetailsForm((f) => ({ ...f, name: e.target.value }))}
-                              className="w-full bg-navy-950 border border-gold-600/10 py-4 px-5 text-white text-sm outline-none focus:border-gold-500"
+                              className="w-full bg-primary border border-utility-gray/60 py-4 px-5 text-secondary text-sm outline-none focus:border-accent"
                             />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] text-gold-600/50  tracking-[0.2em] font-bold">Email Address</label>
-                            <p className="text-white text-lg font-serif border-b border-gold-600/10 pb-2">{user?.email}</p>
+                            <label className="text-[10px] text-accent/80 tracking-[0.2em] font-bold">Email Address</label>
+                            <p className="text-secondary text-lg font-serif border-b border-utility-gray/60 pb-2">{user?.email}</p>
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] text-gold-600/50  tracking-[0.2em] font-bold">Phone Number</label>
+                            <label className="text-[10px] text-accent/80 tracking-[0.2em] font-bold">Phone Number</label>
                             <input
                               value={detailsForm.phone}
                               onChange={(e) => setDetailsForm((f) => ({ ...f, phone: e.target.value }))}
-                              className="w-full bg-navy-950 border border-gold-600/10 py-4 px-5 text-white text-sm outline-none focus:border-gold-500"
+                              className="w-full bg-primary border border-utility-gray/60 py-4 px-5 text-secondary text-sm outline-none focus:border-accent"
                               placeholder="0712 345 678"
                             />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] text-gold-600/50  tracking-[0.2em] font-bold">Preferred Style</label>
-                            <p className="text-gold-500 text-lg font-serif border-b border-gold-600/10 pb-2 italic">Bespoke Tailoring</p>
+                            <label className="text-[10px] text-accent/80 tracking-[0.2em] font-bold">Preferred Style</label>
+                            <p className="text-accent text-lg font-serif border-b border-utility-gray/60 pb-2 italic">Bespoke Tailoring</p>
                           </div>
                        </div>
                        <div className="pt-8">
-                         <button
-                           type="button"
-                           onClick={() => saveProfile()}
-                           disabled={profileSaving}
-                           className="bg-transparent border border-gold-600/30 text-gold-500 px-8 py-4 text-[10px] font-bold   hover:bg-gold-600 hover:text-navy-950 transition-all disabled:opacity-50"
-                         >
-                           {profileSaving ? 'Saving...' : 'Update Profile'}
-                         </button>
-                       </div>
+                          <button
+                            type="button"
+                            onClick={() => saveProfile()}
+                            disabled={profileSaving}
+                            className="bg-transparent border border-accent/40 text-accent px-8 py-4 text-[10px] font-bold hover:bg-accent hover:text-primary transition-all disabled:opacity-50"
+                          >
+                            {profileSaving ? 'Saving...' : 'Update Profile'}
+                          </button>
+                        </div>
                     </div>
                   )}
 
                   {activeTab === 'addresses' && (
                     <div className="space-y-8">
-                      <div className="flex justify-between items-end border-b border-gold-600/10 pb-6">
-                        <h2 className="text-xl md:text-2xl text-white">Saved Addresses</h2>
+                      <div className="flex justify-between items-end border-b border-utility-gray/60 pb-6">
+                        <h2 className="text-xl md:text-2xl text-secondary">Saved Addresses</h2>
                       </div>
-                      <div className="bg-navy-900/50 border border-gold-600/10 p-8 space-y-5">
+                      <div className="bg-utility-gray/30 border border-utility-gray/60 p-8 space-y-5">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           {[
                             ['cbd', 'CBD'],
@@ -312,8 +312,8 @@ const Profile = () => {
                               onClick={() => setAddressForm((f) => ({ ...f, delivery_zone: value }))}
                               className={`border px-3 py-3 text-[10px] font-bold uppercase tracking-wider transition-colors ${
                                 addressForm.delivery_zone === value
-                                  ? 'bg-gold-600 text-navy-950 border-gold-600'
-                                  : 'border-gold-500/20 text-gold-400 hover:border-gold-500/60'
+                                  ? 'bg-accent text-primary border-accent'
+                                  : 'border-utility-gray/60 text-accent/80 hover:border-accent hover:text-accent'
                               }`}
                             >
                               {label}
@@ -321,12 +321,12 @@ const Profile = () => {
                           ))}
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[10px] text-gold-600/50 tracking-[0.2em] font-bold">Exact Location</label>
+                          <label className="text-[10px] text-accent/80 tracking-[0.2em] font-bold">Exact Location</label>
                           <textarea
                             rows={5}
                             value={addressForm.line1}
                             onChange={(e) => setAddressForm((f) => ({ ...f, line1: e.target.value }))}
-                            className="w-full bg-navy-950 border border-gold-600/10 py-4 px-5 text-white text-sm outline-none focus:border-gold-500 resize-y"
+                            className="w-full bg-primary border border-utility-gray/60 py-4 px-5 text-secondary text-sm outline-none focus:border-accent resize-y"
                             placeholder="Estate, street, building, floor, landmark"
                           />
                         </div>
@@ -334,7 +334,7 @@ const Profile = () => {
                           type="button"
                           onClick={() => saveProfile(addressForm)}
                           disabled={profileSaving}
-                          className="bg-gold-600 text-navy-950 px-8 py-4 text-[10px] font-bold hover:bg-gold-500 transition-all disabled:opacity-50"
+                          className="bg-accent text-primary px-8 py-4 text-[10px] font-bold hover:bg-accent/80 transition-all disabled:opacity-50"
                         >
                           {profileSaving ? 'Saving...' : 'Save Address'}
                         </button>
@@ -343,32 +343,32 @@ const Profile = () => {
                   )}
 
                   {activeTab === 'security' && (
-                    <div className="space-y-8 bg-navy-900/30 border border-gold-600/10 p-12">
-                      <h2 className="text-xl md:text-2xl text-white border-b border-gold-600/10 pb-6">Security Settings</h2>
+                    <div className="space-y-8 bg-utility-gray/30 border border-utility-gray/60 p-8 md:p-12">
+                      <h2 className="text-xl md:text-2xl text-secondary border-b border-utility-gray/60 pb-6">Security Settings</h2>
                       <div className="max-w-md space-y-8">
                         <div className="space-y-6">
                           <div className="space-y-2">
-                            <label className="text-[10px] text-gold-600/50  tracking-[0.2em] font-bold ml-1">Current Password</label>
+                            <label className="text-[10px] text-accent/80 tracking-[0.2em] font-bold ml-1">Current Password</label>
                             <input 
                               type="password"
                               value={passwordForm.current_password}
                               onChange={(e) => setPasswordForm((f) => ({ ...f, current_password: e.target.value }))}
-                              className="w-full bg-navy-950 border border-gold-600/10 py-4 px-6 text-white text-sm outline-none focus:border-gold-500"
+                              className="w-full bg-primary border border-utility-gray/60 py-4 px-6 text-secondary text-sm outline-none focus:border-accent"
                               placeholder="••••••••"
                             />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] text-gold-600/50  tracking-[0.2em] font-bold ml-1">New Password</label>
+                            <label className="text-[10px] text-accent/80 tracking-[0.2em] font-bold ml-1">New Password</label>
                             <input 
                               type="password"
                               value={passwordForm.new_password}
                               onChange={(e) => setPasswordForm((f) => ({ ...f, new_password: e.target.value }))}
-                              className="w-full bg-navy-950 border border-gold-600/10 py-4 px-6 text-white text-sm outline-none focus:border-gold-500"
+                              className="w-full bg-primary border border-utility-gray/60 py-4 px-6 text-secondary text-sm outline-none focus:border-accent"
                               placeholder="••••••••"
                             />
                           </div>
                         </div>
-                        <button disabled={profileSaving} className="w-full bg-gold-600 text-navy-950 py-5 text-[10px] font-bold   shadow-xl shadow-gold-600/10 hover:bg-gold-500 transition-all disabled:opacity-50">
+                        <button disabled={profileSaving} className="w-full bg-accent text-primary py-5 text-[10px] font-bold shadow-xl shadow-accent/20 hover:bg-accent/80 transition-all disabled:opacity-50">
                           {profileSaving ? 'Saving...' : 'Change Password'}
                         </button>
                       </div>
@@ -387,5 +387,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-

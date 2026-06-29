@@ -1,4 +1,4 @@
-// ELIJAY'S inventory lines from Excel (June 16) — no footwear
+// ELIJAY'S inventory lines from Excel (June 16) — auto-synced
 module.exports = [
   { name: 'Belt c', opening: 0, sales: 0, stockOut: 0, stockIn: 0, closing: 0 },
   { name: 'Belt official', opening: 8, sales: 0, stockOut: 0, stockIn: 0, closing: 8 },

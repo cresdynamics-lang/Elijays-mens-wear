@@ -154,14 +154,14 @@ export default function BlogsView() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-2xl border border-gold-500/10 bg-navy-900/40 p-5 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray dark:bg-utility-gray/40 p-5 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h2 className="text-xl font-serif font-bold text-gold-100">Blog Management</h2>
-          <p className="mt-1 text-xs text-gold-500/40">Published and draft posts with thumbnail previews.</p>
+          <h2 className="text-xl font-serif font-bold text-secondary dark:text-secondary dark:text-accent-100">Blog Management</h2>
+          <p className="mt-1 text-xs text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Published and draft posts with thumbnail previews.</p>
         </div>
         <button
           onClick={showForm ? handleCancel : openCreateForm}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gold-600 px-4 py-3 text-sm font-bold text-navy-950 transition-colors hover:bg-gold-500"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-600 px-4 py-3 text-sm font-bold text-base-950 transition-colors hover:bg-accent-500"
         >
           {showForm ? <X size={18} /> : <Plus size={18} />}
           {showForm ? 'Close form' : 'Create post'}
@@ -169,16 +169,16 @@ export default function BlogsView() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-gold-500/10 bg-navy-900/40 p-5 backdrop-blur-sm">
-          <div className="flex items-center justify-between gap-4 border-b border-gold-500/10 pb-4">
+        <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray dark:bg-utility-gray/40 p-5 backdrop-blur-sm">
+          <div className="flex items-center justify-between gap-4 border-b border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 pb-4">
             <div>
-              <h3 className="font-serif text-lg font-bold text-gold-100">{editingBlog ? 'Edit blog post' : 'New blog post'}</h3>
-              <p className="mt-1 text-xs text-gold-500/40">Use one image and a clean excerpt for search snippets.</p>
+              <h3 className="font-serif text-lg font-bold text-secondary dark:text-secondary dark:text-accent-100">{editingBlog ? 'Edit blog post' : 'New blog post'}</h3>
+              <p className="mt-1 text-xs text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Use one image and a clean excerpt for search snippets.</p>
             </div>
             <button
               type="button"
               onClick={handleCancel}
-              className="inline-flex items-center gap-2 rounded-lg border border-gold-500/15 px-3 py-2 text-xs font-bold text-gold-100 hover:border-gold-500/40"
+              className="inline-flex items-center gap-2 rounded-lg border border-accent-500/15 px-3 py-2 text-xs font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 hover:border-accent-500/40"
             >
               <X size={14} /> Cancel
             </button>
@@ -192,7 +192,7 @@ export default function BlogsView() {
               value={formData.title}
               onChange={handleInputChange}
               required
-              className="w-full rounded-xl border border-gold-500/15 bg-navy-950/50 px-4 py-3 text-sm text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+              className="w-full rounded-xl border border-accent-500/15 bg-primary dark:bg-primary/50 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
             />
             <input
               type="text"
@@ -201,7 +201,7 @@ export default function BlogsView() {
               value={formData.slug}
               onChange={handleInputChange}
               required
-              className="w-full rounded-xl border border-gold-500/15 bg-navy-950/50 px-4 py-3 text-sm text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+              className="w-full rounded-xl border border-accent-500/15 bg-primary dark:bg-primary/50 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
             />
             <input
               type="text"
@@ -210,13 +210,13 @@ export default function BlogsView() {
               value={formData.author_name}
               onChange={handleInputChange}
               required
-              className="w-full rounded-xl border border-gold-500/15 bg-navy-950/50 px-4 py-3 text-sm text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+              className="w-full rounded-xl border border-accent-500/15 bg-primary dark:bg-primary/50 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
             />
             <select
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              className="w-full rounded-xl border border-gold-500/15 bg-navy-950/50 px-4 py-3 text-sm text-gold-100 outline-none focus:border-gold-500/40"
+              className="w-full rounded-xl border border-accent-500/15 bg-primary dark:bg-primary/50 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none focus:border-accent-500/40"
             >
               {blogCategories.map((category) => (
                 <option key={category} value={category}>{category}</option>
@@ -231,7 +231,7 @@ export default function BlogsView() {
             onChange={handleInputChange}
             required
             rows={3}
-            className="w-full rounded-xl border border-gold-500/15 bg-navy-950/50 px-4 py-3 text-sm text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+            className="w-full rounded-xl border border-accent-500/15 bg-primary dark:bg-primary/50 px-4 py-3 text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
           />
 
           <textarea
@@ -241,23 +241,23 @@ export default function BlogsView() {
             onChange={handleInputChange}
             required
             rows={10}
-            className="w-full rounded-2xl border border-gold-500/15 bg-navy-950/50 px-4 py-3 text-sm leading-6 text-gold-100 outline-none placeholder:text-gold-500/25 focus:border-gold-500/40"
+            className="w-full rounded-2xl border border-accent-500/15 bg-primary dark:bg-primary/50 px-4 py-3 text-sm leading-6 text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
           />
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_auto] lg:items-start">
-            <label className="block rounded-2xl border border-dashed border-gold-500/20 bg-navy-950/40 p-4">
-              <span className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-gold-500/40">Featured image</span>
+            <label className="block rounded-2xl border border-dashed border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-primary dark:bg-primary/40 p-4">
+              <span className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Featured image</span>
               <div className="flex items-center gap-3">
-                <ImageIcon size={18} className="text-gold-500/60" />
+                <ImageIcon size={18} className="text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60" />
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
                   disabled={uploadingImage}
-                  className="w-full text-sm text-gold-100 file:mr-4 file:rounded-lg file:border-0 file:bg-gold-600 file:px-3 file:py-2 file:text-sm file:font-bold file:text-navy-950 hover:file:bg-gold-500"
+                  className="w-full text-sm text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 file:mr-4 file:rounded-lg file:border-0 file:bg-accent-600 file:px-3 file:py-2 file:text-sm file:font-bold file:text-base-950 hover:file:bg-accent-500"
                 />
               </div>
-              {uploadingImage && <p className="mt-3 text-xs text-gold-500/40">Uploading image...</p>}
+              {uploadingImage && <p className="mt-3 text-xs text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Uploading image...</p>}
               {formData.featured_image_url && (
                 <img
                   src={resolveDisplayImageUrl(formData.featured_image_url, { width: 1200 })}
@@ -267,17 +267,17 @@ export default function BlogsView() {
               )}
             </label>
 
-            <label className="flex items-center justify-between rounded-2xl border border-gold-500/15 bg-navy-950/50 px-4 py-4">
+            <label className="flex items-center justify-between rounded-2xl border border-accent-500/15 bg-primary dark:bg-primary/50 px-4 py-4">
               <div>
-                <span className="block text-sm font-bold text-gold-100">Publish now</span>
-                <span className="block text-xs text-gold-500/40">Drafts stay hidden from the public site.</span>
+                <span className="block text-sm font-bold text-secondary dark:text-secondary dark:text-accent-100">Publish now</span>
+                <span className="block text-xs text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">Drafts stay hidden from the public site.</span>
               </div>
               <input
                 type="checkbox"
                 name="is_published"
                 checked={formData.is_published}
                 onChange={handleInputChange}
-                className="h-5 w-5 rounded border-gold-500/20 bg-navy-900 text-gold-600 focus:ring-0"
+                className="h-5 w-5 rounded border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/20 bg-utility-gray dark:bg-base-900 text-accent-600 focus:ring-0"
               />
             </label>
           </div>
@@ -286,14 +286,14 @@ export default function BlogsView() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-xl bg-gold-600 px-5 py-3 text-sm font-bold text-navy-950 transition-colors hover:bg-gold-500 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-accent-600 px-5 py-3 text-sm font-bold text-base-950 transition-colors hover:bg-accent-500 disabled:opacity-50"
             >
               <Save size={18} /> {saving ? 'Saving...' : 'Save post'}
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="rounded-xl border border-gold-500/15 px-5 py-3 text-sm font-bold text-gold-100 transition-colors hover:border-gold-500/40"
+              className="rounded-xl border border-accent-500/15 px-5 py-3 text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 transition-colors hover:border-accent-500/40"
             >
               Cancel
             </button>
@@ -301,37 +301,37 @@ export default function BlogsView() {
         </form>
       )}
 
-      <div className="rounded-2xl border border-gold-500/10 bg-navy-900/40 p-5 backdrop-blur-sm">
+      <div className="rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-utility-gray dark:bg-utility-gray/40 p-5 backdrop-blur-sm">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-gold-500 border-t-transparent" />
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent dark:border-accent-500 border-t-transparent" />
           </div>
         ) : blogs.length ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {blogs.map((blog) => (
-              <article key={blog.id} className="overflow-hidden rounded-2xl border border-gold-500/10 bg-navy-950/55 transition-transform hover:-translate-y-0.5">
-                <div className="relative h-44 bg-navy-800">
+              <article key={blog.id} className="overflow-hidden rounded-2xl border border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-utility-gray/60 dark:border-accent-500/10 bg-primary dark:bg-primary/55 transition-transform hover:-translate-y-0.5">
+                <div className="relative h-44 bg-base-800">
                   {blog.featured_image_url ? (
                     <img src={resolveDisplayImageUrl(blog.featured_image_url, { width: 1200 })} alt={blog.title} className="h-full w-full object-cover" onError={(e) => { e.currentTarget.src = '/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg'; }} />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-gold-500/30">
+                    <div className="flex h-full w-full items-center justify-center text-secondary/70 dark:text-secondary/70 dark:text-accent-500/30">
                       <ImageIcon size={32} />
                     </div>
                   )}
-                  <span className={`absolute left-3 top-3 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] ${blog.is_published ? 'bg-green-400 text-navy-950' : 'bg-amber-300 text-navy-950'}`}>
+                  <span className={`absolute left-3 top-3 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] ${blog.is_published ? 'bg-green-400 text-base-950' : 'bg-amber-300 text-base-950'}`}>
                     {blog.is_published ? 'Published' : 'Draft'}
                   </span>
                 </div>
                 <div className="space-y-4 p-4">
                   <div>
                     <div className="flex items-center justify-between gap-3">
-                      <h3 className="line-clamp-2 text-base font-bold text-gold-100">{blog.title}</h3>
-                      <span className="shrink-0 rounded-full border border-gold-500/15 px-2.5 py-1 text-[10px] font-bold text-gold-500/60">{blog.category}</span>
+                      <h3 className="line-clamp-2 text-base font-bold text-secondary dark:text-secondary dark:text-accent-100">{blog.title}</h3>
+                      <span className="shrink-0 rounded-full border border-accent-500/15 px-2.5 py-1 text-[10px] font-bold text-secondary/70 dark:text-secondary/70 dark:text-accent-500/60">{blog.category}</span>
                     </div>
-                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-gold-200/70">{blog.excerpt}</p>
+                    <p className="mt-2 line-clamp-3 text-sm leading-6 text-accent-200/70">{blog.excerpt}</p>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-gold-500/5 pt-3 text-[10px] uppercase tracking-[0.2em] text-gold-500/35">
+                  <div className="flex items-center justify-between border-t border-accent-500/5 pt-3 text-[10px] uppercase tracking-[0.2em] text-accent-500/35">
                     <span>{blog.views || 0} views</span>
                     <span>{blog.published_date ? new Date(blog.published_date).toLocaleDateString() : 'Not published'}</span>
                   </div>
@@ -339,13 +339,13 @@ export default function BlogsView() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => openEditForm(blog)}
-                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-gold-500/15 px-3 py-2.5 text-sm font-bold text-gold-100 hover:border-gold-500/40"
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-accent-500/15 px-3 py-2.5 text-sm font-bold text-secondary dark:text-secondary dark:text-secondary dark:text-secondary dark:text-accent-100 hover:border-accent-500/40"
                     >
                       <PencilLine size={16} /> Edit
                     </button>
                     <button
                       onClick={() => handleDelete(blog.id)}
-                      className="inline-flex items-center justify-center rounded-xl border border-red-400/20 px-3 py-2.5 text-red-400 hover:bg-red-400/10"
+                      className="inline-flex items-center justify-center rounded-xl border border-red-400/20 px-3 py-2.5 text-red-600 dark:text-red-600 dark:text-red-400 hover:bg-red-400/10"
                       title="Delete"
                     >
                       <Trash2 size={16} />
@@ -356,7 +356,7 @@ export default function BlogsView() {
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center text-sm text-gold-500/40">No blog posts found.</div>
+          <div className="py-20 text-center text-sm text-secondary/60 dark:text-secondary/60 dark:text-accent-500/40">No blog posts found.</div>
         )}
       </div>
     </div>

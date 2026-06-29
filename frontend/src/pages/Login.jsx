@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
@@ -45,76 +45,77 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-navy-950 min-h-screen">
+    <div className="bg-primary min-h-screen">
       <Navbar />
-      
-      <main className="pt-48 pb-24 flex items-center justify-center px-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+
+      <main className="pt-44 pb-24 flex items-center justify-center px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md bg-navy-950/50 border border-gold-500/10 p-12 space-y-10 shadow-2xl backdrop-blur-xl"
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="w-full max-w-md bg-utility-gray/30 border border-utility-gray/50 p-10 sm:p-12 space-y-10 shadow-2xl backdrop-blur-2xl rounded-2xl"
         >
           <div className="text-center space-y-4">
-            <h1 className="text-3xl md:text-4xl font-serif text-white">Sign In</h1>
-            <p className="text-navy-400 font-light text-sm tracking-wide">
+            <h1 className="text-3xl md:text-4xl font-serif text-secondary tracking-tight">Sign In</h1>
+            <p className="text-secondary/60 font-light text-sm tracking-wide">
               Access your bespoke orders and preferences.
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-xs py-3 px-4 text-center animate-pulse">
+            <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-xs py-3 px-4 text-center tracking-wide rounded-lg">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] text-gold-500   font-bold ml-1">Email Address</label>
+              <label className="text-[10px] text-accent font-semibold ml-1 uppercase tracking-wider">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gold-600" size={18} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary/50" size={17} />
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-navy-950 border border-gold-500/10 py-4 pl-12 pr-6 text-white text-sm focus:border-gold-500 outline-none transition-all placeholder:text-navy-700"
+                  className="input-sleek w-full py-4 pl-11 pr-6 text-sm placeholder:text-secondary/40 bg-utility-gray/20"
                   placeholder="name@example.com"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] text-gold-500   font-bold ml-1">Password</label>
+              <label className="text-[10px] text-accent font-semibold ml-1 uppercase tracking-wider">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gold-600" size={18} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary/50" size={17} />
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-navy-950 border border-gold-500/10 py-4 pl-12 pr-6 text-white text-sm focus:border-gold-500 outline-none transition-all placeholder:text-navy-700"
+                  className="input-sleek w-full py-4 pl-11 pr-6 text-sm placeholder:text-secondary/40 bg-utility-gray/20"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
-            <button 
+            <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gold-600 text-navy-950 py-5 text-sm font-bold   hover:bg-gold-500 transition-all flex items-center justify-center space-x-3 shadow-xl mt-8 disabled:opacity-50"
+              className="btn-primary w-full py-5 text-sm tracking-wider inline-flex items-center justify-center space-x-3 shadow-xl mt-8 disabled:opacity-40 rounded-xl"
             >
               <span>{loading ? 'Processing...' : 'Authenticate'}</span>
-              {!loading && <ArrowRight size={18} />}
+              {!loading && <ArrowRight size={16} />}
             </button>
           </form>
 
-          <div className="pt-8 border-t border-gold-500/10 text-center space-y-6">
-            <p className="text-xs text-navy-400">Don't have an account?</p>
-            <Link 
-              to="/signup" 
-              className="flex items-center justify-center space-x-2 text-gold-500 hover:text-gold-200 transition-colors  tracking-[0.2em] text-[10px] font-bold"
+          <div className="pt-8 border-t border-utility-gray/50 text-center space-y-6">
+            <p className="text-xs text-secondary/60 font-light">Don't have an account?</p>
+            <Link
+              to="/signup"
+              className="inline-flex items-center justify-center space-x-2 text-accent/80 hover:text-accent transition-colors tracking-[0.2em] text-[10px] font-semibold group"
             >
-              <UserPlus size={16} />
+              <UserPlus size={15} className="group-hover:-translate-y-0.5 transition-transform" />
               <span>Create Your Profile</span>
             </Link>
           </div>
