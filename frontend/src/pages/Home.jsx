@@ -87,6 +87,8 @@ const Home = () => {
       })
       .catch((error) => {
         console.error('Home: homepage data unavailable', error);
+        // Don't crash the app if API fails - homepage will render with static content
+        if (!cancelled) setHomepageData(null);
       });
     return () => {
       cancelled = true;
