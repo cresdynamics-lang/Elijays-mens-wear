@@ -139,7 +139,14 @@ exports.getProducts = async (req, res, next) => {
         const countResult = await db.query(countQuery);
         const total = parseInt(countResult.rows[0].count);
 
-        let products = result.rows.map((p) => applyProductImageOptimization(p));
+        let products = result.rows.map((p) => {
+            try {
+                return applyProductImageOptimization(p);
+            } catch (error) {
+                console.error('Error optimizing product image:', error);
+                return p;
+            }
+        });
         products = await attachPosStock(products, { forStaff: isStaffUser(req.user) });
 
         products = forAudience(products, req);
@@ -193,8 +200,16 @@ exports.getProductBySlug = async (req, res, next) => {
         const variantsResult = await db.query('SELECT * FROM product_variants WHERE product_id = $1', [product.id]);
         product.variants = variantsResult.rows.map((v) => mapVariantRow(v, product.sku || product.slug || product.name));
 
+        let optimizedProduct;
+        try {
+            optimizedProduct = applyProductImageOptimization(product);
+        } catch (error) {
+            console.error('Error optimizing product image:', error);
+            optimizedProduct = product;
+        }
+
         const enriched = await attachPosStock(
-            applyProductImageOptimization(product),
+            optimizedProduct,
             { forStaff: isStaffUser(req.user) }
         );
         formatResponse(res, 200, true, 'Product details fetched', forAudience(enriched, req));
@@ -618,10 +633,19 @@ exports.adminGetProducts = async (req, res, next) => {
                 p.variants = variantsByProduct[p.id] || [];
                 if (lite) {
                     if (p.thumbnail) {
-                        p.thumbnail_optimized = optimizeCloudinaryUrl(p.thumbnail, { width: 120 });
+                        try {
+                            p.thumbnail_optimized = optimizeCloudinaryUrl(p.thumbnail, { width: 120 });
+                        } catch (error) {
+                            console.error('Error optimizing thumbnail:', error);
+                            p.thumbnail_optimized = p.thumbnail;
+                        }
                     }
                 } else {
-                    applyProductImageOptimization(p);
+                    try {
+                        applyProductImageOptimization(p);
+                    } catch (error) {
+                        console.error('Error optimizing product image:', error);
+                    }
                 }
             }
         }
