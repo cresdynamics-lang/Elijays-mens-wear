@@ -96,20 +96,14 @@ const Navbar = () => {
   return (
     <>
       {/* Announcement Bar */}
-      <div className="bg-[#1a1a1a] border-b border-white/10 relative z-[55]">
+      <div className="bg-[#0B0B0B] border-b border-white/10 relative z-[55]">
         <div className="container mx-auto px-6 flex justify-between items-center py-2.5">
-          <div className="flex items-center gap-2 text-[#aaa] text-[11px] font-medium">
-            <span className="tracking-wide">Need help? Call Us: +00 123 456 789140</span>
+          <div className="flex items-center gap-2 text-[#888] text-[10px] font-medium tracking-widest uppercase">
+            <span>10% off your next order. Use code: MENSWEAR01</span>
           </div>
-          <p className="hidden md:block text-center text-[#aaa] text-[11px] tracking-wide font-medium">
-            10% off your next order, use code: ESQUIRE10
-          </p>
-          <div className="flex items-center gap-2 text-[#aaa] text-[11px] cursor-pointer hover:text-accent transition-colors font-medium">
-            <Globe size={12} className="text-accent" />
-            <span className="tracking-wide">KES</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="text-[#aaa]">
-              <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <div className="flex items-center gap-2 text-[#888] text-[10px] cursor-pointer hover:text-[#8A8A6B] transition-colors font-medium tracking-widest uppercase">
+            <Globe size={12} className="text-[#8A8A6B]" />
+            <span>Region</span>
           </div>
         </div>
       </div>
@@ -118,8 +112,8 @@ const Navbar = () => {
       <header
         className={`relative w-full z-[50] transition-all duration-500 ${
           scrolled
-            ? 'bg-[#0d0d0d]/95 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)]'
-            : 'bg-[#0d0d0d]/80 backdrop-blur-md'
+            ? 'bg-[#0B0B0B]/95 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)]'
+            : 'bg-[#0B0B0B]/80 backdrop-blur-md'
         }`}
       >
         <div className="container mx-auto px-6 h-[72px] flex justify-between items-center">

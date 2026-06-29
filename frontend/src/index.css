@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap');
 
 @theme {
-  --color-primary: #0d0d0d;
+  --color-primary: #0B0B0B;
   --color-secondary: #888888;
-  --color-accent: #c9a84c;
-  --color-utility-gray: #111111;
+  --color-accent: #8A8A6B;
+  --color-utility-gray: #141414;
   --color-border: rgba(255, 255, 255, 0.08);
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "DM Sans", "Inter", sans-serif;
@@ -13,10 +13,10 @@
 
 @layer base {
   :root {
-    --page-bg: #000000;
+    --page-bg: #0B0B0B;
     --text-main: #ffffff;
     --text-muted: #888888;
-    --card-bg: #111111;
+    --card-bg: #141414;
     --card-border: rgba(255, 255, 255, 0.08);
     --input-bg: #0a0a0a;
   }
@@ -108,10 +108,18 @@ button { transition: all 0.3s ease; }
 /* SECTION A — Mosaic Grid */
 .mosaic-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 300px);
   gap: 2px;
-  background: #0d0d0d;
+  background: #0B0B0B;
+}
+
+.mosaic-grid .panel-tall {
+  grid-row: span 2;
+}
+
+.mosaic-grid .panel-wide {
+  grid-column: span 2;
 }
 
 /* SECTION B — Collection Grid */
@@ -122,7 +130,7 @@ button { transition: all 0.3s ease; }
 }
 
 .collection-card {
-  background: #1a1a1a;
+  background: #121212;
   overflow: hidden;
   text-decoration: none;
 }

@@ -20,27 +20,27 @@ const fadeUp = {
 const Home = () => {
   const [homepageData, setHomepageData] = useState(null);
   const features = [
-    { icon: Truck, label: 'FREE SHIPPING', desc: 'Free shipping for orders over $100' },
-    { icon: Tag, label: 'BIG SAVING', desc: 'Big saving on all orders over $100' },
-    { icon: Clock, label: '24/7 SUPPORT', desc: '24 hours a day, 7 days a week' },
-    { icon: CreditCard, label: 'FLEXIBLE PAYMENT', desc: 'Flexible payment with all major credit cards' },
+    { icon: Truck, label: 'FREE SHIPPING', desc: 'Free Shipping on orders over $150' },
+    { icon: Tag, label: 'BIG SAVING', desc: 'Big Saving on First Order Over $99' },
+    { icon: Clock, label: '24/7 SUPPORT', desc: 'Dedicated fashion assistance' },
+    { icon: CreditCard, label: 'FLEXIBLE PAYMENT', desc: 'Split payments with multiple options' },
   ];
 
   const collections = [
     {
-      name: 'FORMAL SUITS',
+      name: 'TAILORED BLAZERS',
       count: 24,
       image: '/WhatsApp%20Image%202026-05-12%20at%208.07.17%20PM.jpeg',
       link: '/suits',
     },
     {
-      name: 'CASUAL WEAR',
+      name: 'PREMIUM FOOTWEAR',
       count: 38,
       image: '/WhatsApp%20Image%202026-05-12%20at%208.07.33%20PM.jpeg',
       link: '/products?category=jackets',
     },
     {
-      name: "MEN'S ACCESSORIES",
+      name: 'MODERN STREETWEAR',
       count: 19,
       image: '/belt-001.jpeg',
       link: '/products?category=belts-ties',
@@ -49,32 +49,39 @@ const Home = () => {
 
   const mosaicPanels = [
     {
-      eyebrow: 'THE HOTEST',
-      title: 'WRIST WATCH',
+      eyebrow: 'PREMIUM QUALITY',
+      title: 'THE FINEST WOOL COATS',
       image: '/WhatsApp%20Image%202026-05-12%20at%208.07.17%20PM.jpeg',
-      span: '',
+      span: 'panel-tall',
       link: '/products?category=suits',
     },
     {
       eyebrow: 'WORLD BRANDED',
-      title: 'WATCH COLLECTION',
+      title: 'APPAREL COLLECTION',
       image: '/WhatsApp%20Image%202026-05-12%20at%208.07.30%20PM.jpeg',
-      span: '',
+      span: 'panel-wide',
       link: '/suits',
     },
     {
-      eyebrow: 'CASUAL',
-      title: 'STAINLESS STEEL WATCH',
+      eyebrow: 'CASUAL LUXURY',
+      title: 'KNITWEAR',
       image: '/polo%20light%20blue.jpeg',
       span: '',
       link: '/shirts',
     },
     {
-      eyebrow: 'NEW LUXURY',
-      title: 'WATCH COLLECTION',
+      eyebrow: 'SEASON SALE',
+      title: 'NEW LUXURY COLLECTION',
       image: '/WhatsApp%20Image%202026-05-12%20at%208.07.33%20PM.jpeg',
       span: '',
       link: '/products?category=jackets',
+    },
+    {
+      eyebrow: 'LIMITED OFFER',
+      title: 'GET SAVE UP TO 20% OFF',
+      image: '/WhatsApp%20Image%202026-05-12%20at%208.07.20%20PM.jpeg',
+      span: 'panel-tall',
+      link: '/products',
     },
   ];
 
@@ -102,37 +109,39 @@ const Home = () => {
         schema={[]}
       />
 
-      {/* Hero — Full-Bleed Editorial Banner */}
-      <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="/WhatsApp%20Image%202026-05-12%20at%208.07.17%20PM.jpeg"
-            alt="Men's fashion editorial"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/50" />
+      {/* Hero — Split Layout */}
+      <section className="relative min-h-[85vh] md:min-h-[90vh] flex overflow-hidden">
+        {/* Left Column - Content */}
+        <div className="w-1/2 flex items-center justify-center bg-[#0B0B0B] px-12 md:px-20">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="max-w-lg space-y-8"
+          >
+            <span className="text-[#8A8A6B] text-[10px] font-bold tracking-[0.3em] uppercase block">
+              EXTRA 10% OFF WITH CODE: TITAN01
+            </span>
+            <h1 className="text-[42px] md:text-[52px] lg:text-[64px] font-sans text-white leading-[1.1] tracking-tight font-bold uppercase">
+              GET YOUR NEW<br />EDITION SUITS
+            </h1>
+            <Link
+              to="/products"
+              className="inline-block bg-white text-[#0B0B0B] px-12 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-[#8A8A6B] hover:text-white transition-all duration-[0.3s] ease"
+            >
+              SHOP NOW
+            </Link>
+          </motion.div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-10 pt-20">
-          <div className="max-w-2xl">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="space-y-8"
-            >
-              <h1 className="text-[48px] md:text-[56px] lg:text-[64px] font-serif text-white leading-[0.9] tracking-tight font-light">
-                GET YOUR NEW EDITION MENSWEAR
-              </h1>
-
-              <Link
-                to="/products"
-                className="inline-block border border-white text-white px-10 py-4 text-[10px] font-bold tracking-widest uppercase hover:bg-white hover:text-[#0d0d0d] transition-all duration-[0.25s] ease"
-              >
-                SHOP NOW
-              </Link>
-            </motion.div>
-          </div>
+        {/* Right Column - Visual */}
+        <div className="w-1/2 relative overflow-hidden">
+          <img
+            src="/WhatsApp%20Image%202026-05-12%20at%208.07.17%20PM.jpeg"
+            alt="Premium men's blazer"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0B0B0B]/30" />
         </div>
       </section>
 
@@ -211,10 +220,16 @@ const Home = () => {
       </section>
 
       {/* SECTION B — Shop by Collection (3-Column Card Grid) */}
-      <section className="py-24 md:py-32 bg-[#0d0d0d]">
+      <section className="py-24 md:py-32 bg-[#0B0B0B]">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif text-white tracking-tight">
+            <div className="w-12 h-12 mx-auto mb-6 border-2 border-[#8A8A6B] flex items-center justify-center">
+              <div className="w-6 h-6 bg-[#8A8A6B]" />
+            </div>
+            <span className="text-[#8A8A6B] text-[10px] font-bold tracking-[0.3em] uppercase block mb-4">
+              MENSWEAR COLLECTION
+            </span>
+            <h2 className="text-3xl md:text-4xl font-sans text-white tracking-tight font-bold uppercase">
               SHOP BY COLLECTION
             </h2>
           </div>
@@ -237,9 +252,13 @@ const Home = () => {
                   <div className="collection-name">
                     {col.name}
                   </div>
-                  <span className="collection-badge">
-                    {col.count}
-                  </span>
+                  <div className="flex justify-center mt-4">
+                    <div className="w-8 h-8 border border-white/30 flex items-center justify-center">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white">
+                        <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -267,15 +286,12 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             className="max-w-4xl mx-auto space-y-8"
           >
-            <span className="text-accent text-[10px] font-bold tracking-[0.2em] uppercase block">
-              10% OFF YOUR NEXT ORDER USE CODE: ESQUIRE10
-            </span>
-            <h2 className="text-[40px] md:text-[48px] lg:text-[56px] font-serif text-white leading-tight tracking-tight font-light">
-              WORLD BRANDED MENSWEAR COLLECTIONS
+            <h2 className="text-[40px] md:text-[48px] lg:text-[56px] font-sans text-white leading-tight tracking-tight font-bold uppercase">
+              WORLD BRANDED LUXURY CLOTHING
             </h2>
             <Link
               to="/products"
-              className="inline-block border border-white text-white px-10 py-4 text-[10px] font-bold tracking-widest uppercase hover:bg-white hover:text-[#0d0d0d] transition-all duration-[0.25s] ease"
+              className="inline-block bg-white text-[#0B0B0B] px-12 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-[#8A8A6B] hover:text-white transition-all duration-[0.3s] ease"
             >
               SHOP NOW
             </Link>
