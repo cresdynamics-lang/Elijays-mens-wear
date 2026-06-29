@@ -20,6 +20,7 @@ const host = process.env.DB_HOST || dbUrl?.host;
 const database = process.env.DB_NAME || dbUrl?.database;
 const password = process.env.DB_PASSWORD ?? dbUrl?.password;
 const port = parseInt(process.env.DB_PORT, 10) || dbUrl?.port || 5432;
+const requiresSsl = (process.env.DATABASE_URL || '').includes('sslmode=require');
 
 const pool = new Pool({
   user,
@@ -27,6 +28,7 @@ const pool = new Pool({
   database,
   password,
   port,
+  ssl: requiresSsl ? { rejectUnauthorized: false } : undefined,
   max: parseInt(process.env.DB_POOL_MAX, 10) || 20,
   min: parseInt(process.env.DB_POOL_MIN, 10) || 2,
   idleTimeoutMillis: parseInt(process.env.DB_POOL_IDLE_MS, 10) || 30000,
