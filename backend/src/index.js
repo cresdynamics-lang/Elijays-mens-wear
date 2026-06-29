@@ -8,16 +8,6 @@ const { setIO } = require('./lib/socket');
 
 const PORT = process.env.PORT || 5000;
 
-const verifyDatabase = async () => {
-  try {
-    await db.query('SELECT 1');
-    logger.info({ msg: 'PostgreSQL connected' });
-  } catch (err) {
-    logger.error({ err, msg: 'PostgreSQL connection failed' });
-    process.exit(1);
-  }
-};
-
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -37,7 +27,14 @@ const { startStockDayScheduler, stopStockDayScheduler } = require('./services/st
 const { validateMediaStorageOnStartup } = require('./lib/mediaStorage');
 
 const start = async () => {
-  await verifyDatabase();
+  let dbHealthy = false;
+  try {
+    await db.query('SELECT 1');
+    logger.info({ msg: 'PostgreSQL connected' });
+    dbHealthy = true;
+  } catch (err) {
+    logger.error({ err, msg: 'PostgreSQL connection failed — server starting without DB' });
+  }
   try {
     const mediaStatus = validateMediaStorageOnStartup();
     if (mediaStatus.warning) {
@@ -48,8 +45,14 @@ const start = async () => {
   } catch (mediaErr) {
     logger.warn({ err: mediaErr, msg: 'Media storage check failed — continuing without it' });
   }
-  await runStartupBootstrap();
-  await startStockDayScheduler();
+  if (dbHealthy) {
+    try { await runStartupBootstrap(); } catch (bootstrapErr) {
+      logger.warn({ err: bootstrapErr, msg: 'Startup bootstrap failed (server still running)' });
+    }
+    try { await startStockDayScheduler(); } catch (schedulerErr) {
+      logger.warn({ err: schedulerErr, msg: 'Stock day scheduler failed to start' });
+    }
+  }
   httpServer.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
       logger.error({
@@ -67,6 +70,7 @@ const start = async () => {
       port: PORT,
       env: process.env.NODE_ENV,
       url: `http://localhost:${PORT}`,
+      db: dbHealthy ? 'connected' : 'disconnected',
     });
   });
 };
