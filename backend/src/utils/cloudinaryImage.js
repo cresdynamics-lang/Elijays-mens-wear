@@ -20,17 +20,22 @@ const stripCloudinaryTransforms = (pathAfterUpload) => {
  * Build an optimized delivery URL (f_auto, q_auto, WebP when supported).
  */
 const optimizeCloudinaryUrl = (url, { width = 800, height, crop = 'limit' } = {}) => {
-  if (!url || !isCloudinaryUrl(url)) return url;
+  try {
+    if (!url || !isCloudinaryUrl(url)) return url;
 
-  const marker = '/upload/';
-  const idx = url.indexOf(marker);
-  if (idx === -1) return url;
+    const marker = '/upload/';
+    const idx = url.indexOf(marker);
+    if (idx === -1) return url;
 
-  const base = url.slice(0, idx + marker.length);
-  const assetPath = stripCloudinaryTransforms(url.slice(idx + marker.length));
-  const transforms = [`f_auto`, `q_auto`, `w_${width}`, `c_${crop}`];
-  if (height) transforms.push(`h_${height}`);
-  return `${base}${transforms.join(',')}/${assetPath}`;
+    const base = url.slice(0, idx + marker.length);
+    const assetPath = stripCloudinaryTransforms(url.slice(idx + marker.length));
+    const transforms = [`f_auto`, `q_auto`, `w_${width}`, `c_${crop}`];
+    if (height) transforms.push(`h_${height}`);
+    return `${base}${transforms.join(',')}/${assetPath}`;
+  } catch (error) {
+    console.error('Error optimizing Cloudinary URL:', error);
+    return url;
+  }
 };
 
 /**
