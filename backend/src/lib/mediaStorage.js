@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const logger = require('../utils/logger');
 
 const isProduction = () => process.env.NODE_ENV === 'production';
 
@@ -47,9 +48,13 @@ const validateMediaStorageOnStartup = () => {
   }
 
   if (!status.cloudinaryConfigured && status.localAllowed) {
-    const uploadDir = path.join(__dirname, '..', 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    try {
+      const uploadDir = path.join(__dirname, '..', 'uploads');
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+    } catch (dirErr) {
+      logger.warn({ err: dirErr, msg: 'Cannot create uploads dir — local storage may fail' });
     }
     return {
       ...status,

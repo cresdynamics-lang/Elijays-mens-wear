@@ -38,11 +38,15 @@ const { validateMediaStorageOnStartup } = require('./lib/mediaStorage');
 
 const start = async () => {
   await verifyDatabase();
-  const mediaStatus = validateMediaStorageOnStartup();
-  if (mediaStatus.warning) {
-    logger.warn({ msg: mediaStatus.warning, provider: mediaStatus.provider });
-  } else {
-    logger.info({ msg: 'Media storage ready', provider: mediaStatus.provider });
+  try {
+    const mediaStatus = validateMediaStorageOnStartup();
+    if (mediaStatus.warning) {
+      logger.warn({ msg: mediaStatus.warning, provider: mediaStatus.provider });
+    } else {
+      logger.info({ msg: 'Media storage ready', provider: mediaStatus.provider });
+    }
+  } catch (mediaErr) {
+    logger.warn({ err: mediaErr, msg: 'Media storage check failed — continuing without it' });
   }
   await runStartupBootstrap();
   await startStockDayScheduler();
