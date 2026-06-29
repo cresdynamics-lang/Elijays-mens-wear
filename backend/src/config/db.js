@@ -1,17 +1,28 @@
 const { Pool } = require('pg');
 require('dotenv').config();
+const { URL } = require('url');
 
 function parseDatabaseUrl(url) {
   if (!url) return null;
-  const match = url.match(/postgresql?:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
-  if (!match) return null;
-  return {
-    user: match[1],
-    password: match[2],
-    host: match[3],
-    port: parseInt(match[4], 10),
-    database: match[5].split('?')[0],
-  };
+  if (!url.startsWith('postgres')) return null;
+  try {
+    const parsed = new URL(url);
+    return {
+      user: decodeURIComponent(parsed.username),
+      password: decodeURIComponent(parsed.password),
+      host: parsed.hostname,
+      port: parseInt(parsed.port, 10) || 5432,
+      database: decodedPathname(parsed.pathname),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function decodedPathname(pathname) {
+  const raw = pathname.replace(/^\//, '');
+  if (!raw.includes('%')) return raw;
+  try { return decodeURIComponent(raw); } catch { return raw; }
 }
 
 const dbUrl = parseDatabaseUrl(process.env.DATABASE_URL);
