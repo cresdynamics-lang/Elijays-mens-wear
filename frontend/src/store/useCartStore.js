@@ -18,12 +18,18 @@ function mergeKey(item) {
   return `${item.productId}:${item.variantId || ''}:${item.sizeLabel || ''}`;
 }
 
-const isRealProductId = (id) => typeof id === 'string' && id.length >= 32;
+const isRealProductId = (id) => {
+  // Accept both real product IDs (32+ chars) and dummy IDs (set_XXX, shirt_XXX)
+  if (typeof id !== 'string') return false;
+  if (id.length >= 32) return true;
+  // Accept dummy product IDs
+  return /^set_\d+$|^shirt_\d+$/.test(id);
+};
 
 function mergeServerAndLocal(serverItems, localItems) {
   const serverKeys = new Set(serverItems.map(mergeKey));
   const unsyncedLocal = localItems.filter(
-    (it) => !it.cartItemId && isRealProductId(it.productId) && !serverKeys.has(mergeKey(it))
+    (it) => !it.cartItemId && !serverKeys.has(mergeKey(it))
   );
   return [...serverItems, ...unsyncedLocal];
 }
@@ -141,7 +147,7 @@ export const useCartStore = create(
           });
         }
 
-        if (isCustomerSession()) {
+        if (isCustomerSession() && !isDummy) {
           try {
             await cartAPI.addItem({
               product_id: payload.productId,
