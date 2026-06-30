@@ -9,10 +9,7 @@
       "root": "backend",
       "routePrefix": "/_/backend",
       "framework": "node",
-      "entrypoint": "src/index.js",
-      "env": {
-        "NODE_ENV": "production"
-      }
+      "entrypoint": "src/index.js"
     }
   }
 }
