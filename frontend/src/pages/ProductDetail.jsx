@@ -15,6 +15,7 @@ import { parseAngleImages, getDefaultAngleImage } from '../utils/angleImages';
 import { buildVariantMeta, buildRichDescription, sortSizes } from '../utils/productDescription';
 import { buildBreadcrumbSchema, buildProductSchema } from '../seo/seoData';
 import { toCartVariantId } from '../utils/ids';
+import { DUMMY_PRODUCTS } from '../utils/dummyData';
 
 const variantStockQty = (variant) => {
  if (!variant) return null;
@@ -205,7 +206,7 @@ const ProductDetail = () => {
  variantMeta.variants.find((v) => v.color === color && v.size === size)
  ), [variantMeta]);
 
- useEffect(() => {
+  useEffect(() => {
  const fetchProduct = async () => {
  setProduct(null);
  setSelectedColor('');
@@ -213,91 +214,31 @@ const ProductDetail = () => {
  setSelectedImage('');
  setColorCarouselIndex(0);
 
- let found = null;
- try {
- const res = await productAPI.getBySlug(slug);
- const payload = res.data?.data;
- if (res.data?.success && payload) {
- found = Array.isArray(payload) ? payload[0] : payload;
- }
- } catch (error) {
- console.error('Product fetch failed:', error);
- }
+ // Use dummy data instead of API
+ let found = DUMMY_PRODUCTS.find(p => p.slug === slug);
 
  if (!found) {
  setLoadError('Product not found.');
  return;
  }
 
- const enrichedVariants = enrichShoeVariants(found.variants || [], found.category_name);
- const metaForDesc = buildVariantMeta(enrichedVariants, found.category_name);
- const richDescription = buildRichDescription(
- { ...found, variants: enrichedVariants },
- metaForDesc,
- found.parent_category_name
- );
+ // For dummy products, create a simple variant structure
  const p = {
  ...found,
- thumbnail: found.thumbnail || found.image_url,
- description: richDescription,
- variants: enrichedVariants,
+ thumbnail: found.thumbnail,
+ description: found.description,
+ variants: [], // No variants for simple dummy products
  };
 
- let rel = [];
- try {
- const relRes = await productAPI.related(found.id);
- rel = relRes.data.data || [];
- const categoryText = `${found.category_name || ''} ${found.parent_category_name || ''}`.toLowerCase();
- if (categoryText.includes('belt')) {
- rel = rel.filter((item) => BELT_RELATED_PRODUCT_SLUGS.has(String(item.slug || '').toLowerCase()));
- }
- } catch {
- console.error('Could not fetch related products');
- }
+ // Get related products from same category
+ const rel = DUMMY_PRODUCTS.filter(p => 
+ p.category_name === found.category_name && p.id !== found.id
+ ).slice(0, 4);
 
  const meta = buildVariantMeta(p.variants, p.category_name);
- const urlVariantId = searchParams.get('variant');
- const urlVariant = urlVariantId
- ? meta.variants.find((v) => String(v.id) === urlVariantId)
- : null;
-
  const productHero = getProductBaseImage(p) || getPremiumImage(p);
- const multiColor = meta.colors.length > 1;
 
- if (urlVariant) {
- setSelectedColor(urlVariant.color);
- setSelectedSize(urlVariant.size);
- setSelectedImage(
- getDefaultAngleImage(urlVariant, p) ||
- getVariantImage(urlVariant) ||
- productHero
- );
- } else if (!multiColor && meta.variants[0]) {
- const only = meta.variants[0];
- setSelectedColor(only.color || '');
- setSelectedSize(only.size || '');
  setSelectedImage(productHero);
- } else if (multiColor) {
- const firstColor = meta.colors[0]?.color;
- if (firstColor) {
- const sizes = meta.variants.filter((v) => v.color === firstColor).map((v) => v.size);
- const firstSize = sortSizes(sizes, meta.isShoe)[0] || '';
- const firstVariant = meta.variants.find((v) => v.color === firstColor && v.size === firstSize);
- setSelectedColor(firstColor);
- setSelectedSize(firstSize);
- setSelectedImage(
- getDefaultAngleImage(firstVariant, p) ||
- getVariantImage(firstVariant) ||
- productHero
- );
- setColorCarouselIndex(0);
- } else {
- setSelectedImage(productHero);
- }
- } else {
- setSelectedImage(productHero);
- }
-
  setProduct(p);
  setRelated(rel);
  };
@@ -709,7 +650,6 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  <button
  key={size}
  type="button"
- disabled={isOutOfStock}
  disabled={isOutOfStock}
  onClick={() => handleSizeSelect(size)}
  title={isOutOfStock ? 'Unavailable' : undefined}
