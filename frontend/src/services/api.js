@@ -1,10 +1,14 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
+import { DUMMY_PRODUCTS } from '../utils/dummyData';
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: parseInt(import.meta.env.VITE_API_TIMEOUT, 10) || 30000,
 });
+
+// Flag to use dummy data when backend is unavailable
+const USE_DUMMY_DATA = true; // Always use dummy data since backend is not deployed
 
 const requestId = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
@@ -82,15 +86,49 @@ export const authAPI = {
 };
 
 export const productAPI = {
-  list: (params) => API.get('/products', { params }),
-  featured: () => API.get('/products/featured'),
-  getBySlug: (slug) => API.get(`/products/${encodeURIComponent(slug)}`),
-  related: (productId) => API.get(`/products/${productId}/related`),
+  list: (params) => {
+    if (USE_DUMMY_DATA) {
+      return Promise.resolve({ data: DUMMY_PRODUCTS });
+    }
+    return API.get('/products', { params }).catch(() => ({ data: DUMMY_PRODUCTS }));
+  },
+  featured: () => {
+    if (USE_DUMMY_DATA) {
+      return Promise.resolve({ data: DUMMY_PRODUCTS.slice(0, 8) });
+    }
+    return API.get('/products/featured').catch(() => ({ data: DUMMY_PRODUCTS.slice(0, 8) }));
+  },
+  getBySlug: (slug) => {
+    if (USE_DUMMY_DATA) {
+      const product = DUMMY_PRODUCTS.find(p => p.slug === slug);
+      return Promise.resolve({ data: product || null });
+    }
+    return API.get(`/products/${encodeURIComponent(slug)}`).catch(() => {
+      const product = DUMMY_PRODUCTS.find(p => p.slug === slug);
+      return { data: product || null };
+    });
+  },
+  related: (productId) => {
+    if (USE_DUMMY_DATA) {
+      return Promise.resolve({ data: DUMMY_PRODUCTS.slice(0, 4) });
+    }
+    return API.get(`/products/${productId}/related`).catch(() => ({ data: DUMMY_PRODUCTS.slice(0, 4) }));
+  },
 };
 
 export const catalogueAPI = {
-  get: () => API.get('/catalogue'),
-  ads: () => API.get('/catalogue/ads'),
+  get: () => {
+    if (USE_DUMMY_DATA) {
+      return Promise.resolve({ data: { products: DUMMY_PRODUCTS } });
+    }
+    return API.get('/catalogue').catch(() => ({ data: { products: DUMMY_PRODUCTS } }));
+  },
+  ads: () => {
+    if (USE_DUMMY_DATA) {
+      return Promise.resolve({ data: [] });
+    }
+    return API.get('/catalogue/ads').catch(() => ({ data: [] }));
+  },
 };
 
 export const cartAPI = {
@@ -183,8 +221,38 @@ export const adminCustomerAPI = {
 
 // Ã¢â€â‚¬Ã¢â€â‚¬ FRONTEND Ã¢â‚¬â€œ BANNERS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 export const bannerAPI = {
-  getAll: () => API.get('/banners'),
-  getHomepageData: () => API.get('/homepage'),
+  getAll: () => {
+    if (USE_DUMMY_DATA) {
+      return Promise.resolve({ data: [] });
+    }
+    return API.get('/banners').catch(() => ({ data: [] }));
+  },
+  getHomepageData: () => {
+    if (USE_DUMMY_DATA) {
+      return Promise.resolve({ 
+        data: {
+          banners: [],
+          categories: [],
+          new_arrivals: DUMMY_PRODUCTS.slice(0, 8),
+          best_sellers: DUMMY_PRODUCTS.slice(8, 16),
+          hero_slides: [],
+          category_tiles: [],
+          product_rows: []
+        }
+      });
+    }
+    return API.get('/homepage').catch(() => ({ 
+      data: {
+        banners: [],
+        categories: [],
+        new_arrivals: DUMMY_PRODUCTS.slice(0, 8),
+        best_sellers: DUMMY_PRODUCTS.slice(8, 16),
+        hero_slides: [],
+        category_tiles: [],
+        product_rows: []
+      }
+    }));
+  },
 };
 
 // Ã¢â€â‚¬Ã¢â€â‚¬ ADMIN Ã¢â‚¬â€œ COUPONS Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
