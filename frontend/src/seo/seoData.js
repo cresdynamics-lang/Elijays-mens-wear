@@ -1,7 +1,7 @@
 export const SITE_URL = 'https://elijays.co.ke';
 export const SITE_NAME = "ELIJAY'S Men's Wear";
 export const DEFAULT_IMAGE = `${SITE_URL}/elijays-logo.png`;
-export const CONTACT_PHONE = '+254700000000';
+export const CONTACT_PHONE = '+254721844475';
 export const CONTACT_EMAIL = 'contact@elijays.co.ke';
 export const SOCIAL_INSTAGRAM = 'https://www.instagram.com/elijaysmenswear/';
 export const SOCIAL_FACEBOOK = 'https://www.facebook.com/elijaysmenswear';
