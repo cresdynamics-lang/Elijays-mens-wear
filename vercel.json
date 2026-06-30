@@ -9,7 +9,7 @@
       "root": "backend",
       "routePrefix": "/_/backend",
       "framework": "node",
-      "entrypoint": "index.js"
+      "entrypoint": "src/index.js"
     }
   }
 }
