@@ -7,6 +7,7 @@ import Layout from '../components/Layout';
 import ProductShowcase from '../components/ProductShowcase';
 import { bannerAPI } from '../services/api';
 import { routeSeo } from '../seo/seoData';
+import { DUMMY_PRODUCTS } from '../utils/dummyData';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -19,6 +20,23 @@ const fadeUp = {
 
 const Home = () => {
   const [homepageData, setHomepageData] = useState(null);
+  
+  // Create category rows from dummy products
+  const categoryRows = [
+    {
+      slug: 'luxury-gift-sets',
+      title: 'Luxury Gift Sets',
+      path: '/products?category=gifts-accessories',
+      products: DUMMY_PRODUCTS.filter(p => p.category_name === 'gifts-accessories').slice(0, 8)
+    },
+    {
+      slug: 'ralph-lauren-shirts',
+      title: 'Ralph Lauren Shirts',
+      path: '/products?category=clothing-apparel',
+      products: DUMMY_PRODUCTS.filter(p => p.category_name === 'clothing-apparel')
+    }
+  ];
+  
   const features = [
     { icon: Truck, label: 'FREE SHIPPING', desc: 'Free Shipping on orders over $150' },
     { icon: Tag, label: 'BIG SAVING', desc: 'Big Saving on First Order Over $99' },
@@ -189,7 +207,7 @@ const Home = () => {
       </section>
 
       {/* Product Showcase — horizontal scrolling product rows */}
-      <ProductShowcase categoryRows={homepageData?.categoryRows} />
+      <ProductShowcase categoryRows={categoryRows} />
 
       {/* Trust / Features Bar */}
       <section className="py-16 md:py-20 bg-[#111]">
