@@ -10,6 +10,7 @@ import { getPremiumImage } from '../utils/productImages';
 import { catalogueAPI, productAPI, adminCategoryAPI } from '../services/api';
 import { buildBreadcrumbSchema, categoryFallbackIntro, routeSeo } from '../seo/seoData';
 import ProductCard from '../components/product/ProductCard';
+import { DUMMY_PRODUCTS } from '../utils/dummyData';
 
 const categoryPages = ['polo-t-shirts', 'shirts', 'suits', 'trousers', 'linen'];
 const beltProductSlugs = new Set([
@@ -24,6 +25,8 @@ const isBeltCategory = (value) => {
 
 const CATEGORY_DATA = [
  { id: 'All', name: 'All', sub: [] },
+ { id: 'gifts-accessories', name: 'Gifts & Accessories', sub: ['Gifts & Accessories'] },
+ { id: 'clothing-apparel', name: 'Clothing & Apparel', sub: ['Clothing & Apparel'] },
  { id: 'polo-t-shirts', name: 'Polo T-shirts', sub: ['Knitted Polos', 'Polos'] },
  { id: 'trousers', name: 'Trousers', sub: ['Khaki', 'Formal', 'Chino', 'Jeans', 'Gurkha'] },
  { id: 'shirts', name: 'Shirts', sub: ['Formal shirts', 'Casual', 'Presidential'] },
@@ -131,7 +134,7 @@ const Products = ({ categoryOverride = null }) => {
  const currentCategory = categoryOverride || searchParams.get('category') || 'All';
  const currentSub = searchParams.get('sub') || 'All';
 
- useEffect(() => {
+  useEffect(() => {
  const fetchData = async () => {
  setLoading(true);
  setFetchError('');
@@ -139,44 +142,28 @@ const Products = ({ categoryOverride = null }) => {
  if (currentCategory !== 'All') params.category = currentCategory;
  if (currentSub !== 'All') params.sub = currentSub;
 
- try {
- const catalogueRes = await catalogueAPI.get();
- const catalogue = catalogueRes.data.data || {};
- const fetchedProducts = filterCatalogueProducts(catalogue.products || [], currentCategory, currentSub);
- const allCats = catalogue.categories || [];
- const parents = allCats.filter(c => !c.parent_id);
- const organized = parents.map(p => ({
- id: p.slug,
- name: p.name,
- sub: allCats.filter(c => c.parent_id === p.id).map(c => c.name)
- }));
- setDynamicCategories(organized);
- setProducts(fetchedProducts);
- } catch (error) {
- console.error('Error fetching products:', error);
- try {
- const [response, catRes] = await Promise.all([
- productAPI.list(params),
- adminCategoryAPI.getAll().catch(() => ({ data: { data: [] } })),
- ]);
- const fetchedProducts = response.data.data.products || response.data.data || [];
- const allCats = catRes.data.data || [];
- const parents = allCats.filter(c => !c.parent_id);
- setDynamicCategories(parents.map(p => ({
- id: p.slug,
- name: p.name,
- sub: allCats.filter(c => c.parent_id === p.id).map(c => c.name)
- })));
- setProducts(fetchedProducts);
- } catch (fallbackError) {
- console.error('Fallback product fetch failed:', fallbackError);
- setFetchError('Could not load products. Please check your connection and try again.');
- setProducts([]);
+ // Use dummy data directly instead of API calls
+ let fetchedProducts = DUMMY_PRODUCTS;
+ 
+ // Filter by category
+ if (currentCategory !== 'All') {
+   fetchedProducts = fetchedProducts.filter(p => 
+     p.category_name === currentCategory || 
+     p.category_name.toLowerCase() === currentCategory.toLowerCase()
+   );
  }
- } finally {
+ 
+ // Filter by subcategory
+ if (currentSub !== 'All') {
+   fetchedProducts = fetchedProducts.filter(p => 
+     p.subcategory === currentSub || 
+     p.subcategory.toLowerCase() === currentSub.toLowerCase()
+   );
+ }
+ 
+ setProducts(fetchedProducts);
  setLoading(false);
  window.scrollTo(0, 0);
- }
  };
  fetchData();
  }, [currentCategory, currentSub]);
