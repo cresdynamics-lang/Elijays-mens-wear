@@ -23,6 +23,7 @@ const ProductDescription = ({
   parsedColors = [],
   parsedSizes = [],
   isShoe = false,
+  keyFeatures = [],
 }) => {
   const sections = parseDescriptionSections(description);
   const colorLines = sections.colors.length ? sections.colors : parsedColors;
@@ -36,6 +37,9 @@ const ProductDescription = ({
   const otherFooter = sections.footer.filter(
     (l) => !deliveryLines.includes(l) && !whyLines.includes(l)
   );
+  
+  // Use keyFeatures from prop if available, otherwise use parsed features from description
+  const featuresToShow = keyFeatures.length > 0 ? keyFeatures : sections.features;
 
   return (
     <div className="space-y-10">
@@ -53,10 +57,10 @@ const ProductDescription = ({
         ))}
       </div>
 
-      {sections.features.length > 0 && (
+      {featuresToShow.length > 0 && (
         <Section title="Key Features" icon="*">
           <ul className="space-y-3 pl-1 text-[15px] leading-relaxed text-secondary font-semibold">
-            {sections.features.map((item) => (
+            {featuresToShow.map((item) => (
               <li key={item} className="flex gap-3">
                 <span className="text-accent shrink-0 mt-1 font-bold">•</span>
                 <span className="font-semibold">{item}</span>

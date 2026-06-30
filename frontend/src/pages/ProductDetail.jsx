@@ -741,6 +741,7 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  parsedColors={parsedColorList}
  parsedSizes={parsedSizes}
  isShoe={variantMeta.isShoe}
+ keyFeatures={product.key_features}
  />
  </div>
  </div>
