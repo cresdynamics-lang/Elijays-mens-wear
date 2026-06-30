@@ -137,8 +137,8 @@ const Home = () => {
         {/* Right Column - Visual */}
         <div className="w-1/2 relative overflow-hidden">
           <img
-            src="/WhatsApp%20Image%202026-05-12%20at%208.07.17%20PM.jpeg"
-            alt="Premium men's blazer"
+            src="/WhatsApp Image 2026-06-29 at 20.58.00 (1).jpeg"
+            alt="Louis Vuitton luxury gift set"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0B0B0B]/30" />
@@ -270,7 +270,7 @@ const Home = () => {
       <section className="relative py-32 md:py-40 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="/WhatsApp%20Image%202026-05-12%20at%208.07.18%20PM.jpeg"
+            src="/WhatsApp Image 2026-06-29 at 20.57.59 (1).jpeg"
             alt=""
             aria-hidden="true"
             className="w-full h-full object-cover"
