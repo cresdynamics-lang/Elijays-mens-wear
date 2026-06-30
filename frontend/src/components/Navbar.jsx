@@ -118,10 +118,11 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-6 h-[72px] flex justify-between items-center">
           {/* Logo on the LEFT */}
-          <Link to="/" className="flex-shrink-0">
+          <Link to="/" className="flex-shrink-0 flex items-center gap-3">
             <div className="h-12 w-12 md:h-14 md:w-14 rounded-full border-2 border-accent bg-primary flex items-center justify-center overflow-hidden">
-              <img src="/elijays-logo.png" alt="ELIJAY'S Men's Wear" className="h-10 md:h-12 w-auto object-contain" />
+              <img src="/elijays-logo.jpeg" alt="ELIJAY'S Men's Wear" className="h-10 md:h-12 w-auto object-contain" />
             </div>
+            <span className="hidden md:block font-serif text-lg md:text-xl text-white tracking-wide">Elijay's Men's Wear</span>
           </Link>
 
           {/* Center nav links */}
@@ -230,7 +231,7 @@ const MobileMenu = ({ setIsOpen, menuItems, handleLinkClick }) => {
       >
         <div className="flex justify-between items-center mb-12">
             <div className="h-10 w-10 rounded-full border-2 border-accent bg-primary flex items-center justify-center overflow-hidden">
-              <img src="/elijays-logo.png" alt="ELIJAY'S Men's Wear" className="h-8 w-auto object-contain" />
+              <img src="/elijays-logo.jpeg" alt="ELIJAY'S Men's Wear" className="h-8 w-auto object-contain" />
             </div>
            <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-accent">
              <X size={24} />
