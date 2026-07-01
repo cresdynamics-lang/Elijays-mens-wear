@@ -4,64 +4,76 @@ import BlogShowcase from '../components/BlogShowcase';
 import SEO from '../components/SEO';
 import { buildBreadcrumbSchema, buildBlogPostingSchema, routeSeo } from '../seo/seoData';
 
+const DUMMY_BLOGS = [
+  {
+    id: 1,
+    title: 'The Art of Bespoke Tailoring: A Guide to Custom Suits',
+    slug: 'the-art-of-bespoke-tailoring',
+    excerpt: 'Discover the craftsmanship behind bespoke suits and why custom tailoring is the ultimate expression of personal style.',
+    content: 'Bespoke tailoring represents the pinnacle of menswear craftsmanship...',
+    category: 'Style Guide',
+    featured_image_url: '/WhatsApp Image 2026-06-29 at 20.57.55.jpeg',
+    author_name: 'ELIJAY\'S',
+    published_date: '2026-06-15',
+    created_at: '2026-06-15',
+    updated_at: '2026-06-15'
+  },
+  {
+    id: 2,
+    title: 'Summer 2026: Essential Pieces for the Modern Gentleman',
+    slug: 'summer-2026-essential-pieces',
+    excerpt: 'From lightweight linens to breathable polos, explore the must-have items for your summer wardrobe.',
+    content: 'Summer fashion is all about comfort without compromising style...',
+    category: 'Seasonal',
+    featured_image_url: '/WhatsApp Image 2026-06-29 at 20.57.56.jpeg',
+    author_name: 'ELIJAY\'S',
+    published_date: '2026-06-20',
+    created_at: '2026-06-20',
+    updated_at: '2026-06-20'
+  },
+  {
+    id: 3,
+    title: 'Building a Timeless Wardrobe: Investment Pieces Worth Every Shilling',
+    slug: 'building-a-timeless-wardrobe',
+    excerpt: 'Learn which clothing items are worth the investment and how to build a wardrobe that lasts for years.',
+    content: 'Quality over quantity is the golden rule of menswear...',
+    category: 'Style Guide',
+    featured_image_url: '/WhatsApp Image 2026-06-29 at 20.57.57.jpeg',
+    author_name: 'ELIJAY\'S',
+    published_date: '2026-06-25',
+    created_at: '2026-06-25',
+    updated_at: '2026-06-25'
+  }
+];
+
 const BLOGS_PER_PAGE = 9;
 
 export default function Blog() {
-  const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState(DUMMY_BLOGS);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(DUMMY_BLOGS.length);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(['Style Guide', 'Seasonal']);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams({
-          page: currentPage,
-          limit: BLOGS_PER_PAGE,
-          ...(selectedCategory && { category: selectedCategory }),
-          ...(searchQuery && { search: searchQuery }),
-        });
-
-        const response = await fetch(`/api/blog?${params}`, {
-          credentials: 'include',
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch blogs');
-        const data = await response.json();
-        setBlogs(data.posts);
-        setTotal(data.pagination.total);
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBlogs();
-  }, [currentPage, selectedCategory, searchQuery]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/api/blog?limit=1000', {
-          credentials: 'include',
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch categories');
-        const data = await response.json();
-        const uniqueCategories = [...new Set(data.posts.map((blog) => blog.category))];
-        setCategories(uniqueCategories);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+    let filtered = DUMMY_BLOGS;
+    
+    if (selectedCategory) {
+      filtered = filtered.filter(blog => blog.category === selectedCategory);
+    }
+    
+    if (searchQuery) {
+      filtered = filtered.filter(blog => 
+        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    setBlogs(filtered);
+    setTotal(filtered.length);
+  }, [selectedCategory, searchQuery]);
 
   const totalPages = Math.ceil(total / BLOGS_PER_PAGE);
 

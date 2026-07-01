@@ -39,7 +39,6 @@ const Navbar = () => {
       ],
     },
     { name: 'Blog', href: '/blog' },
-    { name: 'Pages', href: '#' },
   ];
 
   const handleLinkClick = (href) => {
@@ -139,7 +138,7 @@ const Navbar = () => {
                 <Menu size={24} />
               </button>
             </div>
-            <button className="hidden md:flex hover:text-accent transition-colors">
+            <button onClick={() => navigate('/products')} className="hidden md:flex hover:text-accent transition-colors">
               <Search size={20} />
             </button>
             <div className="relative group">
