@@ -106,7 +106,7 @@ const Footer = () => {
       </div>
 
       <a
-        href={`https://wa.me/${WHATSAPP_NUMBER}`}
+        href="https://wa.me/254721844475"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
