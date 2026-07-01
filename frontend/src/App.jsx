@@ -13,6 +13,12 @@ import Payment from './pages/Payment';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
+import Support from './pages/Support';
+import Contact from './pages/Contact';
+import Bespoke from './pages/Bespoke';
+import Shipping from './pages/Shipping';
+import SizeGuide from './pages/SizeGuide';
+import Privacy from './pages/Privacy';
 import SEO from './components/SEO';
 import { useAuthStore } from './store/useAuthStore';
 import { useCartStore } from './store/useCartStore';
@@ -84,6 +90,12 @@ function App() {
         <Route path="/checkout" element={<NoIndexPage title="Checkout"><Checkout /></NoIndexPage>} />
         <Route path="/payment/:orderId" element={<NoIndexPage title="Payment"><Payment /></NoIndexPage>} />
         <Route path="/profile" element={<NoIndexPage title="Profile"><Profile /></NoIndexPage>} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/bespoke" element={<Bespoke />} />
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/size-guide" element={<SizeGuide />} />
+        <Route path="/privacy" element={<Privacy />} />
 
         {/* Legacy POS URLs → unified staff portal */}
         <Route path="/pos/login" element={<Navigate to="/admin/login" replace />} />

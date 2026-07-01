@@ -3,7 +3,9 @@
  * Generates order message and sends via WhatsApp
  */
 
-export const WHATSAPP_BUSINESS_NUMBER = '254700000000';
+import { CONTACT_PHONE } from '../seo/seoData';
+
+export const WHATSAPP_BUSINESS_NUMBER = CONTACT_PHONE.replace(/\D/g, '');
 
 /**
  * Format order items for WhatsApp message
