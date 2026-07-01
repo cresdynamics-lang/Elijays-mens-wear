@@ -181,31 +181,18 @@ button { transition: all 0.3s ease; }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  /* Section A mosaic: collapses to 1 column */
+  /* Section A mosaic: keep same layout on all screens */
   .mosaic-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 200px);
   }
 
   .mosaic-grid > a {
-    min-height: 220px;
+    min-height: 200px;
   }
 
-  /* Section B cards: collapses to horizontal scroll */
+  /* Section B cards: keep same layout on all screens */
   .collection-grid {
-    display: flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    gap: 2px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .collection-grid::-webkit-scrollbar {
-    display: none;
-  }
-
-  .collection-card {
-    flex: 0 0 85%;
-    scroll-snap-align: start;
+    grid-template-columns: repeat(3, 1fr);
   }
 }

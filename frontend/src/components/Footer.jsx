@@ -8,8 +8,8 @@ const Footer = () => {
   return (
     <footer className="bg-primary pt-24 pb-14 border-t border-white/5">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
-          <div className="space-y-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16 mb-20">
+          <div className="hidden md:block space-y-8">
             <h2 className="text-3xl font-serif font-semibold text-accent tracking-tight">ELIJAY&apos;S</h2>
             <p className="text-white/50 font-light leading-relaxed max-w-sm">
               Nairobi menswear grounded in real inventory — suits, shirts, trousers, polos, jackets,
