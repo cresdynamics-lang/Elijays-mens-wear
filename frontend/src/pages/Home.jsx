@@ -1,204 +1,171 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Truck, Tag, Clock, CreditCard } from 'lucide-react';
 import SEO from '../components/SEO';
 import Layout from '../components/Layout';
 import ProductShowcase from '../components/ProductShowcase';
 import { bannerAPI } from '../services/api';
 import { routeSeo } from '../seo/seoData';
 import { DUMMY_PRODUCTS } from '../utils/dummyData';
+import {
+  HOME_INTRO_CARDS,
+  HOME_CATEGORY_SECTIONS,
+  productMatchesCategory,
+} from '../data/navCategories';
+import { openWhatsAppGeneral } from '../lib/whatsappEnquiry';
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.15, duration: 0.8, ease: 'easeOut' },
-  }),
-};
+const HERO_IMAGE = '/hero/hero-suits.jpg';
+
+const JOURNAL_TILES = [
+  {
+    title: 'How to wear linen in Nairobi heat',
+    date: '12 Jun 2026',
+    href: '/journal',
+    image: '/hero/hero-shirts.jpg',
+  },
+  {
+    title: 'Suiting for ruracio and the office',
+    date: '28 May 2026',
+    href: '/journal',
+    image: '/hero/hero-suits.jpg',
+  },
+  {
+    title: 'The belt that finishes the fit',
+    date: '9 May 2026',
+    href: '/journal',
+    image: '/belt-001.jpeg',
+  },
+];
 
 const Home = () => {
-  const [homepageData, setHomepageData] = useState(null);
-  
-  // Create category rows from dummy products
-  const categoryRows = [
-    {
-      slug: 'luxury-gift-sets',
-      title: 'Luxury Gift Sets',
-      path: '/products?category=gifts-accessories',
-      products: DUMMY_PRODUCTS.filter(p => p.category_name === 'gifts-accessories').slice(0, 8)
-    },
-    {
-      slug: 'ralph-lauren-shirts',
-      title: 'Ralph Lauren Shirts',
-      path: '/products?category=clothing-apparel',
-      products: DUMMY_PRODUCTS.filter(p => p.category_name === 'clothing-apparel')
-    }
-  ];
-  
-  const features = [
-    { icon: Truck, label: 'FREE SHIPPING', desc: 'Free Shipping on orders over $150' },
-    { icon: Tag, label: 'BIG SAVING', desc: 'Big Saving on First Order Over $99' },
-    { icon: Clock, label: '24/7 SUPPORT', desc: 'Dedicated fashion assistance' },
-    { icon: CreditCard, label: 'FLEXIBLE PAYMENT', desc: 'Split payments with multiple options' },
-  ];
-
-  const collections = [
-    {
-      name: 'LUXURY GIFT SETS',
-      count: 16,
-      image: '/WhatsApp Image 2026-06-29 at 20.57.59 (1).jpeg',
-      link: '/products?category=gifts-accessories',
-    },
-    {
-      name: 'DESIGNER BELTS',
-      count: 16,
-      image: '/WhatsApp Image 2026-06-29 at 20.58.02.jpeg',
-      link: '/products?category=gifts-accessories',
-    },
-    {
-      name: 'RALPH LAUREN SHIRTS',
-      count: 6,
-      image: '/WhatsApp Image 2026-06-29 at 20.58.05 (1).jpeg',
-      link: '/products?category=clothing-apparel',
-    },
-  ];
-
-  const mosaicPanels = [
-    {
-      eyebrow: 'PREMIUM QUALITY',
-      title: 'LUXURY GIFT SETS',
-      image: '/WhatsApp Image 2026-06-29 at 20.57.56.jpeg',
-      span: 'panel-tall',
-      link: '/products?category=gifts-accessories',
-    },
-    {
-      eyebrow: 'WORLD BRANDED',
-      title: 'DESIGNER COLLECTION',
-      image: '/WhatsApp Image 2026-06-29 at 20.58.02.jpeg',
-      span: 'panel-wide',
-      link: '/products?category=gifts-accessories',
-    },
-    {
-      eyebrow: 'CASUAL LUXURY',
-      title: 'RALPH LAUREN',
-      image: '/WhatsApp Image 2026-06-29 at 20.58.05 (1).jpeg',
-      span: '',
-      link: '/products?category=clothing-apparel',
-    },
-    {
-      eyebrow: 'SEASON SALE',
-      title: 'NEW ARRIVALS',
-      image: '/WhatsApp Image 2026-06-29 at 20.57.59.jpeg',
-      span: '',
-      link: '/products?category=gifts-accessories',
-    },
-    {
-      eyebrow: 'LIMITED OFFER',
-      title: 'GET SAVE UP TO 20% OFF',
-      image: '/WhatsApp Image 2026-06-29 at 20.58.00 (1).jpeg',
-      span: 'panel-tall',
-      link: '/products',
-    },
-  ];
+  const [allProducts, setAllProducts] = useState(DUMMY_PRODUCTS);
+  const [featuredProducts, setFeaturedProducts] = useState(
+    DUMMY_PRODUCTS.filter((p) => p.category_name !== 'belts-ties').slice(0, 8)
+  );
 
   useEffect(() => {
     let cancelled = false;
     bannerAPI
       .getHomepageData()
       .then((res) => {
-        if (!cancelled) setHomepageData(res.data?.data || null);
+        if (cancelled) return;
+        const data = res.data?.data || res.data;
+        const arrivals = data?.new_arrivals || [];
+        const best = data?.best_sellers || [];
+        const merged = [...arrivals, ...best, ...DUMMY_PRODUCTS];
+        const unique = [];
+        const seen = new Set();
+        for (const p of merged) {
+          const key = p.id || p.slug;
+          if (!key || seen.has(key)) continue;
+          seen.add(key);
+          unique.push(p);
+        }
+        if (unique.length) setAllProducts(unique);
+        if (arrivals.length) {
+          setFeaturedProducts(
+            arrivals.filter((p) => !String(p.category_name || '').includes('belt')).slice(0, 8)
+          );
+        }
       })
-      .catch((error) => {
-        console.error('Home: homepage data unavailable', error);
-        // Don't crash the app if API fails - homepage will render with static content
-        if (!cancelled) setHomepageData(null);
-      });
-    return () => {
-      cancelled = true;
-    };
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, []);
+
+  const categorySections = useMemo(
+    () =>
+      HOME_CATEGORY_SECTIONS.map((section) => ({
+        ...section,
+        products: allProducts
+          .filter((p) => productMatchesCategory(p, section.match))
+          .slice(0, 8),
+      })).filter((section) => section.products.length > 0),
+    [allProducts]
+  );
 
   return (
     <Layout>
-      <SEO
-        {...routeSeo.home}
-        schema={[]}
-      />
+      <SEO {...routeSeo.home} schema={[]} />
 
-      {/* Hero — Split Layout */}
-      <section className="relative min-h-[85vh] md:min-h-[90vh] flex overflow-hidden">
-        {/* Left Column - Content */}
-        <div className="w-1/2 flex items-center justify-center bg-[#0B0B0B] px-12 md:px-20">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="max-w-lg space-y-8"
-          >
-            <span className="text-[#8A8A6B] text-[10px] font-bold tracking-[0.3em] uppercase block">
-              EXTRA 10% OFF WITH CODE: TITAN01
-            </span>
-            <h1 className="text-[42px] md:text-[52px] lg:text-[64px] font-sans text-white leading-[1.1] tracking-tight font-bold uppercase">
-              GET YOUR NEW<br />EDITION SUITS
+      <section className="relative w-full min-h-[72vh] md:min-h-[85vh] overflow-hidden bg-elijays-black">
+        <img
+          src={HERO_IMAGE}
+          alt="Tailored suiting at Elijay's Men's Wear"
+          className="absolute inset-0 w-full h-full object-cover"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-elijays-black/75 via-elijays-black/55 to-elijays-black/80" />
+        <div className="relative z-10 container mx-auto px-5 md:px-8 min-h-[72vh] md:min-h-[85vh] flex flex-col justify-center py-16 md:py-20">
+          <div className="neo-panel self-start max-w-xl w-full p-5 sm:p-7 md:p-8">
+            <p className="text-elijays-gold text-[11px] md:text-[12px] tracking-[0.22em] uppercase font-sans font-semibold mb-4">
+              Elijay&apos;s Men&apos;s Wear
+            </p>
+            <h1 className="neo-headline font-display text-[2.35rem] sm:text-[2.75rem] md:text-5xl lg:text-[3.6rem] leading-[1.1] mb-0 font-semibold italic">
+              Tailored for the man who arrives.
             </h1>
-            <Link
-              to="/products"
-              className="inline-block bg-white text-[#0B0B0B] px-12 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-[#8A8A6B] hover:text-white transition-all duration-[0.3s] ease"
-            >
-              SHOP NOW
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Right Column - Visual */}
-        <div className="w-1/2 relative overflow-hidden">
-          <img
-            src="/WhatsApp Image 2026-06-29 at 20.58.00 (1).jpeg"
-            alt="Louis Vuitton luxury gift set"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0B0B0B]/30" />
+            <div className="neo-panel-inset mt-5 sm:mt-6 px-4 py-3.5">
+              <p className="mb-0 text-[14px] md:text-[16px] font-normal leading-relaxed tracking-wide text-[#F7F5EF]">
+                Suits, shirts and outerwear cut for Nairobi&apos;s CBD — feel the cloth, own the fit.
+              </p>
+            </div>
+            <div className="flex flex-row flex-wrap gap-2.5 sm:gap-3 mt-6">
+              <Link to="/suits" className="btn-gold btn-sm neo-btn text-center">
+                Shop suits
+              </Link>
+              <button
+                type="button"
+                onClick={() => openWhatsAppGeneral("Hello ELIJAY'S, I'd like to book a fitting.")}
+                className="btn-gold-outline btn-sm neo-btn text-center"
+              >
+                Book a fitting
+              </button>
+            </div>
+          </div>
+          <div className="absolute bottom-7 left-5 md:left-8">
+            <span className="garment-tag neo-panel">Muindi Mbingu × Biashara St</span>
+          </div>
         </div>
       </section>
 
-      {/* SECTION A — Featured Categories Mosaic Grid */}
-      <section className="py-20 md:py-28 bg-[#0d0d0d]">
-        <div className="container mx-auto px-6">
-          <div className="mb-14 space-y-4">
-            <span className="text-accent text-[10px] font-semibold tracking-[0.2em] uppercase">
-              Curated Selection
-            </span>
-            <h2 className="text-3xl md:text-4xl font-serif text-white tracking-tight">
-              Featured Categories
-            </h2>
-          </div>
-
-          <div className="mosaic-grid">
-            {mosaicPanels.map((panel, idx) => (
+      <section className="py-12 md:py-16 bg-elijays-white">
+        <div className="container mx-auto px-5 md:px-8">
+          <p className="text-elijays-gold text-[11px] tracking-[0.2em] uppercase font-sans font-medium mb-2">
+            Welcome
+          </p>
+          <p className="font-display text-elijays-ink text-2xl md:text-3xl mb-3 max-w-2xl font-medium leading-snug tracking-[0.01em]">
+            Dress like the room expects you.
+          </p>
+          <p className="text-elijays-ink text-sm md:text-base mb-8 md:mb-10 max-w-2xl font-normal leading-relaxed tracking-wide">
+            Suiting, fittings on the floor, and everyday pieces for how Nairobi dresses — chosen so a man adds what fits, not what fills a cart.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4">
+            {HOME_INTRO_CARDS.map((card) => (
               <Link
-                key={idx}
-                to={panel.link}
-                className={`relative group overflow-hidden cursor-pointer ${panel.span}`}
+                key={card.title}
+                to={card.link}
+                className="group relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-elijays-charcoal"
               >
                 <img
-                  src={panel.image}
-                  alt={panel.title}
+                  src={card.image}
+                  alt={card.title}
                   loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-black/45 group-hover:bg-black/60 transition-colors duration-[0.25s] ease" />
-                <div className="absolute bottom-0 left-0 p-5 md:p-6 z-10">
-                  <span className="block text-[#c9a84c] font-sans text-[10px] uppercase tracking-[0.2em] mb-2">
-                    {panel.eyebrow}
-                  </span>
-                  <h3 className="font-serif text-[20px] md:text-[26px] font-medium text-white leading-tight mb-3">
-                    {panel.title}
-                  </h3>
-                  <span className="text-white text-[11px] font-sans uppercase tracking-wider underline decoration-transparent group-hover:decoration-[#c9a84c] group-hover:text-[#c9a84c] transition-all duration-[0.25s] ease">
-                    SHOP NOW
-                  </span>
+                <div className="absolute inset-0 bg-gradient-to-t from-elijays-black via-elijays-black/40 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-2.5 sm:p-4 md:p-5">
+                  <div className="bg-elijays-black/85 backdrop-blur-md border border-elijays-gold/40 p-3 sm:p-4">
+                    <p className="text-elijays-gold text-[10px] sm:text-[11px] mb-0.5 sm:mb-1 font-medium tracking-[0.12em] uppercase">
+                      {card.eyebrow}
+                    </p>
+                    <h3 className="font-display text-elijays-white text-lg sm:text-2xl md:text-[1.65rem] mb-1 sm:mb-2 font-medium tracking-[0.02em]">
+                      {card.title}
+                    </h3>
+                    <p className="hidden sm:block text-elijays-white text-sm mb-3 font-normal leading-snug line-clamp-2">
+                      {card.description}
+                    </p>
+                    <span className="inline-block border border-elijays-gold bg-elijays-gold text-elijays-ink px-2.5 py-1.5 sm:px-4 sm:py-2 text-[9px] sm:text-[10px] tracking-[0.12em] uppercase font-medium group-hover:bg-elijays-white transition-colors">
+                      Shop now
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}
@@ -206,114 +173,79 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Product Showcase — horizontal scrolling product rows */}
-      <ProductShowcase categoryRows={categoryRows} />
-
-      {/* Trust / Features Bar */}
-      <section className="py-16 md:py-20 bg-[#111]">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            {features.map((feat, i) => (
-              <motion.div
-                key={feat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.7 }}
-                className="flex flex-col items-center text-center space-y-4"
-              >
-                <feat.icon size={24} className="text-accent" />
-                <div>
-                  <h4 className="text-white text-[11px] font-bold tracking-[0.2em] uppercase">
-                    {feat.label}
-                  </h4>
-                  <p className="text-[#888] text-[11px] mt-1 font-light">
-                    {feat.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+      <section className="bg-elijays-black border-y border-elijays-gold">
+        <div className="container mx-auto px-5 md:px-8 py-3.5 text-center">
+          <p className="text-elijays-gold text-[12px] md:text-[13px] tracking-[0.04em]">
+            New season linen shirts — in store now.
+          </p>
         </div>
       </section>
 
-      {/* SECTION B — Shop by Collection (3-Column Card Grid) */}
-      <section className="py-24 md:py-32 bg-[#0B0B0B]">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <div className="w-12 h-12 mx-auto mb-6 border-2 border-[#8A8A6B] flex items-center justify-center">
-              <div className="w-6 h-6 bg-[#8A8A6B]" />
-            </div>
-            <span className="text-[#8A8A6B] text-[10px] font-bold tracking-[0.3em] uppercase block mb-4">
-              MENSWEAR COLLECTION
-            </span>
-            <h2 className="text-3xl md:text-4xl font-sans text-white tracking-tight font-bold uppercase">
-              SHOP BY COLLECTION
-            </h2>
-          </div>
+      <ProductShowcase
+        title="New arrivals"
+        products={featuredProducts}
+        viewAllPath="/products"
+      />
 
-          <div className="collection-grid">
-            {collections.map((col, i) => (
-              <Link
-                key={col.name}
-                to={col.link}
-                className="collection-card"
-              >
-                <div className="collection-card-image">
+      {categorySections.map((section) => (
+        <ProductShowcase
+          key={section.title}
+          title={section.title}
+          products={section.products}
+          viewAllPath={section.viewAllPath}
+        />
+      ))}
+
+      <section className="bg-elijays-gold">
+        <div className="container mx-auto px-5 md:px-8 py-10 md:py-12 text-center">
+          <h2 className="font-display text-2xl md:text-3xl text-elijays-ink mb-2 font-medium tracking-[0.02em]">
+            Get styled
+          </h2>
+          <p className="text-elijays-ink/80 text-[15px] mb-6 font-light tracking-wide">
+            Message us — we&apos;ll confirm size, stock, and a fitting.
+          </p>
+          <button
+            type="button"
+            onClick={() => openWhatsAppGeneral()}
+            className="inline-flex items-center justify-center px-8 py-3.5 text-[11px] font-medium tracking-[0.14em] uppercase border border-elijays-ink bg-elijays-ink text-elijays-white hover:bg-transparent hover:text-elijays-ink transition-colors"
+          >
+            Enquire on WhatsApp
+          </button>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16 bg-elijays-white">
+        <div className="container mx-auto px-5 md:px-8">
+          <div className="flex items-end justify-between gap-4 mb-8">
+            <div>
+              <p className="text-elijays-gold text-[12px] mb-1">Journal</p>
+              <h2 className="font-display text-2xl md:text-3xl text-elijays-ink">From the floor</h2>
+            </div>
+            <Link
+              to="/journal"
+              className="text-[12px] text-elijays-ink underline underline-offset-4 decoration-elijays-gold shrink-0"
+            >
+              View all
+            </Link>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-5">
+            {JOURNAL_TILES.map((tile) => (
+              <Link key={tile.title} to={tile.href} className="group min-w-0">
+                <div className="aspect-[3/4] sm:aspect-[4/3] overflow-hidden bg-elijays-charcoal mb-2 sm:mb-3">
                   <img
-                    src={col.image}
-                    alt={col.name}
+                    src={tile.image}
+                    alt=""
                     loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                   />
                 </div>
-                <div className="collection-card-label">
-                  <div className="collection-name">
-                    {col.name}
-                  </div>
-                  <div className="flex justify-center mt-4">
-                    <div className="w-8 h-8 border border-white/30 flex items-center justify-center">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-white">
-                        <path d="M2 6H10M10 6L6 2M10 6L6 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                <p className="text-[9px] sm:text-[11px] text-elijays-gold mb-0.5 sm:mb-1">{tile.date}</p>
+                <h3 className="font-display text-[12px] sm:text-base md:text-lg text-elijays-ink group-hover:text-elijays-gold-dim transition-colors leading-snug line-clamp-2">
+                  {tile.title}
+                </h3>
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Full-Bleed Promo Banner */}
-      <section className="relative py-32 md:py-40 overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="/WhatsApp Image 2026-06-29 at 20.57.59 (1).jpeg"
-            alt=""
-            aria-hidden="true"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
-
-        <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto space-y-8"
-          >
-            <h2 className="text-[40px] md:text-[48px] lg:text-[56px] font-sans text-white leading-tight tracking-tight font-bold uppercase">
-              WORLD BRANDED LUXURY CLOTHING
-            </h2>
-            <Link
-              to="/products"
-              className="inline-block bg-white text-[#0B0B0B] px-12 py-4 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-[#8A8A6B] hover:text-white transition-all duration-[0.3s] ease"
-            >
-              SHOP NOW
-            </Link>
-          </motion.div>
         </div>
       </section>
     </Layout>

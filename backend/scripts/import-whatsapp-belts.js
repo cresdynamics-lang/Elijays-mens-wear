@@ -21,7 +21,8 @@ const CATALOG = [
     name: 'BLACK LEATHER BELT SET',
     slug: 'black-leather-belt-set',
     color: 'Black',
-    price: 2400,
+    price: 3500,
+    discount_price: 2000,
     featured: true,
     description:
       'A clean black leather belt set with mixed buckle shapes and smooth-to-textured finishes for formal and smart-casual dressing. Adjustable and easy to pair with trousers, suits, and weekend tailoring.',
@@ -31,7 +32,8 @@ const CATALOG = [
     name: 'DARK BROWN LEATHER BELT SET',
     slug: 'dark-brown-leather-belt-set',
     color: 'Dark Brown',
-    price: 2400,
+    price: 3500,
+    discount_price: 2000,
     featured: true,
     description:
       'A refined dark brown leather belt set with polished metal buckles and balanced grain for office and evening dressing. Versatile with navy, charcoal, and tan tailoring.',
@@ -97,13 +99,15 @@ const buildDescription = (item) =>
     const productSku = generateProductSku({ name: item.name, slug: item.slug });
 
     const result = await db.query(
-      `INSERT INTO products (name, slug, sku, description, price, category_id, brand_id, stock_quantity, is_featured, thumbnail, images, is_active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb, true)
+      `INSERT INTO products (name, slug, sku, description, price, discount_price, pos_sell_price, category_id, brand_id, stock_quantity, is_featured, thumbnail, images, is_active)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12::jsonb, true)
        ON CONFLICT (slug) DO UPDATE SET
          name = EXCLUDED.name,
          sku = EXCLUDED.sku,
          description = EXCLUDED.description,
          price = EXCLUDED.price,
+         discount_price = EXCLUDED.discount_price,
+         pos_sell_price = EXCLUDED.pos_sell_price,
          category_id = EXCLUDED.category_id,
          brand_id = EXCLUDED.brand_id,
          thumbnail = EXCLUDED.thumbnail,
@@ -118,6 +122,8 @@ const buildDescription = (item) =>
         productSku,
         buildDescription(item),
         item.price,
+        item.discount_price,
+        item.discount_price,
         beltsId,
         brandId,
         STOCK_PER_ITEM,

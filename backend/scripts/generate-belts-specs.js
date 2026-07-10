@@ -163,7 +163,7 @@ const SPECS = {
         'Track-style closure without holes.',
         'Comfortable all-day wear.',
       ],
-      'Ideal for gifting and daily business wear with chinos or dress pants.',
+      'Ideal for daily business wear with chinos or dress pants.',
     ),
   },
   eb0578f5: {

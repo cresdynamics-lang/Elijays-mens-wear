@@ -32,7 +32,7 @@ Shipping: KSh ${totals.shipping.toLocaleString()}
 ━━━━━━━━━━━━━━━━━━━━━━
 *TOTAL: KSh ${totals.total.toLocaleString()}*
 
-📍 Shop: elijays.co.ke
+📍 Shop: elijays-mens-wear.co.ke
 💬 Reply to confirm order`;
 
   return `${header}\n\n${itemsList}\n${summary}`;

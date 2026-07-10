@@ -1,128 +1,84 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Globe, Mail, Phone, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { SITE_URL, SOCIAL_INSTAGRAM, SOCIAL_FACEBOOK } from '../seo/seoData';
+import { STORE, NAV_PARENTS } from '../data/navCategories';
 import { WHATSAPP_NUMBER } from '../lib/storeContact';
+import { openWhatsAppGeneral } from '../lib/whatsappEnquiry';
 
-const Footer = () => {
-  return (
-    <footer className="bg-primary pt-24 pb-14 border-t border-white/5">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16 mb-20">
-          <div className="hidden md:block space-y-8">
-            <h2 className="text-3xl font-serif font-semibold text-accent tracking-tight">ELIJAY&apos;S</h2>
-            <p className="text-white/50 font-light leading-relaxed max-w-sm">
-              Nairobi menswear grounded in real inventory — suits, shirts, trousers, polos, jackets,
-              and accessories stocked daily from our shop floor.
-            </p>
-            <div className="flex space-x-5">
-              <motion.a
-                href={SOCIAL_INSTAGRAM}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Follow ELIJAY'S Men's Wear on Instagram"
-                whileHover={{ y: -3 }}
-                className="text-white/50 hover:text-accent transition-colors duration-300"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                </svg>
-              </motion.a>
-              <motion.a
-                href={SOCIAL_FACEBOOK}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Follow ELIJAY'S Men's Wear on Facebook"
-                whileHover={{ y: -3 }}
-                className="text-white/50 hover:text-accent transition-colors duration-300"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                </svg>
-              </motion.a>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-accent font-serif text-xl mb-8 tracking-wide">Collections</h3>
-            <ul className="space-y-4">
-              {['Shirts & Suits', 'Trousers & Khakis', 'Polos & Sweaters', 'Jackets', 'Belts & Ties'].map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-white/70 hover:text-accent transition-colors duration-300 text-sm tracking-wide font-light">
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-accent font-serif text-xl mb-8 tracking-wide">Support</h3>
-            <ul className="space-y-4">
-              {[
-                { name: 'Contact Us', path: '/contact' },
-                { name: 'Bespoke Services', path: '/bespoke' },
-                { name: 'Shipping & Returns', path: '/shipping' },
-                { name: 'Size Guide', path: '/size-guide' },
-                { name: 'Privacy Policy', path: '/privacy' },
-                { name: 'Staff', path: '/admin' }
-              ].map((link) => (
-                <li key={link.name}>
-                  <a href={link.path} className="text-white/70 hover:text-accent transition-colors duration-300 text-sm tracking-wide font-light">
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-between items-center py-10 border-y border-white/5 gap-6">
-          <div className="flex items-center space-x-3 text-white/50">
-            <MapPin size={16} className="text-accent" />
-            <span className="text-sm font-light">ELIJAY'S Men's Wear, Nairobi</span>
-          </div>
-          <div className="flex items-center space-x-3 text-white/50">
-            <Phone size={16} className="text-accent" />
-            <span className="text-sm font-light">0721-844475</span>
-          </div>
-          <div className="flex items-center space-x-3 text-white/50">
-            <Mail size={16} className="text-accent" />
-            <span className="text-sm font-light">contact@elijays.co.ke</span>
-          </div>
-          <a href={SITE_URL} className="flex items-center space-x-3 text-white/50 hover:text-accent transition-colors duration-300">
-            <Globe size={16} className="text-accent" />
-            <span className="text-sm font-light">elijays.co.ke</span>
+const Footer = () => (
+  <footer className="bg-elijays-black border-t border-elijays-gold text-elijays-white">
+    <div className="container mx-auto px-5 md:px-8 py-12 md:py-14">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+        <div className="space-y-4">
+          <p className="font-display text-xl tracking-[0.06em] uppercase text-elijays-white">Elijay&apos;s</p>
+          <span className="garment-tag !bg-transparent inline-flex">Muindi Mbingu × Biashara St</span>
+          <p className="text-sm text-elijays-white/60 font-light leading-relaxed">
+            Luxury menswear on Muindi Mbingu at Biashara Street, Nairobi CBD. Walk in for a fitting — or enquire on WhatsApp.
+          </p>
+          <a
+            href="https://maps.google.com/?q=Muindi+Mbingu+Street+Biashara+Street+Nairobi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-[12px] text-elijays-gold hover:text-elijays-white transition-colors underline underline-offset-4"
+          >
+            Open in Maps
           </a>
         </div>
 
-        <div className="text-center pt-10">
-          <p className="text-xs text-white/30 tracking-widest font-light uppercase">
-            Copyright 2026 ELIJAY&apos;S MEN&apos;S WEAR. ALL RIGHTS RESERVED.
-          </p>
+        <div>
+          <h4 className="text-elijays-gold text-[11px] tracking-[0.14em] uppercase mb-4">Shop</h4>
+          <ul className="space-y-2">
+            {NAV_PARENTS.map((p) => (
+              <li key={p.name}>
+                <Link to={p.href} className="text-sm text-elijays-white/70 hover:text-elijays-gold transition-colors">{p.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="text-elijays-gold text-[11px] tracking-[0.14em] uppercase mb-4">Visit</h4>
+          <ul className="space-y-2 text-sm text-elijays-white/70">
+            <li>{STORE.street}</li>
+            <li>{STORE.city}</li>
+            <li><a href="tel:+254721844475" className="hover:text-elijays-gold">{STORE.phoneDisplay}</a></li>
+            <li><a href={`mailto:${STORE.email}`} className="hover:text-elijays-gold">{STORE.email}</a></li>
+            {STORE.hours.map((h) => (
+              <li key={h.day}>{h.day}: {h.time}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="text-elijays-gold text-[11px] tracking-[0.14em] uppercase mb-4">Connect</h4>
+          <button type="button" onClick={() => openWhatsAppGeneral()} className="btn-gold-outline mb-5">
+            WhatsApp
+          </button>
+          <div className="flex gap-2.5">
+            <a href={SOCIAL_INSTAGRAM} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="inline-flex h-8 w-8 items-center justify-center border border-elijays-gold text-elijays-gold hover:bg-elijays-gold hover:text-elijays-ink transition-colors">
+              <i className="fa-brands fa-instagram text-[13px]" aria-hidden />
+            </a>
+            <a href={SOCIAL_FACEBOOK} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="inline-flex h-8 w-8 items-center justify-center border border-elijays-gold text-elijays-gold hover:bg-elijays-gold hover:text-elijays-ink transition-colors">
+              <i className="fa-brands fa-facebook-f text-[13px]" aria-hidden />
+            </a>
+            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="inline-flex h-8 w-8 items-center justify-center border border-elijays-gold text-elijays-gold hover:bg-elijays-gold hover:text-elijays-ink transition-colors">
+              <i className="fa-brands fa-whatsapp text-[14px]" aria-hidden />
+            </a>
+          </div>
+          <ul className="mt-6 space-y-2 text-sm text-elijays-white/60">
+            <li><Link to="/about" className="hover:text-elijays-gold">About</Link></li>
+            <li><Link to="/journal" className="hover:text-elijays-gold">Journal</Link></li>
+            <li><Link to="/contact" className="hover:text-elijays-gold">Contact</Link></li>
+          </ul>
         </div>
       </div>
 
-      <a
-        href="https://wa.me/254721844475"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
-        className="group fixed bottom-6 right-6 flex h-14 w-14 items-center overflow-hidden rounded-full bg-[#25D366] shadow-lg shadow-emerald-900/20 transition-all duration-400 hover:w-48 z-50"
-      >
-        <span className="flex h-14 w-14 shrink-0 items-center justify-center">
-          <svg viewBox="0 0 448 512" aria-hidden="true" className="h-6 w-6 fill-white">
-            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32 101.2 32 0 133.2 0 256c0 45.1 11.7 89.2 33.8 127.1L0 480l97.7-33.3C134.5 468.1 178 480 223.9 480c122.7 0 223.9-101.2 223.9-224 0-59.3-23.1-115.1-66.9-158.9zM223.9 438.6c-39.7 0-78.6-10.7-112.3-31l-7.8-4.6-57.7 19.7 19.3-56.1-5-8c-21.9-34.8-33.5-75-33.5-116.6 0-119.2 97-216.2 216.2-216.2 57.7 0 111.9 22.5 152.9 63.5 41 41 63.5 95.2 63.5 152.9 0 119.2-97 216.3-215.6 216.3zm125.2-162.6c-6.8-3.4-40.4-20-46.7-22.4-6.2-2.4-10.8-3.4-15.4 3.4-4.6 6.8-17.8 22.4-21.8 27-4 4.6-8 5.1-14.8 1.7-6.8-3.4-28.5-10.5-54.3-33.5-20.1-17.9-33.7-40-37.7-46.8-4-6.8-.4-10.4 3-13.8 3.1-3.1 6.8-8.1 10.2-12.1 3.4-4 4.5-6.8 6.8-11.3 2.3-4.6 1.1-8.6-.6-12.1-1.7-3.4-15.4-37.1-21.1-50.8-5.5-13.2-11.1-11.4-15.4-11.7-4-.2-8.6-.2-13.2-.2s-12.1 1.7-18.4 8.6c-6.2 6.8-23.9 23.4-23.9 57.1 0 33.7 24.5 66.2 27.9 70.8 3.4 4.6 48.3 73.9 117 103.5 16.4 7.1 29.2 11.3 39.2 14.5 16.5 5.2 31.5 4.5 43.4 2.7 13.2-2 40.4-16.5 46-32.4 5.7-15.9 5.7-29.6 4-32.4-1.7-2.8-6.2-4.5-13-7.9z" />
-          </svg>
-        </span>
-        <span className="ml-2 whitespace-nowrap text-white text-sm font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100 pr-5">
-          WhatsApp
-        </span>
-      </a>
-    </footer>
-  );
-};
+      <div className="border-t border-elijays-gold/40 pt-5 flex flex-col md:flex-row justify-between gap-2 text-xs text-elijays-white/40">
+        <p>© {new Date().getFullYear()} Elijay&apos;s Men&apos;s Wear. All rights reserved.</p>
+        <a href={SITE_URL} className="hover:text-elijays-gold">elijays-mens-wear.co.ke</a>
+      </div>
+    </div>
+  </footer>
+);
 
 export default Footer;

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Layout from '../components/Layout';
 import SEO from '../components/SEO';
 import { buildBreadcrumbSchema, buildBlogPostingSchema } from '../seo/seoData';
 import { resolveDisplayImageUrl } from '../utils/cloudinary';
@@ -18,7 +19,7 @@ export default function BlogArticle() {
         });
 
         if (!response.ok) {
-          throw new Error('Blog post not found');
+          throw new Error('Article not found');
         }
 
         const data = await response.json();
@@ -30,7 +31,7 @@ export default function BlogArticle() {
             credentials: 'include',
           });
         } catch {
-          console.warn('Could not update views');
+          /* views optional */
         }
       } catch (err) {
         setError(err.message);
@@ -39,126 +40,98 @@ export default function BlogArticle() {
       }
     };
 
-    if (slug) {
-      fetchBlog();
-    }
+    if (slug) fetchBlog();
   }, [slug]);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-primary">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent/60"></div>
-      </div>
+      <Layout>
+        <p className="text-center text-elijays-ink/40 text-[11px] py-24 tracking-wider uppercase">Loading…</p>
+      </Layout>
     );
   }
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center bg-primary text-secondary px-6">
-        <h1 className="text-2xl font-serif font-bold text-secondary mb-5 text-center tracking-tight">
-          {error || 'Blog post not found'}
-        </h1>
-        <Link to="/blog" className="text-accent hover:text-accent/80 font-semibold transition-colors duration-300">
-          Back to blog
-        </Link>
-      </div>
+      <Layout>
+        <div className="container mx-auto px-5 py-20 text-center">
+          <h1 className="font-display text-2xl text-elijays-ink mb-4">{error || 'Article not found'}</h1>
+          <Link to="/journal" className="text-elijays-gold underline underline-offset-4 text-sm">
+            Back to Journal
+          </Link>
+        </div>
+      </Layout>
     );
   }
 
-  const fallbackImage = '/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg';
+  const fallbackImage = '/hero/hero-shirts.jpg';
   const imageUrl = resolveDisplayImageUrl(blog.featured_image_url, { width: 1600 }) || fallbackImage;
 
   return (
-    <div className="min-h-screen bg-primary">
+    <Layout>
       <SEO
         title={blog.title}
         description={blog.excerpt || blog.title}
-        path={`/blog/${blog.slug}`}
+        path={`/journal/${blog.slug}`}
         image={imageUrl}
-        keywords={[blog.title, blog.category, "ELIJAY'S Men's Wear blog", 'menswear Kenya'].filter(Boolean)}
+        keywords={[blog.title, blog.category, "ELIJAY'S Men's Wear", 'menswear Nairobi'].filter(Boolean)}
         schema={[
           buildBreadcrumbSchema([
             { name: 'Home', path: '/' },
-            { name: 'Blog', path: '/blog' },
-            { name: blog.title, path: `/blog/${blog.slug}` },
+            { name: 'Journal', path: '/journal' },
+            { name: blog.title, path: `/journal/${blog.slug}` },
           ]),
           buildBlogPostingSchema(blog),
         ]}
       />
 
       {imageUrl && (
-        <div className="relative w-full h-96 bg-utility-gray overflow-hidden">
+        <div className="relative w-full h-[42vh] md:h-[52vh] bg-elijays-charcoal overflow-hidden">
           <img
             src={imageUrl}
             alt={blog.title}
             className="w-full h-full object-cover"
-            onError={(e) => {
-              e.currentTarget.src = fallbackImage;
-            }}
+            onError={(e) => { e.currentTarget.src = fallbackImage; }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-elijays-black/70 via-transparent to-transparent" />
         </div>
       )}
 
-      <div className="max-w-3xl mx-auto px-4 py-12 md:py-16">
-        <div className="mb-8">
-          <Link to="/blog" className="text-accent hover:text-accent/80 text-sm font-semibold transition-colors duration-300">
-            Back to blog
-          </Link>
-        </div>
+      <article className="container mx-auto px-5 md:px-8 max-w-3xl py-10 md:py-14">
+        <Link to="/journal" className="text-[12px] text-elijays-gold hover:text-elijays-gold-dim">
+          ← Journal
+        </Link>
 
-        <header className="mb-10">
-          <h1 className="text-2xl md:text-3xl font-serif font-bold text-secondary mb-5 tracking-tight">
+        <header className="mt-6 mb-8">
+          <p className="text-[11px] text-elijays-gold mb-2">
+            {new Date(blog.published_date).toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })}
+            {blog.category ? ` · ${blog.category}` : ''}
+          </p>
+          <h1 className="font-display text-3xl md:text-4xl text-elijays-ink leading-tight">
             {blog.title}
           </h1>
-
-          <div className="flex flex-wrap items-center gap-4 text-sm text-secondary/70">
-            <time dateTime={blog.published_date}>
-              {new Date(blog.published_date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </time>
-            <span className="text-accent/60">|</span>
-            <span className="inline-block bg-accent/10 px-3.5 py-1 rounded-full border border-accent/15 text-accent text-xs font-bold tracking-wide">
-              {blog.category}
-            </span>
-            <span className="text-accent/60">|</span>
-            <span className="text-secondary/60 font-medium">{blog.views || 0} views</span>
-          </div>
         </header>
 
         {blog.excerpt && (
-          <div className="mb-10 text-lg text-secondary/80 italic border-l-2 border-accent/50 pl-5 leading-relaxed font-medium">
+          <p className="text-lg text-[#5c5c5c] font-light leading-relaxed mb-8 border-l-2 border-elijays-gold pl-4">
             {blog.excerpt}
-          </div>
+          </p>
         )}
 
-        <article className="max-w-none mb-14">
-          <div className="text-secondary leading-[1.8] whitespace-pre-wrap text-[15px] font-medium">
-            {blog.content}
-          </div>
-        </article>
-
-        <div className="bg-utility-gray/40 border border-utility-gray/60 p-7 mb-10 rounded-2xl">
-          <h3 className="text-base md:text-lg font-serif font-bold text-secondary mb-3 tracking-tight">
-            Style note
-          </h3>
-          <p className="text-secondary/70 font-medium leading-relaxed">
-            This article is built around the category and product imagery already on the site so the visual story matches the written one.
-          </p>
+        <div className="text-elijays-ink/85 leading-[1.8] whitespace-pre-wrap text-[15px] font-light">
+          {blog.content}
         </div>
 
-        <div className="text-center py-10 border-t border-utility-gray/60">
-          <Link
-            to={`/blog?category=${encodeURIComponent(blog.category)}`}
-            className="btn-primary inline-block px-7 py-3 text-[10px] tracking-wider"
-          >
-            Explore more {blog.category} articles
+        <div className="mt-12 pt-8 border-t border-elijays-ink/10 text-center">
+          <Link to="/journal" className="btn-gold-outline">
+            More from the Journal
           </Link>
         </div>
-      </div>
-    </div>
+      </article>
+    </Layout>
   );
 }

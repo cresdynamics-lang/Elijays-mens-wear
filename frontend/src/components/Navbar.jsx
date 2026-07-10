@@ -1,274 +1,243 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag, Search, User, LogOut, ChevronRight, Phone, Globe } from 'lucide-react';
+import { Menu, X, Search, User, ChevronRight, MessageCircle, ShoppingBag } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
+import { useCartStore } from '../store/useCartStore';
 import { userInitials } from '../lib/format';
+import { NAV_PARENTS } from '../data/navCategories';
+import { openWhatsAppGeneral } from '../lib/whatsappEnquiry';
+import FloatingSocial from './FloatingSocial';
+
+const iconBox = 'inline-flex h-8 w-8 items-center justify-center border border-elijays-gold text-elijays-gold hover:bg-elijays-gold hover:text-elijays-ink transition-colors';
+
+const BrandLogo = ({ className = 'h-8 md:h-9' }) => (
+  <Link
+    to="/"
+    className="inline-flex items-center gap-2.5 sm:gap-3 shrink-0 min-w-0"
+    aria-label="Elijay's Men's Wear home"
+  >
+    <img
+      src="/elijays-logo-nav.png"
+      alt=""
+      className={`${className} w-auto object-contain shrink-0`}
+    />
+    <span className="font-display text-elijays-gold text-[15px] sm:text-lg md:text-xl tracking-[0.06em] leading-none whitespace-nowrap">
+      Elijay&apos;s <span className="font-normal text-elijays-white">Men&apos;s Wear</span>
+    </span>
+  </Link>
+);
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [mobileParent, setMobileParent] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
   const navigate = useNavigate();
-  const getItemCount = useCartStore((state) => state.getItemCount);
-  const { user, isAuthenticated, logout } = useAuthStore();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const { user, isAuthenticated } = useAuthStore();
+  const cartCount = useCartStore((s) => s.getItemCount());
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
   }, [isOpen]);
 
-  const menuItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Products', href: '/products' },
-    {
-      name: 'Collections',
-      subItems: [
-        { name: 'Suits & Blazers', href: '/suits' },
-        { name: 'Shirts', href: '/shirts' },
-        { name: 'Trousers', href: '/trousers' },
-        { name: 'Polo T-shirts', href: '/polo-t-shirts' },
-        { name: 'Jackets', href: '/products?category=jackets' },
-        { name: 'Sweaters', href: '/products?category=sweaters' },
-      ],
-    },
-    { name: 'Blog', href: '/blog' },
-  ];
-
-  const handleLinkClick = (href) => {
-    if (href === '#') return;
+  const go = (href) => {
     navigate(href);
     setIsOpen(false);
     setOpenDropdown(null);
+    setMobileParent(null);
   };
 
-  const NavLink = ({ item }) => {
-    const hasSubItems = item.subItems && item.subItems.length > 0;
-
-    return (
-      <div
-        className="relative"
-        onMouseEnter={() => hasSubItems && setOpenDropdown(item.name)}
-        onMouseLeave={() => hasSubItems && setOpenDropdown(null)}
-      >
-        <button
-          onClick={() => !hasSubItems && handleLinkClick(item.href)}
-          className="font-sans text-[11px] font-medium tracking-[0.2em] uppercase text-white/80 hover:text-accent transition-colors duration-300"
-        >
-          {item.name}
-        </button>
-        <AnimatePresence>
-          {hasSubItems && openDropdown === item.name && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute top-full left-1/2 -translate-x-1/2 mt-4 z-[60]"
-            >
-              <div className="bg-utility-gray border border-white/15 rounded-md shadow-2xl p-5 w-56">
-                <div className="space-y-3">
-                  {item.subItems.map((sub) => (
-                    <button
-                      key={sub.name}
-                      onClick={() => handleLinkClick(sub.href)}
-                      className="block w-full text-left font-sans text-sm text-white/80 hover:text-accent transition-colors"
-                    >
-                      {sub.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    );
+  const submitSearch = (e) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    navigate(`/products?search=${encodeURIComponent(q)}`);
+    setSearchOpen(false);
+    setQuery('');
   };
 
   return (
     <>
-      {/* Announcement Bar */}
-      <div className="bg-[#0B0B0B] border-b border-white/10 relative z-[55]">
-        <div className="container mx-auto px-6 flex justify-between items-center py-2.5">
-          <div className="flex items-center gap-2 text-[#888] text-[10px] font-medium tracking-widest uppercase">
-            <span>10% off your next order. Use code: MENSWEAR01</span>
-          </div>
-          <div className="flex items-center gap-2 text-[#888] text-[10px] cursor-pointer hover:text-[#8A8A6B] transition-colors font-medium tracking-widest uppercase">
-            <Globe size={12} className="text-[#8A8A6B]" />
-            <span>Region</span>
-          </div>
+      {/* 1. Utility bar — address only (socials float left) */}
+      <div className="bg-elijays-black">
+        <div className="container mx-auto px-4 md:px-8 h-8 flex items-center">
+          <span className="text-[10px] md:text-[11px] tracking-[0.12em] text-elijays-gold font-medium truncate">
+            Muindi Mbingu × Biashara St, Nairobi
+          </span>
         </div>
       </div>
 
-      {/* Navigation Bar */}
-      <header
-        className={`relative w-full z-[50] transition-all duration-500 ${
-          scrolled
-            ? 'bg-[#0B0B0B]/95 backdrop-blur-xl border-b border-[rgba(255,255,255,0.08)]'
-            : 'bg-[#0B0B0B]/80 backdrop-blur-md'
-        }`}
-      >
-        <div className="container mx-auto px-6 h-[72px] flex justify-between items-center">
-          {/* Logo on the LEFT */}
-          <Link to="/" className="flex-shrink-0 flex items-center gap-3">
-            <div className="h-12 w-12 md:h-14 md:w-14 rounded-full border-2 border-accent bg-primary flex items-center justify-center overflow-hidden">
-              <img src="/elijays-logo.jpeg" alt="ELIJAY'S Men's Wear" className="h-10 md:h-12 w-auto object-contain" />
-            </div>
-            <span className="hidden md:block font-serif text-lg md:text-xl text-white tracking-wide">Elijay's Men's Wear</span>
-          </Link>
-
-          {/* Center nav links */}
-          <nav className="hidden xl:flex items-center gap-12">
-            {menuItems.map((item) => (
-              <NavLink key={item.name} item={item} />
-            ))}
-          </nav>
-
-          {/* Right icons */}
-          <div className="flex items-center gap-7 text-white/80">
-            <div className="xl:hidden">
-              <button onClick={() => setIsOpen(true)} className="text-white/80 hover:text-accent">
-                <Menu size={24} />
+      {/* 2. Header — logo left, nav center, icons right */}
+      <header className="sticky top-0 z-50 bg-elijays-black border-b border-elijays-gold">
+        <div className="container mx-auto px-4 md:px-8">
+          {/* Mobile header — logo left; search, cart, menu right */}
+          <div className="lg:hidden h-14 flex items-center justify-between gap-3">
+            <BrandLogo className="h-8" />
+            <div className="flex items-center gap-2 shrink-0">
+              <button type="button" onClick={() => setSearchOpen((v) => !v)} className={iconBox} aria-label="Search">
+                <Search size={16} strokeWidth={1.5} />
               </button>
-            </div>
-            <button onClick={() => navigate('/products')} className="hidden md:flex hover:text-accent transition-colors">
-              <Search size={20} />
-            </button>
-            <div className="relative group">
-              <Link to={isAuthenticated ? "/profile" : "/login"} className="block hover:text-accent transition-colors">
-                {isAuthenticated ? (
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-xs font-semibold text-white">
-                    {userInitials(user)}
+              <Link to="/cart" className={`${iconBox} relative`} aria-label="Cart">
+                <ShoppingBag size={16} strokeWidth={1.5} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] px-0.5 rounded-full bg-elijays-gold text-elijays-ink text-[8px] font-semibold flex items-center justify-center leading-none">
+                    {cartCount > 9 ? '9+' : cartCount}
                   </span>
-                ) : (
-                  <User size={20} />
                 )}
               </Link>
-              {isAuthenticated && (
-                <div className="absolute top-full right-0 mt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[60]">
-                  <div className="bg-utility-gray border border-white/15 rounded-md shadow-2xl p-4 w-48">
-                    <p className="font-sans text-sm text-white/70 mb-3 border-b border-white/10 pb-2">{user?.name || 'Profile'}</p>
-                    <div className="space-y-2">
-                      <Link to="/profile" className="block font-sans text-sm text-white/80 hover:text-accent">My Account</Link>
-                      <button onClick={logout} className="flex items-center gap-2 font-sans text-sm text-red-400/90 hover:text-red-400">
-                        <LogOut size={14} />
-                        <span>Sign Out</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <button type="button" onClick={() => setIsOpen(true)} className={iconBox} aria-label="Menu">
+                <Menu size={16} strokeWidth={1.5} />
+              </button>
             </div>
-            <Link to="/cart" className="relative hover:text-accent transition-colors">
-              <ShoppingBag size={20} />
-              {getItemCount() > 0 && (
-                <span className="absolute -top-2 -right-2.5 bg-accent text-primary text-[10px] h-4 w-4 rounded-full flex items-center justify-center font-bold">
-                  {getItemCount()}
-                </span>
-              )}
-            </Link>
           </div>
+
+          {/* Desktop header */}
+          <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center h-[68px] gap-6">
+            <div className="justify-self-start">
+              <BrandLogo className="h-10" />
+            </div>
+
+            <nav className="flex items-center justify-center gap-7">
+              {NAV_PARENTS.map((item) => (
+                <MegaLink key={item.name} item={item} open={openDropdown} setOpen={setOpenDropdown} go={go} />
+              ))}
+            </nav>
+
+            <div className="justify-self-end flex items-center gap-2.5">
+              <button type="button" onClick={() => setSearchOpen((v) => !v)} className={iconBox} aria-label="Search">
+                <Search size={15} strokeWidth={1.5} />
+              </button>
+              <button type="button" onClick={() => openWhatsAppGeneral()} className={iconBox} aria-label="WhatsApp">
+                <MessageCircle size={15} strokeWidth={1.5} />
+              </button>
+              <Link to={isAuthenticated ? '/profile' : '/login'} className={iconBox} aria-label="Account">
+                {isAuthenticated ? (
+                  <span className="text-[9px] font-semibold">{userInitials(user)}</span>
+                ) : (
+                  <User size={15} strokeWidth={1.5} />
+                )}
+              </Link>
+            </div>
+          </div>
+
+          {searchOpen && (
+            <form onSubmit={submitSearch} className="pb-3">
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search suits, shirts, khakis…"
+                className="w-full bg-elijays-charcoal border border-elijays-gold/40 text-elijays-white px-4 py-2.5 text-sm outline-none focus:border-elijays-gold placeholder:text-elijays-white/40"
+              />
+            </form>
+          )}
         </div>
       </header>
 
+      {/* Mobile drawer */}
       <AnimatePresence>
-        {isOpen && <MobileMenu setIsOpen={setIsOpen} menuItems={menuItems} handleLinkClick={handleLinkClick} />}
+        {isOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] lg:hidden">
+            <div className="absolute inset-0 bg-elijays-black/70" onClick={() => setIsOpen(false)} />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+              className="relative w-[88%] max-w-sm h-full bg-elijays-black border-r border-elijays-gold p-6 overflow-y-auto"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <BrandLogo className="h-8" />
+                <button type="button" onClick={() => setIsOpen(false)} className={iconBox}><X size={16} /></button>
+              </div>
+
+              {mobileParent ? (
+                <div>
+                  <button type="button" onClick={() => setMobileParent(null)} className="text-sm text-elijays-gold mb-5">← Back</button>
+                  <p className="font-display text-xl text-elijays-white mb-4">{mobileParent.name}</p>
+                  <div className="space-y-1">
+                    {mobileParent.children.map((c) => (
+                      <button key={c.name} type="button" onClick={() => go(c.href)} className="block w-full text-left text-elijays-white/80 py-2.5 border-b border-white/10 text-sm">
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {NAV_PARENTS.map((item) => (
+                    <button
+                      key={item.name}
+                      type="button"
+                      onClick={() => setMobileParent(item)}
+                      className="flex w-full items-center justify-between py-3.5 text-left text-elijays-white border-b border-white/10"
+                    >
+                      <span className="text-[15px]">{item.name}</span>
+                      <ChevronRight size={16} className="text-elijays-gold" />
+                    </button>
+                  ))}
+                  {[
+                    { name: 'Journal', href: '/journal' },
+                    { name: 'About', href: '/about' },
+                    { name: 'Contact', href: '/contact' },
+                  ].map((l) => (
+                    <button key={l.name} type="button" onClick={() => go(l.href)} className="block w-full text-left py-3.5 text-elijays-white/80 border-b border-white/10 text-[15px]">
+                      {l.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
+
+      <FloatingSocial />
     </>
   );
 };
 
-const MobileMenu = ({ setIsOpen, menuItems, handleLinkClick }) => {
-  const [openSubMenu, setOpenSubMenu] = useState(null);
-
-  const SubMenu = ({ item, onBack }) => (
-    <motion.div
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-      className="absolute inset-0 bg-primary p-6"
-    >
-      <button onClick={onBack} className="font-sans text-sm text-white/70 mb-8">
-        &larr; Back to Main Menu
-      </button>
-      <div className="space-y-5">
-        {item.subItems.map(sub => (
-          <button
-            key={sub.name}
-            onClick={() => handleLinkClick(sub.href)}
-            className="block w-full text-left font-sans text-2xl text-white/80 hover:text-accent"
-          >
-            {sub.name}
-          </button>
-        ))}
-      </div>
-    </motion.div>
-  );
-
+const MegaLink = ({ item, open, setOpen, go }) => {
+  const active = open === item.name;
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] xl:hidden"
+    <div
+      className="relative"
+      onMouseEnter={() => setOpen(item.name)}
+      onMouseLeave={() => setOpen(null)}
     >
-      <div onClick={() => setIsOpen(false)} className="absolute inset-0 bg-black/60 backdrop-blur-md" />
-      <motion.div
-        initial={{ x: '-100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '-100%' }}
-        transition={{ type: 'spring', damping: 30, stiffness: 200 }}
-        className="relative w-[85%] max-w-md h-full bg-primary p-6 shadow-2xl"
+      <button
+        type="button"
+        onClick={() => go(item.href)}
+        className="text-[13px] text-elijays-white/90 hover:text-elijays-gold transition-colors whitespace-nowrap"
       >
-        <div className="flex justify-between items-center mb-12">
-            <div className="h-10 w-10 rounded-full border-2 border-accent bg-primary flex items-center justify-center overflow-hidden">
-              <img src="/elijays-logo.jpeg" alt="ELIJAY'S Men's Wear" className="h-8 w-auto object-contain" />
+        {item.name}
+      </button>
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[60]"
+          >
+            <div className="bg-elijays-charcoal border border-elijays-gold py-2 min-w-[180px]">
+              {item.children.map((c) => (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => go(c.href)}
+                  className="block w-full text-left px-4 py-2 text-[13px] text-elijays-white/80 hover:text-elijays-gold hover:bg-elijays-black/50 transition-colors"
+                >
+                  {c.name}
+                </button>
+              ))}
             </div>
-           <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-accent">
-             <X size={24} />
-           </button>
-        </div>
-
-        <div className="relative">
-          <AnimatePresence>
-            {openSubMenu ? (
-              <SubMenu item={openSubMenu} onBack={() => setOpenSubMenu(null)} />
-            ) : (
-              <motion.div className="space-y-6">
-                {menuItems.map(item =>
-                  item.subItems ? (
-                    <button
-                      key={item.name}
-                      onClick={() => setOpenSubMenu(item)}
-                      className="flex justify-between items-center w-full text-left font-sans text-3xl text-white/80 hover:text-accent"
-                    >
-                      {item.name}
-                      <ChevronRight size={24} />
-                    </button>
-                  ) : (
-                    <button
-                      key={item.name}
-                      onClick={() => handleLinkClick(item.href)}
-                      className="block w-full text-left font-sans text-3xl text-white/80 hover:text-accent"
-                    >
-                      {item.name}
-                    </button>
-                  )
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 

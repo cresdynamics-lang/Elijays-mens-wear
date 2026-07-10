@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronLeft } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -7,9 +7,9 @@ import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import { useCartStore } from '../store/useCartStore';
 import { getPremiumImage } from '../utils/productImages';
-import { catalogueAPI, productAPI, adminCategoryAPI } from '../services/api';
 import { buildBreadcrumbSchema, categoryFallbackIntro, routeSeo } from '../seo/seoData';
 import ProductCard from '../components/product/ProductCard';
+import { SEARCH_PLACEHOLDER } from '../content/nairobiBrand';
 import { DUMMY_PRODUCTS } from '../utils/dummyData';
 
 const categoryPages = ['polo-t-shirts', 'shirts', 'suits', 'trousers', 'linen'];
@@ -25,7 +25,6 @@ const isBeltCategory = (value) => {
 
 const CATEGORY_DATA = [
  { id: 'All', name: 'All', sub: [] },
- { id: 'gifts-accessories', name: 'Gifts & Accessories', sub: ['Gifts & Accessories'] },
  { id: 'clothing-apparel', name: 'Clothing & Apparel', sub: ['Clothing & Apparel'] },
  { id: 'polo-t-shirts', name: 'Polo T-shirts', sub: ['Knitted Polos', 'Polos'] },
  { id: 'trousers', name: 'Trousers', sub: ['Khaki', 'Formal', 'Chino', 'Jeans', 'Gurkha'] },
@@ -233,59 +232,65 @@ const Products = ({ categoryOverride = null }) => {
  return true;
  });
 
+ const categoryHeading =
+ currentCategory === 'All'
+ ? 'Shop'
+ : selectedCategory?.name || currentCategory;
+
+ const chipClass = (active) =>
+ `shrink-0 px-4 py-2 text-[11px] tracking-[0.06em] border transition-colors ${
+ active
+ ? 'bg-elijays-gold border-elijays-gold text-elijays-ink'
+ : 'bg-transparent border-elijays-ink/20 text-elijays-ink/70 hover:border-elijays-gold hover:text-elijays-gold'
+ }`;
+
  return (
- <div className="bg-primary min-h-screen">
+ <div className="bg-elijays-white min-h-screen">
  <SEO
  {...seo}
  schema={[
  buildBreadcrumbSchema([
  { name: 'Home', path: '/' },
- { name: currentCategory === 'All' ? 'Collections' : selectedCategory?.name || 'Collections', path: seo.path },
+ { name: currentCategory === 'All' ? 'Shop' : selectedCategory?.name || 'Shop', path: seo.path },
  ]),
  ]}
  />
  <Navbar />
 
- <main className="pt-28 pb-24">
- <div className="container mx-auto px-6">
- <div className="flex items-center space-x-4 mb-10">
- <button onClick={() => navigate(-1)} className="text-accent/70 hover:text-accent transition-colors duration-300">
- <ChevronLeft size={22} />
+ <main className="pb-20">
+ <div className="bg-elijays-black border-b border-elijays-gold">
+ <div className="container mx-auto px-5 md:px-8 py-10 md:py-12">
+ <button
+ type="button"
+ onClick={() => navigate(-1)}
+ className="inline-flex items-center gap-1 text-elijays-gold/80 hover:text-elijays-gold text-[12px] mb-4"
+ >
+ <ChevronLeft size={16} /> Back
  </button>
- <span className="text-[10px] text-accent/50 font-medium">Back</span>
- </div>
- <div className="mb-14">
- <span className="text-accent/70 text-[10px] tracking-[0.35em] font-semibold uppercase">ELIJAY'S Men's Wear</span>
- <h1 className="text-3xl md:text-4xl font-serif text-secondary tracking-tight mt-2">
- {currentCategory === 'All' ? 'Our Collections' : selectedCategory?.name}
+ <h1 className="font-display text-3xl md:text-4xl text-elijays-white tracking-tight">
+ {categoryHeading}
  </h1>
- <div className="max-w-3xl mt-6 space-y-3">
- <h2 className="text-lg md:text-xl font-serif text-accent/70">{intro.title}</h2>
- <p className="text-sm text-secondary/70 font-light leading-relaxed">{intro.copy}</p>
- </div>
- <div className="flex gap-4 mt-4">
- {currentSub !== 'All' && (
- <p className="text-accent/50 text-[12px] font-medium">
- Exploring: {currentSub}
+ {intro.copy && (
+ <p className="mt-3 max-w-2xl text-sm text-elijays-white/65 font-light leading-relaxed">
+ {intro.copy}
  </p>
  )}
  </div>
  </div>
 
- <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-8 md:space-y-0 mb-14 border-b border-white/10 pb-10">
- <div className="w-full space-y-8">
+ <div className="container mx-auto px-5 md:px-8 py-8 md:py-10">
+ <div className="flex flex-col gap-6 mb-10">
  {!isDedicatedCategoryPage && (
- <div className="flex gap-2.5 overflow-x-auto custom-scrollbar pb-2 snap-x snap-mandatory">
+ <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-1">
  {allCategoryData.map((cat) => (
  <button
  key={cat.id}
  type="button"
  onClick={() => setFilter(cat.id, 'All')}
- className={`shrink-0 px-5 py-2.5 text-[9px] font-semibold tracking-[0.18em] transition-all duration-300 border rounded-full ${
- currentCategory === cat.id || currentCategory.toLowerCase() === cat.name.toLowerCase()
- ? 'bg-accent text-white border-accent'
- : 'bg-transparent text-secondary/70 border-utility-gray hover:border-accent/30 hover:text-accent'
- }`}
+ className={chipClass(
+ currentCategory === cat.id ||
+ currentCategory.toLowerCase() === cat.name.toLowerCase()
+ )}
  >
  {cat.name}
  </button>
@@ -293,18 +298,12 @@ const Products = ({ categoryOverride = null }) => {
  </div>
  )}
 
- <div className={`flex gap-2 items-center overflow-x-auto custom-scrollbar pb-2 flex-wrap ${isDedicatedCategoryPage ? '' : 'pt-4 border-t border-white/10'}`}>
- <span className="text-[8px] font-bold text-accent/60 mr-2 uppercase tracking-wider">
- Sub Categories:
- </span>
+ {subCategoryList.length > 0 && (
+ <div className="flex gap-2 flex-wrap items-center">
  <button
  type="button"
  onClick={() => setFilter(currentCategory, 'All')}
- className={`shrink-0 px-4 py-1.5 text-[8px] font-semibold transition-all duration-300 rounded-full border ${
- currentSub === 'All'
- ? 'bg-accent/10 text-accent border-accent/30'
- : 'bg-transparent text-secondary/70 border-utility-gray hover:border-accent/20 hover:text-accent/70'
- }`}
+ className={chipClass(currentSub === 'All')}
  >
  All
  </button>
@@ -313,61 +312,56 @@ const Products = ({ categoryOverride = null }) => {
  key={sub}
  type="button"
  onClick={() => setFilter(currentCategory, sub)}
- className={`shrink-0 px-4 py-1.5 text-[8px] font-semibold transition-all duration-300 rounded-full border ${
- currentSub === sub
- ? 'bg-accent/10 text-accent border-accent/30'
- : 'bg-transparent text-secondary/70 border-utility-gray hover:border-accent/20 hover:text-accent/70'
- }`}
+ className={chipClass(currentSub === sub)}
  >
  {sub}
  </button>
  ))}
  </div>
- </div>
+ )}
 
- <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+ <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between border-t border-elijays-ink/10 pt-5">
+ <div className="relative w-full sm:max-w-xs">
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-elijays-ink/40" size={15} />
+ <input
+ type="text"
+ placeholder={SEARCH_PLACEHOLDER}
+ className="w-full pl-10 pr-3 py-2.5 text-sm bg-elijays-white border border-elijays-ink/15 text-elijays-ink outline-none focus:border-elijays-gold placeholder:text-elijays-ink/40"
+ value={searchQuery}
+ onChange={(e) => setSearchQuery(e.target.value)}
+ />
+ </div>
  <select
  value={stockFilter}
  onChange={(e) => setStockFilter(e.target.value)}
- className="bg-primary border border-utility-gray text-[10px] text-secondary/70 px-4 py-3.5 outline-none focus:border-accent/40 transition-colors rounded-lg appearance-none cursor-pointer"
+ className="bg-elijays-white border border-elijays-ink/15 text-[12px] text-elijays-ink/70 px-3 py-2.5 outline-none focus:border-elijays-gold"
  >
  <option value="all">All availability</option>
  <option value="in_stock">In stock only</option>
  <option value="out_of_stock">Out of stock</option>
  </select>
- <div className="relative w-full md:w-72 group">
- <Search
- className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary/50 group-focus-within:text-accent/60 transition-colors"
- size={15}
- />
- <input
- type="text"
- placeholder="Search collection..."
- className="w-full pl-11 pr-4 py-3.5 text-[10px] bg-primary border border-utility-gray rounded-lg text-secondary placeholder:text-secondary/50 focus:border-accent/50"
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- />
- </div>
  </div>
  </div>
 
  {fetchError && (
- <p className="text-center text-red-600 text-sm py-8">{fetchError}</p>
+ <p className="text-center text-red-700 text-sm py-8">{fetchError}</p>
  )}
 
  {loading ? (
- <p className="text-center text-secondary/50 text-[10px] py-20 tracking-wider uppercase">Loading collection…</p>
+ <p className="text-center text-elijays-ink/40 text-[11px] py-20 tracking-wider uppercase">
+ Loading collection…
+ </p>
  ) : (
- <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 sm:gap-x-8 gap-y-14 sm:gap-y-20">
+ <div className="product-grid">
  <AnimatePresence mode="popLayout">
- {filteredProducts.map((product, index) => (
+ {filteredProducts.map((product) => (
  <motion.div
  key={product.id}
  layout
- initial={{ opacity: 0, y: 24 }}
+ initial={{ opacity: 0, y: 16 }}
  animate={{ opacity: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.92 }}
- transition={{ duration: 0.5, ease: 'easeOut' }}
+ exit={{ opacity: 0, scale: 0.96 }}
+ transition={{ duration: 0.35, ease: 'easeOut' }}
  >
  <ProductCard product={product} onAddToCart={handleQuickAdd} addedProductId={addedProductId} />
  </motion.div>
@@ -377,13 +371,14 @@ const Products = ({ categoryOverride = null }) => {
  )}
 
  {!loading && filteredProducts.length === 0 && (
- <div className="text-center py-24 space-y-5">
- <p className="text-secondary/50 text-[10px] tracking-wider uppercase">No pieces found in this curation.</p>
+ <div className="text-center py-20 space-y-4">
+ <p className="text-elijays-ink/50 text-sm">No pieces in this filter.</p>
  <button
+ type="button"
  onClick={() => setFilter('All')}
- className="text-secondary text-[10px] font-semibold border-b border-white/15 pb-1.5 hover:border-white/60 transition-colors duration-300"
+ className="text-[12px] text-elijays-gold underline underline-offset-4"
  >
- Clear Filters
+ Clear filters
  </button>
  </div>
  )}

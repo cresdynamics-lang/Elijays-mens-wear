@@ -2,38 +2,37 @@ import { resolveDisplayImageUrl } from '../utils/cloudinary';
 import { Link } from 'react-router-dom';
 
 export default function BlogShowcase({ blog }) {
-  const fallbackImage = '/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg';
+  const fallbackImage = '/hero/hero-shirts.jpg';
   const imageUrl = resolveDisplayImageUrl(blog.featured_image_url, { width: 1200 }) || fallbackImage;
+  const dateLabel = blog.published_date
+    ? new Date(blog.published_date).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
+    : '';
 
   return (
-    <Link
-      to={`/blog/${blog.slug}`}
-      className="group block rounded-xl overflow-hidden bg-utility-gray/40 border border-utility-gray/60 hover:border-accent/40 transition-all duration-500"
-    >
-      <div className="relative w-full h-52 bg-utility-gray overflow-hidden">
+    <Link to={`/journal/${blog.slug}`} className="group block min-w-0">
+      <div className="aspect-[3/4] sm:aspect-[4/3] overflow-hidden bg-elijays-charcoal mb-2 sm:mb-3">
         <img
           src={imageUrl}
           alt={blog.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
           onError={(e) => { e.currentTarget.src = fallbackImage; }}
         />
-        <div className="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-all duration-500" />
       </div>
-      <div className="p-6 space-y-4">
-        <div className="flex items-center justify-between text-[9px] tracking-[0.22em] font-semibold text-accent/80 uppercase">
-          <span>{blog.category}</span>
-          <span>{new Date(blog.published_date).toLocaleDateString()}</span>
-        </div>
-        <h3 className="text-lg md:text-xl font-serif font-semibold text-secondary line-clamp-2 leading-snug group-hover:text-accent transition-colors duration-300">
-          {blog.title}
-        </h3>
-        <p className="text-sm text-secondary/70 line-clamp-2 leading-relaxed font-light">
+      {dateLabel && (
+        <p className="text-[9px] sm:text-[11px] text-elijays-gold mb-0.5 sm:mb-1">{dateLabel}</p>
+      )}
+      <h3 className="font-display text-[12px] sm:text-base md:text-lg text-elijays-ink group-hover:text-elijays-gold-dim transition-colors leading-snug line-clamp-2">
+        {blog.title}
+      </h3>
+      {blog.excerpt && (
+        <p className="mt-1 hidden sm:block text-sm text-elijays-ink/80 font-normal line-clamp-2 leading-relaxed">
           {blog.excerpt}
         </p>
-        <div className="flex items-center justify-end text-[10px] tracking-[0.18em] uppercase text-accent/70 group-hover:text-accent transition-colors duration-300">
-          <span>Read story</span>
-        </div>
-      </div>
+      )}
     </Link>
   );
 }

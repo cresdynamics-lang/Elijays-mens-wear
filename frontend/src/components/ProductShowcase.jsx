@@ -1,84 +1,34 @@
-import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useCartStore } from '../store/useCartStore';
-import { getPremiumImage } from '../utils/productImages';
+import { Link } from 'react-router-dom';
 import ProductCard from './product/ProductCard';
 
-const needsSizeSelection = (product) =>
-  ['shirts', 'trousers', 'suits', 'tracksuits', 'jackets', 'linen', 't-shirts', 'polo-t-shirts']
-    .includes((product.category_name || product.parent_category_name || '').toLowerCase());
-
-
-const ProductShowcase = ({ categoryRows = [] }) => {
-  const navigate = useNavigate();
-  const addToCart = useCartStore((state) => state.addToCart);
-  const [addedProductId, setAddedProductId] = useState(null);
-
-  const handleAddToCart = async (product) => {
-    if (needsSizeSelection(product)) {
-      navigate(`/product/${product.slug}`);
-      return;
-    }
-    await addToCart({
-      productId: product.id,
-      variantId: null,
-      quantity: 1,
-      sizeLabel: '',
-      name: product.name,
-      price: parseFloat(product.price),
-      image: getPremiumImage(product),
-      slug: product.slug,
-      brandName: product.brand_name,
-    });
-    setAddedProductId(product.id);
-    setTimeout(() => setAddedProductId(null), 1400);
-  };
-
-  if (!categoryRows.length) return null;
+/** Product grid — 2 cols mobile/tablet, 4 cols desktop. */
+const ProductShowcase = ({ title = 'New arrivals', subtitle, products = [], viewAllPath = '/products', limit = 8 }) => {
+  if (!products.length) return null;
 
   return (
-    <section className="py-20 md:py-24 bg-primary">
-      <div className="container mx-auto px-6 space-y-14">
-        {categoryRows.map((row) => (
-          <div key={row.slug}>
-            <div className="flex items-center justify-between gap-4 mb-8">
-              <h2 className="text-2xl md:text-3xl font-serif text-secondary tracking-tight">
-                {row.title}
-              </h2>
-              <Link
-                to={row.path || '/products'}
-                className="text-accent text-xs font-semibold tracking-widest flex items-center gap-3 hover:gap-4 transition-all shrink-0 group"
-              >
-                VIEW ALL <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-
-            <div className="flex gap-5 overflow-x-auto pb-6 -mx-2 px-2 custom-scrollbar snap-x snap-mandatory scroll-smooth">
-              {row.products.map((product) => (
-                <div
-                  key={product.id}
-                  className="snap-start shrink-0 w-[calc(50%-10px)] md:w-[calc(33.333%-14px)] lg:w-[calc(25%-15px)]"
-                >
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                    addedProductId={addedProductId}
-                  />
-                </div>
-              ))}
-            </div>
+    <section className="py-10 md:py-14 bg-elijays-white border-t border-elijays-ink/5">
+      <div className="container mx-auto px-5 md:px-8">
+        <div className="flex items-end justify-between gap-4 mb-6 md:mb-8">
+          <div>
+            <h2 className="font-display text-[1.35rem] md:text-2xl text-elijays-ink tracking-[0.02em] font-medium">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="text-sm text-elijays-ink/80 mt-1.5 font-normal tracking-wide">{subtitle}</p>
+            )}
           </div>
-        ))}
-
-        <div className="pt-6 flex justify-center">
           <Link
-            to="/products"
-            className="btn-primary inline-flex items-center space-x-4 group"
+            to={viewAllPath}
+            className="text-[11px] font-sans font-medium tracking-[0.14em] uppercase text-elijays-ink underline underline-offset-4 decoration-elijays-gold hover:text-elijays-gold-dim transition-colors shrink-0"
           >
-            <span>View All Products</span>
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            View all
           </Link>
+        </div>
+
+        <div className="product-grid">
+          {products.slice(0, limit).map((product) => (
+            <ProductCard key={product.id || product.slug} product={product} />
+          ))}
         </div>
       </div>
     </section>
@@ -86,4 +36,3 @@ const ProductShowcase = ({ categoryRows = [] }) => {
 };
 
 export default ProductShowcase;
-

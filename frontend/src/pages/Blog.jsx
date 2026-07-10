@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Layout from '../components/Layout';
 import BlogShowcase from '../components/BlogShowcase';
 import SEO from '../components/SEO';
 import { buildBreadcrumbSchema, buildBlogPostingSchema, routeSeo } from '../seo/seoData';
@@ -87,82 +87,62 @@ export default function Blog() {
     setCurrentPage(1);
   };
 
+  const chipClass = (active) =>
+    `px-4 py-2 text-[11px] tracking-[0.06em] border transition-colors ${
+      active
+        ? 'bg-elijays-gold border-elijays-gold text-elijays-ink'
+        : 'bg-transparent border-elijays-ink/20 text-elijays-ink/70 hover:border-elijays-gold'
+    }`;
+
   return (
-    <div className="min-h-screen bg-primary text-secondary">
+    <Layout>
       <SEO
-        title={routeSeo.blog.title}
-        description={routeSeo.blog.description}
-        path={routeSeo.blog.path}
-        keywords={routeSeo.blog.keywords}
+        title={routeSeo.blog?.title || 'Journal | ELIJAY\'S Men\'s Wear'}
+        description={routeSeo.blog?.description || 'Styling notes and lookbook from Elijay\'s Men\'s Wear, Nairobi.'}
+        path="/journal"
+        keywords={routeSeo.blog?.keywords}
         schema={[
           buildBreadcrumbSchema([
             { name: 'Home', path: '/' },
-            { name: 'Blog', path: '/blog' },
+            { name: 'Journal', path: '/journal' },
           ]),
           blogs[0] ? buildBlogPostingSchema(blogs[0]) : null,
         ]}
       />
 
-      <section className="relative border-b border-utility-gray/50 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url("/WhatsApp Image 2026-05-12 at 8.07.18 PM.jpeg")' }}
-        />
-        <div className="absolute inset-0 bg-primary/70 backdrop-blur-sm" />
-        <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-20">
-          <div className="max-w-4xl space-y-4">
-            <span className="text-accent/80 text-[9px] tracking-[0.35em] font-semibold uppercase">
-              ELIJAY'S Style Journal
-            </span>
-            <h1 className="text-3xl md:text-4xl font-serif leading-tight text-secondary tracking-tight">
-              Style notes, wardrobe ideas, and editorial stories from the brand
-            </h1>
-            <p className="text-secondary/70 text-sm md:text-base max-w-3xl leading-relaxed font-light">
-              A tighter, more useful blog built around the products, categories, and styling language already on the site.
-            </p>
-            <div className="pt-3">
-              <Link
-                to="/"
-                className="inline-flex items-center text-accent/80 text-[9px] font-semibold tracking-[0.25em] uppercase hover:text-accent transition-colors duration-300"
-              >
-                Back to home
-              </Link>
-            </div>
-          </div>
+      <section className="bg-elijays-black border-b border-elijays-gold">
+        <div className="container mx-auto px-5 md:px-8 py-12 md:py-16 max-w-3xl">
+          <p className="text-elijays-gold text-[12px] mb-3">Journal</p>
+          <h1 className="font-display text-3xl md:text-4xl text-elijays-white mb-3 leading-tight">
+            From the floor
+          </h1>
+          <p className="text-elijays-white/65 text-sm font-light leading-relaxed">
+            Styling notes for Nairobi — linen in the heat, suiting for the occasion, and finishing the fit.
+          </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 py-12 md:py-14">
-        <div className="mb-10 space-y-4">
+      <div className="container mx-auto px-5 md:px-8 py-10 md:py-14">
+        <div className="mb-8 space-y-4">
           <input
             type="text"
-            placeholder="Search blog posts..."
+            placeholder="Search journal…"
             value={searchQuery}
             onChange={handleSearch}
-            className="input-sleek w-full px-4 py-3 text-sm placeholder:text-secondary/40"
+            className="w-full px-4 py-3 text-sm border border-elijays-ink/15 bg-elijays-white outline-none focus:border-elijays-gold placeholder:text-elijays-ink/40"
           />
 
           {categories.length > 0 && (
-            <div className="flex flex-wrap gap-2.5">
-              <button
-                onClick={() => handleCategoryFilter('')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  !selectedCategory
-                    ? 'btn-primary'
-                    : 'btn-outline'
-                }`}
-              >
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => handleCategoryFilter('')} className={chipClass(!selectedCategory)}>
                 All
               </button>
               {categories.map((category) => (
                 <button
                   key={category}
+                  type="button"
                   onClick={() => handleCategoryFilter(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    selectedCategory === category
-                      ? 'btn-primary'
-                      : 'btn-outline'
-                  }`}
+                  className={chipClass(selectedCategory === category)}
                 >
                   {category}
                 </button>
@@ -172,13 +152,13 @@ export default function Blog() {
         </div>
 
         {loading && (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent/60"></div>
-          </div>
+          <p className="text-center text-elijays-ink/40 text-[11px] py-16 tracking-wider uppercase">
+            Loading…
+          </p>
         )}
 
         {!loading && blogs.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 mb-12">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 mb-12">
             {blogs.map((blog) => (
               <BlogShowcase key={blog.id} blog={blog} />
             ))}
@@ -186,61 +166,51 @@ export default function Blog() {
         )}
 
         {!loading && blogs.length === 0 && (
-          <div className="text-center py-14">
-            <p className="text-lg text-secondary/60 mb-5 font-light">No blog posts found.</p>
-            {searchQuery || selectedCategory ? (
+          <div className="text-center py-16">
+            <p className="text-elijays-ink/50 text-sm mb-4">No journal pieces yet.</p>
+            {(searchQuery || selectedCategory) && (
               <button
+                type="button"
                 onClick={() => {
                   setSearchQuery('');
                   setSelectedCategory('');
                   setCurrentPage(1);
                 }}
-                className="text-accent/80 hover:text-accent font-medium transition-colors duration-300"
+                className="text-elijays-gold text-[12px] underline underline-offset-4"
               >
                 Clear filters
               </button>
-            ) : null}
+            )}
           </div>
         )}
 
         {!loading && totalPages > 1 && (
           <div className="flex justify-center items-center gap-2">
             {currentPage > 1 && (
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                className="btn-primary px-4 py-2.5 text-xs tracking-wider rounded-xl"
-              >
+              <button type="button" onClick={() => setCurrentPage(currentPage - 1)} className="btn-gold-outline !py-2 !px-4">
                 Previous
               </button>
             )}
-
             <div className="flex gap-1.5">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
+                  type="button"
                   onClick={() => setCurrentPage(page)}
-                  className={`px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    currentPage === page
-                      ? 'btn-primary'
-                      : 'btn-outline'
-                  }`}
+                  className={chipClass(currentPage === page)}
                 >
                   {page}
                 </button>
               ))}
             </div>
-
             {currentPage < totalPages && (
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                className="btn-primary px-4 py-2.5 text-xs tracking-wider rounded-xl"
-              >
+              <button type="button" onClick={() => setCurrentPage(currentPage + 1)} className="btn-gold-outline !py-2 !px-4">
                 Next
               </button>
             )}
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 }

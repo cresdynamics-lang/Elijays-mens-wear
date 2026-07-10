@@ -8,4 +8,4 @@ Disallow: /login
 Disallow: /signup
 Disallow: /admin
 
-Sitemap: https://prince-esquire.co.ke/sitemap.xml
+Sitemap: https://elijays-mens-wear.co.ke/sitemap.xml

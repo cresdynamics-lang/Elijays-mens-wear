@@ -90,13 +90,15 @@ async function run() {
     const productSku = generateProductSku({ name: item.name, slug: item.slug });
 
     const result = await db.query(
-      `INSERT INTO products (name, slug, sku, description, price, category_id, brand_id, stock_quantity, is_featured, thumbnail, images, is_active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb, true)
+      `INSERT INTO products (name, slug, sku, description, price, discount_price, pos_sell_price, category_id, brand_id, stock_quantity, is_featured, thumbnail, images, is_active)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::jsonb, true)
        ON CONFLICT (slug) DO UPDATE SET
          name = EXCLUDED.name,
          sku = EXCLUDED.sku,
          description = EXCLUDED.description,
          price = EXCLUDED.price,
+         discount_price = EXCLUDED.discount_price,
+         pos_sell_price = EXCLUDED.pos_sell_price,
          category_id = EXCLUDED.category_id,
          brand_id = EXCLUDED.brand_id,
          thumbnail = EXCLUDED.thumbnail,
@@ -110,6 +112,8 @@ async function run() {
         productSku,
         item.description,
         item.price,
+        item.discount_price ?? null,
+        item.pos_sell_price ?? item.discount_price ?? null,
         beltsId,
         brandId,
         SIZES.length * STOCK_PER_SIZE,

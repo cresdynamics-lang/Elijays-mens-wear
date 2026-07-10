@@ -5,6 +5,8 @@ import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Blog from './pages/Blog';
 import BlogArticle from './pages/BlogArticle';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -82,7 +84,11 @@ function App() {
         <Route path="/trousers" element={<Products categoryOverride="trousers" />} />
         <Route path="/linen" element={<Products categoryOverride="linen" />} />
         <Route path="/product/:slug" element={<ProductDetail />} />
-        <Route path="/blog" element={<Blog />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/journal" element={<Blog />} />
+        <Route path="/journal/:slug" element={<BlogArticle />} />
+        <Route path="/blog" element={<Navigate to="/journal" replace />} />
         <Route path="/blog/:slug" element={<BlogArticle />} />
         <Route path="/cart" element={<NoIndexPage title="Shopping Bag"><Cart /></NoIndexPage>} />
         <Route path="/login" element={<NoIndexPage title="Client Login"><Login /></NoIndexPage>} />

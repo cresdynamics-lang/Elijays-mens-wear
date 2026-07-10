@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, ShoppingBag, Plus, Minus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, ShoppingBag, Plus, Minus, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import ProductDescription from '../components/product/ProductDescription';
-import StickyAddToCart from '../components/product/StickyAddToCart';
 import { useCartStore } from '../store/useCartStore';
 import { productAPI } from '../services/api';
 import { getPremiumImage } from '../utils/productImages';
@@ -16,6 +15,7 @@ import { buildVariantMeta, buildRichDescription, sortSizes } from '../utils/prod
 import { buildBreadcrumbSchema, buildProductSchema } from '../seo/seoData';
 import { toCartVariantId } from '../utils/ids';
 import { DUMMY_PRODUCTS } from '../utils/dummyData';
+import { openWhatsAppEnquiry } from '../lib/whatsappEnquiry';
 
 const variantStockQty = (variant) => {
  if (!variant) return null;
@@ -182,7 +182,6 @@ const ProductDetail = () => {
 
  const [quantity, setQuantity] = useState(1);
  const [addedToCart, setAddedToCart] = useState(false);
- const [showStickyCart, setShowStickyCart] = useState(false);
  const [colorCarouselIndex, setColorCarouselIndex] = useState(0);
 
  const touchStartX = useRef(null);
@@ -245,22 +244,6 @@ const ProductDetail = () => {
 
  fetchProduct();
  }, [slug]);
-
- useEffect(() => {
- const relatedEl = relatedSectionRef.current;
- if (!relatedEl || related.length === 0) {
- setShowStickyCart(false);
- return undefined;
- }
-
- const observer = new IntersectionObserver(
- ([entry]) => setShowStickyCart(entry.isIntersecting),
- { threshold: 0, rootMargin: '0px 0px 0px 0px' }
- );
-
- observer.observe(relatedEl);
- return () => observer.disconnect();
- }, [product, related.length]);
 
  const isBelt = `${product?.category_name || ''} ${product?.parent_category_name || ''}`.toLowerCase().includes('belt');
  const currentVariant = (!isBelt && selectedSize && findVariant(selectedColor, selectedSize)) || (selectedColor ? variantMeta.variants.find((v) => v.color === selectedColor) : null) || variantMeta.variants[0];
@@ -417,7 +400,7 @@ const ProductDetail = () => {
  }
 
  return (
- <div className="bg-primary min-h-screen">
+ <div className="bg-elijays-white min-h-screen">
  <SEO
  title={`${product.name} Kenya`}
  description={`Shop ${product.name} at ELIJAY'S Kenya. Discover premium styling, curated detail and Nairobi delivery for luxury wardrobes. Order today.`}
@@ -436,13 +419,13 @@ const ProductDetail = () => {
  />
  <Navbar />
 
- <main className={`pt-24 pb-24 transition-all duration-500 ${showStickyCart ? 'pb-32 md:pb-36' : ''}`}>
- <div className="container mx-auto px-4 md:px-6 max-w-7xl">
- <div className="flex items-center space-x-4 mb-10">
- <button type="button" onClick={() => navigate(-1)} className="text-accent hover:text-accent transition-colors duration-300">
- <ChevronLeft size={22} />
+ <main className="pb-24">
+ <div className="container mx-auto px-5 md:px-8 max-w-7xl pt-6 md:pt-10">
+ <div className="flex items-center space-x-2 mb-8">
+ <button type="button" onClick={() => navigate(-1)} className="text-elijays-gold hover:text-elijays-gold-dim transition-colors">
+ <ChevronLeft size={20} />
  </button>
- <span className="text-[10px] text-accent/80 font-semibold">Back</span>
+ <span className="text-[12px] text-elijays-ink/50">Back</span>
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
@@ -575,10 +558,10 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  {product.brand_name && !['polo-t-shirts', 'polos', 'knitted-polos'].includes((product.category_name || product.parent_category_name || '').toLowerCase()) && (
  <p className="text-[10px] font-bold tracking-[0.28em] text-accent uppercase">{product.brand_name}</p>
  )}
- <h1 className="text-3xl md:text-4xl font-serif text-secondary leading-snug">{product.name}</h1>
+ <h1 className="product-name text-3xl md:text-4xl lg:text-[2.75rem] text-elijays-ink leading-[1.15]">{product.name}</h1>
 
  <div className="flex items-baseline gap-3 flex-wrap">
- <p className="text-3xl md:text-4xl font-light text-accent tracking-tight">
+ <p className="product-price text-2xl md:text-3xl text-elijays-gold tracking-tight">
  KSh {displayPrice.toLocaleString()}
  </p>
  {compareAtPrice != null && compareAtPrice > displayPrice && (
@@ -630,17 +613,17 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  {availableSizes.length > 0 && (
  <div className="space-y-4">
  <div className="flex justify-between items-center">
- <h3 className="text-[10px] tracking-[0.22em] font-bold text-accent uppercase">
- {variantMeta.isShoe ? 'Color' : 'Variant'}
+ <h3 className="text-[11px] tracking-[0.14em] font-medium text-elijays-ink uppercase">
+ Size
  </h3>
  <button
  type="button"
- className="text-[10px] text-secondary/70 font-bold hover:text-accent transition-colors"
+ className="text-[11px] text-elijays-gold hover:text-elijays-gold-dim transition-colors"
  >
- Size Guide
+ Size guide
  </button>
  </div>
- <div className="flex flex-wrap gap-2.5">
+ <div className="flex flex-wrap gap-2">
  {availableSizes.map((size) => {
  const variantForSize = findVariant(selectedColor, size);
  const stock = variantStockQty(variantForSize);
@@ -653,12 +636,12 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  disabled={isOutOfStock}
  onClick={() => handleSizeSelect(size)}
  title={isOutOfStock ? 'Unavailable' : undefined}
- className={`min-w-[3rem] h-11 px-3 flex items-center justify-center text-[11px] font-semibold border transition-all duration-300 rounded-lg ${
+ className={`min-w-[2.75rem] h-10 px-3 flex items-center justify-center text-[12px] border transition-colors ${
  isOutOfStock
- ? 'opacity-30 cursor-not-allowed line-through bg-primary text-secondary/40 border-utility-gray'
+ ? 'opacity-30 cursor-not-allowed line-through border-elijays-ink/15 text-elijays-ink/40'
  : selectedSize === size
- ? 'bg-accent text-white border-accent shadow-lg shadow-accent/20'
- : 'bg-primary text-secondary border-utility-gray hover:border-accent/30'
+ ? 'bg-elijays-gold border-elijays-gold text-elijays-ink'
+ : 'bg-transparent text-elijays-ink border-elijays-ink/20 hover:border-elijays-gold'
  }`}
  >
  {size}
@@ -695,16 +678,12 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  whileHover={{ scale: 1.02 }}
  whileTap={{ scale: 0.98 }}
  type="button"
- onClick={handleAddToCart}
+ onClick={() => openWhatsAppEnquiry(product)}
  disabled={shopOutOfStock}
- className={`flex-1 py-4 px-5 text-[10px] font-semibold tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-2.5 rounded-lg disabled:opacity-35 disabled:cursor-not-allowed ${
- addedToCart
- ? 'bg-emerald-600 text-secondary border border-emerald-600'
- : 'bg-primary border border-accent/30 text-accent hover:bg-accent hover:text-white'
- }`}
+ className="flex-1 py-4 px-5 text-[10px] font-semibold tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-2.5 border border-elijays-gold text-elijays-ink bg-transparent hover:bg-elijays-gold disabled:opacity-35 disabled:cursor-not-allowed"
  >
- <ShoppingBag size={13} />
- <span>{addedToCart ? 'Added to Bag' : 'Add to cart'}</span>
+ <MessageCircle size={13} />
+ <span>Enquire on WhatsApp</span>
  </motion.button>
  </div>
 
@@ -712,12 +691,21 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  whileHover={{ scale: 1.01 }}
  whileTap={{ scale: 0.99 }}
  type="button"
- onClick={handleBuyNow}
+ onClick={handleAddToCart}
  disabled={shopOutOfStock}
- className="w-full bg-accent text-white py-4 px-6 text-[10px] tracking-[0.18em] disabled:opacity-35 disabled:cursor-not-allowed rounded-lg hover:bg-accent/80 transition-all"
+ className={`w-full py-4 px-6 text-[10px] tracking-[0.18em] disabled:opacity-35 disabled:cursor-not-allowed border transition-all flex items-center justify-center gap-2 ${
+ addedToCart
+ ? 'bg-elijays-gold border-elijays-gold text-elijays-ink'
+ : 'border-elijays-ink/20 text-elijays-ink hover:border-elijays-gold'
+ }`}
  >
- Buy it now
+ <ShoppingBag size={13} />
+ <span>{addedToCart ? 'Saved to bag' : 'Add to bag'}</span>
  </motion.button>
+
+ <p className="text-[11px] text-[#5c5c5c] text-center font-light">
+ Prefer to feel the fabric? Book a fitting on Muindi Mbingu — or enquire on WhatsApp for size and stock.
+ </p>
 
  <AnimatePresence>
  {addedToCart && (
@@ -725,9 +713,9 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0 }}
- className="text-[10px] text-emerald-500 font-semibold text-center tracking-wide"
+ className="text-[10px] text-elijays-gold font-semibold text-center tracking-wide"
  >
- Excellent choice. Item added to your curation.
+ Added to your bag. Checkout can follow — or enquire on WhatsApp.
  </motion.p>
  )}
  </AnimatePresence>
@@ -748,28 +736,26 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  </div>
 
  {related.length > 0 && (
- <div ref={relatedSectionRef} className="mt-24 pt-16 border-t border-utility-gray/30">
- <h2 className="text-xl md:text-2xl font-serif text-secondary mb-10 tracking-tight">You may also like</h2>
- <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
- {related.map((p) => (
+ <div ref={relatedSectionRef} className="mt-20 pt-12 border-t border-elijays-ink/10">
+ <h2 className="font-display text-xl md:text-2xl text-elijays-ink mb-8">You may also like</h2>
+ <div className="product-grid">
+ {related.slice(0, 4).map((p) => (
  <Link to={`/product/${p.slug}`} key={p.id} className="group block">
- <div className="aspect-square bg-primary overflow-hidden mb-4 border border-utility-gray/50 group-hover:border-accent/30 transition-all duration-500">
+ <div className="aspect-square bg-elijays-white overflow-hidden mb-3 border border-elijays-ink/8">
  <img
  src={getPremiumImage(p)}
  alt={p.name}
  loading="lazy"
  decoding="async"
- className="w-full h-full object-contain p-4 transition-transform duration-700 group-hover:scale-105"
+ className="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
  />
  </div>
- <div className="space-y-1.5">
- <h3 className="text-[10px] md:text-[11px] font-semibold text-secondary min-h-[28px] group-hover:text-accent/80 transition-colors line-clamp-2 tracking-wide">
+ <h3 className="text-sm font-medium text-elijays-ink line-clamp-2 group-hover:text-elijays-gold-dim transition-colors">
  {p.name}
  </h3>
- <p className="text-xs font-light text-accent/80 italic tracking-wide">
+ <p className="text-sm text-elijays-gold mt-1">
  KSh {parseFloat(p.discount_price || p.price).toLocaleString()}
  </p>
- </div>
  </Link>
  ))}
  </div>
@@ -777,18 +763,6 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  )}
  </div>
  </main>
-
- <StickyAddToCart
- visible={showStickyCart}
- productName={product.name}
- variantSummary={variantSummary}
- displayPrice={displayPrice}
- compareAtPrice={compareAtPrice}
- image={currentDisplayImage}
- addedToCart={addedToCart}
- disabled={shopOutOfStock}
- onAddToCart={handleAddToCart}
- />
 
  <Footer />
  </div>

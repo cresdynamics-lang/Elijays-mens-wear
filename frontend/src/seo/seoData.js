@@ -1,57 +1,62 @@
-export const SITE_URL = 'https://elijays.co.ke';
+export const SITE_URL = 'https://elijays-mens-wear.co.ke';
 export const SITE_NAME = "ELIJAY'S Men's Wear";
 export const DEFAULT_IMAGE = `${SITE_URL}/elijays-logo.png`;
 export const CONTACT_PHONE = '+254721844475';
-export const CONTACT_EMAIL = 'contact@elijays.co.ke';
+export const CONTACT_EMAIL = 'contact@elijays-mens-wear.co.ke';
 export const SOCIAL_INSTAGRAM = 'https://www.instagram.com/elijaysmenswear/';
 export const SOCIAL_FACEBOOK = 'https://www.facebook.com/elijaysmenswear';
 
 export const routeSeo = {
   home: {
-    title: "Luxury Menswear Kenya | ELIJAY'S Men's Wear",
-    description: "Shop curated luxury menswear in Kenya at ELIJAY'S. Suits, shirts, trousers, jackets and accessories with Nairobi delivery. Explore now.",
+    title: "ELIJAY'S Men's Wear | Muindi Mbingu × Biashara St, Nairobi",
+    description:
+      "Luxury menswear on Muindi Mbingu Street, Nairobi CBD. Suits, shirts, trousers, polos and accessories — walk in for a fitting or enquire on WhatsApp.",
     path: '/',
     keywords: [
-      'luxury menswear Kenya',
-      'premium clothing Nairobi',
-      'designer suits Kenya',
-      'mens fashion Nairobi',
+      'mens suits Nairobi',
+      'menswear Muindi Mbingu',
+      'Biashara Street menswear',
+      'wedding suits Kenya',
+      'official shirts Nairobi',
       'elijays mens wear',
+      'elijays-mens-wear.co.ke',
+      'tailored suits Nairobi CBD',
     ],
   },
   products: {
-    title: "Designer Clothing Kenya | ELIJAY'S Men's Wear",
-    description: "Browse premium clothing and accessories at ELIJAY'S. Curated luxury fashion for discerning Kenyan wardrobes. Shop the edit.",
+    title: "Shop | ELIJAY'S Men's Wear Nairobi",
+    description:
+      "Browse suits, shirts, trousers, polos, jackets and belts from our Muindi Mbingu shop floor. Enquire on WhatsApp for size and stock.",
     path: '/products',
-    keywords: ['designer clothing Kenya', 'premium fashion Kenya', 'luxury clothing Nairobi'],
+    keywords: ['menswear Nairobi', 'suits Nairobi CBD', 'men fashion Nairobi', 'khaki trousers Kenya'],
   },
   'polo-t-shirts': {
     title: "Luxury Polo Shirts Kenya | ELIJAY'S Men's Wear",
     description: 'Shop luxury polo shirts in Kenya, from refined knitted polos to elegant casual pieces curated for modern Nairobi style.',
     path: '/polo-t-shirts',
     introTitle: 'Luxury Polo Shirts Kenya',
-    introCopy: "Explore luxury polo shirts in Kenya curated for the man who values ease without losing polish. ELIJAY'S selects premium polos and knitted styles that move comfortably from business lunches to relaxed weekend occasions.",
+    introCopy: "Polos that work from Westlands lunch to a Saturday in Karen. ELIJAY'S stocks knitted and classic polos Nairobi men actually wear — clean fit, proper fabric, no nonsense.",
   },
   shirts: {
     title: "Premium Shirts Kenya | ELIJAY'S Men's Wear",
     description: 'Shop premium shirts in Kenya, from formal shirts to refined casual designs selected for discerning Nairobi style.',
     path: '/shirts',
     introTitle: 'Premium Shirts Kenya',
-    introCopy: "Discover premium shirts in Kenya for refined days, important evenings and every occasion that deserves precision. ELIJAY'S brings together formal shirts, casual shirts and statement pieces with a sharp eye for fit, fabric and finish.",
+    introCopy: "Official shirts for the office, floral for the weekend, crisp cotton for Sunday church. ELIJAY'S shirts are chosen for fit and presence — the way Nairobi men like to look sharp.",
   },
   suits: {
     title: "Luxury Suits Nairobi | ELIJAY'S Men's Wear",
     description: 'Find luxury suits in Nairobi for weddings, business and formal occasions. Shop curated two piece and three piece tailoring today.',
     path: '/suits',
     introTitle: 'Luxury Suits Nairobi',
-    introCopy: "ELIJAY'S curates luxury suits in Nairobi for men who understand the power of presence. Explore two piece and three piece tailoring selected for clean lines, elevated fabrics and formal confidence.",
+    introCopy: "Two-piece and three-piece suits for weddings, ruracio, boardrooms and big days. ELIJAY'S suits are cut for the Nairobi man who wants to look proper without trying too hard.",
   },
   trousers: {
     title: "Premium Trousers Kenya | ELIJAY'S Men's Wear",
     description: 'Shop premium trousers in Kenya, including chinos, formal trousers and refined casual fits for polished everyday style.',
     path: '/trousers',
     introTitle: 'Premium Trousers Kenya',
-    introCopy: "Refine your wardrobe with premium trousers in Kenya chosen for fit, movement and understated style. ELIJAY'S offers chinos, formal trousers, khakis and elevated casual cuts for intentional everyday dressing.",
+    introCopy: "Khakis, official trousers and smart casual cuts for daily Nairobi life. Fitted where it matters, comfortable for the commute — from CBD to dinner.",
   },
   linen: {
     title: "Luxury Linen Kenya | ELIJAY'S Men's Wear",
@@ -61,16 +66,22 @@ export const routeSeo = {
     introCopy: "Luxury linen in Kenya belongs in a wardrobe built for climate, comfort and effortless polish. ELIJAY'S curates linen shirts, sets, trousers and shorts with relaxed sophistication suited to Nairobi weekends and warm weather events.",
   },
   blog: {
-    title: "ELIJAY'S Style Journal",
-    description: "Read styling notes, wardrobe guides and fashion editorial from ELIJAY'S. Practical style advice for premium menswear in Kenya.",
-    path: '/blog',
-    keywords: ['fashion blog Kenya', 'menswear style tips', 'wardrobe guide Nairobi', 'elijays blog'],
+    title: "Journal | ELIJAY'S Men's Wear Nairobi",
+    description:
+      "Styling notes and lookbook from ELIJAY'S Men's Wear — linen in Nairobi heat, suiting for the occasion, and finishing the fit.",
+    path: '/journal',
+    keywords: [
+      'elijays mens wear journal',
+      'menswear style tips Nairobi',
+      'wardrobe guide Kenya',
+      'elijays-mens-wear.co.ke',
+    ],
   },
 };
 
 export const categoryFallbackIntro = {
-  title: "Men's Luxury Fashion",
-  copy: "Browse men's luxury fashion in Kenya curated for elegant, modern dressing. ELIJAY'S brings together premium clothing and polished accessories for customers who value detail, confidence and timeless style.",
+  title: "Nairobi Men's Fashion",
+  copy: "Suits, shirts, trousers, polos, jackets, belts and ties — stocked for how Nairobi men actually dress. Office, church, wedding, or Friday night. Search by category or walk into the shop.",
 };
 
 export const organizationSchema = {
@@ -188,6 +199,6 @@ export const buildBlogPostingSchema = (post) => ({
       url: DEFAULT_IMAGE,
     },
   },
-  mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+  mainEntityOfPage: `${SITE_URL}/journal/${post.slug}`,
   articleSection: post.category || 'Style',
 });
