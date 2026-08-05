@@ -32,7 +32,7 @@ const ProductCard = ({ product, showSale = true }) => {
             className="w-full h-full object-contain p-2.5 sm:p-4 transition-transform duration-500 group-hover:scale-[1.02]"
           />
           {onSale && (
-            <span className="absolute top-2 left-2 border border-elijays-gold bg-elijays-white text-elijays-ink text-[9px] font-medium px-1.5 py-0.5 tracking-[0.14em] uppercase font-sans">
+            <span className="absolute top-2 left-2 border border-elijays-gold bg-elijays-white text-elijays-ink text-[9px] font-medium px-1.5 py-0.5 tracking-[0.14em] uppercase font-sans rounded-md">
               Sale
             </span>
           )}
@@ -54,7 +54,7 @@ const ProductCard = ({ product, showSale = true }) => {
       <button
         type="button"
         onClick={() => openWhatsAppEnquiry(product)}
-        className="mt-auto w-full border border-elijays-gold text-elijays-ink bg-transparent py-2.5 text-[10px] font-medium tracking-[0.16em] uppercase font-sans transition-colors duration-300 hover:bg-elijays-gold"
+        className="mt-auto w-full border border-elijays-gold text-elijays-ink bg-transparent py-2.5 text-[10px] font-medium tracking-[0.16em] uppercase font-sans transition-colors duration-300 hover:bg-elijays-gold rounded-xl"
       >
         Add to bag
       </button>

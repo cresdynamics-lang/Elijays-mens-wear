@@ -1,19 +1,14 @@
 const db = require('./src/config/db');
 
 const CATEGORY_STRUCTURE = [
-  { name: 'Polo T-shirts', sub: ['Knitted Polos', 'Polos'] },
-  { name: 'Shoes', sub: ['Formal shoes', 'Casual', 'Boots', 'Sandals', 'Loafers'] },
-  { name: 'Shirts', sub: ['Formal shirts', 'Casual', 'Presidential'] },
-  { name: 'Suits', sub: ['Two piece', 'Three piece'] },
-  { name: 'Blazers', sub: ['Modern', 'Casual', 'Classic'] },
-  { name: 'Track Suits', sub: [] },
-  { name: 'Jackets', sub: ['Jackets', 'Half jackets'] },
-  { name: 'Trousers', sub: ['Khaki', 'Formal', 'Chino', 'Jeans', 'Gurkha'] },
-  { name: 'Linen', sub: ['Linen Set', 'Linen Trousers', 'Linen shirts', 'Linen shorts'] },
-  { name: 'Caps & Hats', sub: [] },
-  { name: 'Belts & Ties', sub: [] },
-  { name: 'Sweaters', sub: [] },
-  { name: 'T-shirts', sub: ['Sweat-shirts', 'Round-neck T-shirts', 'V-neck T-shirts'] },
+  { name: 'Trousers', sub: ['Khaki', 'Formal', 'Official', 'Chino'] },
+  { name: 'Shirts', sub: ['Polos', 'Cuban', 'Boss', 'Tommy Hilfiger', 'Lacoste'] },
+  { name: 'Suits', sub: ['Two Piece', 'Three Piece'] },
+  { name: 'Jackets', sub: ['Jackets', 'Half Jackets', 'Blazers'] },
+  { name: 'Sweaters', sub: ['Crew Neck', 'V-Neck', 'Cardigan'] },
+  { name: 'Formal Wear', sub: ['Official Shirts', 'Formal Trousers', 'Ties'] },
+  { name: 'Casual Wear', sub: ['T-Shirts', 'Sweatshirts', 'Linen'] },
+  { name: 'Accessories', sub: ['Belts & Ties', 'Caps & Hats'] },
 ];
 
 const slugify = (value) => String(value || '')

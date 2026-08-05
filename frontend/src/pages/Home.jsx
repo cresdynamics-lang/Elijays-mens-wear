@@ -13,7 +13,7 @@ import {
 } from '../data/navCategories';
 import { openWhatsAppGeneral } from '../lib/whatsappEnquiry';
 
-const HERO_IMAGE = '/hero/hero-suits.jpg';
+const HERO_IMAGE = '/hero/hero-elijays.jpg';
 
 const JOURNAL_TILES = [
   {
@@ -86,42 +86,63 @@ const Home = () => {
     <Layout>
       <SEO {...routeSeo.home} schema={[]} />
 
-      <section className="relative w-full min-h-[72vh] md:min-h-[85vh] overflow-hidden bg-elijays-black">
+      <section className="relative w-full min-h-[85vh] md:min-h-[94vh] overflow-hidden bg-elijays-black">
         <img
           src={HERO_IMAGE}
-          alt="Tailored suiting at Elijay's Men's Wear"
-          className="absolute inset-0 w-full h-full object-cover"
+          alt="ELIJAYS Men's Wear — illuminated Muindi Mbingu storefront"
+          className="hero-kenburns absolute inset-0 w-full h-full object-cover object-[center_42%] md:object-[center_38%]"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-elijays-black/75 via-elijays-black/55 to-elijays-black/80" />
-        <div className="relative z-10 container mx-auto px-5 md:px-8 min-h-[72vh] md:min-h-[85vh] flex flex-col justify-center py-16 md:py-20">
-          <div className="neo-panel self-start max-w-xl w-full p-5 sm:p-7 md:p-8">
-            <p className="text-elijays-gold text-[11px] md:text-[12px] tracking-[0.22em] uppercase font-sans font-semibold mb-4">
-              Elijay&apos;s Men&apos;s Wear
+        {/* Soft readability veil — storefront sign + suits stay bright and visible */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(105deg, rgba(8,8,8,0.72) 0%, rgba(8,8,8,0.38) 38%, rgba(8,8,8,0.08) 68%, rgba(8,8,8,0.18) 100%), linear-gradient(180deg, rgba(8,8,8,0.2) 0%, transparent 22%, transparent 72%, rgba(8,8,8,0.45) 100%)',
+          }}
+        />
+        {/* Sign-like gold & purple ambient glow */}
+        <div
+          className="pointer-events-none absolute top-[18%] left-[8%] md:left-[22%] h-48 w-72 md:h-64 md:w-[28rem] rounded-full blur-3xl opacity-40 hero-glow-gold"
+          style={{ background: 'radial-gradient(ellipse, rgba(242,210,120,0.55), transparent 68%)' }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute bottom-[18%] right-[6%] h-36 w-36 md:h-52 md:w-52 rounded-full blur-3xl opacity-30 hero-glow-purple"
+          style={{ background: 'radial-gradient(circle, rgba(142,47,191,0.5), transparent 70%)' }}
+          aria-hidden
+        />
+
+        <div className="relative z-10 container mx-auto px-5 md:px-8 min-h-[85vh] md:min-h-[94vh] flex flex-col justify-end md:justify-center pb-16 pt-28 md:py-24">
+          <div className="self-start max-w-xl w-full hero-copy-in">
+            <p className="font-display text-white text-[2.75rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[0.95] tracking-[0.06em] uppercase mb-2 [text-shadow:0_2px_0_#000,0_4px_18px_rgba(0,0,0,0.95)]">
+              ELIJAYS
             </p>
-            <h1 className="neo-headline font-display text-[2.35rem] sm:text-[2.75rem] md:text-5xl lg:text-[3.6rem] leading-[1.1] mb-0 font-semibold italic">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="h-px w-8 bg-white/80 shrink-0" aria-hidden />
+              <p className="text-white text-[11px] md:text-xs tracking-[0.38em] uppercase font-sans font-medium mb-0 [text-shadow:0_1px_0_#000,0_3px_12px_rgba(0,0,0,0.9)]">
+                Men&apos;s Wear
+              </p>
+              <span className="h-px flex-1 max-w-[4.5rem] bg-gradient-to-r from-white/70 to-transparent" aria-hidden />
+            </div>
+            <h1 className="font-display text-[1.55rem] sm:text-2xl md:text-[1.85rem] leading-snug mb-0 font-normal text-white [text-shadow:0_2px_0_#000,0_6px_22px_rgba(0,0,0,0.95)]">
               Tailored for the man who arrives.
             </h1>
-            <div className="neo-panel-inset mt-5 sm:mt-6 px-4 py-3.5">
-              <p className="mb-0 text-[14px] md:text-[16px] font-normal leading-relaxed tracking-wide text-[#F7F5EF]">
-                Suits, shirts and outerwear cut for Nairobi&apos;s CBD — feel the cloth, own the fit.
-              </p>
-            </div>
-            <div className="flex flex-row flex-wrap gap-2.5 sm:gap-3 mt-6">
-              <Link to="/suits" className="btn-gold btn-sm neo-btn text-center">
+            <p className="mt-4 mb-0 max-w-md text-[15px] md:text-base font-normal leading-relaxed tracking-wide text-white [text-shadow:0_1px_0_#000,0_4px_14px_rgba(0,0,0,0.9)]">
+              Suits, shirts and outerwear cut for Nairobi&apos;s CBD — walk in on Muindi Mbingu, feel the cloth, own the fit.
+            </p>
+            <div className="flex flex-row flex-wrap gap-3 mt-8">
+              <Link to="/suits" className="btn-gold btn-sm text-center">
                 Shop suits
               </Link>
               <button
                 type="button"
                 onClick={() => openWhatsAppGeneral("Hello ELIJAY'S, I'd like to book a fitting.")}
-                className="btn-gold-outline btn-sm neo-btn text-center"
+                className="btn-gold-outline btn-sm text-center"
               >
                 Book a fitting
               </button>
             </div>
-          </div>
-          <div className="absolute bottom-7 left-5 md:left-8">
-            <span className="garment-tag neo-panel">Muindi Mbingu × Biashara St</span>
           </div>
         </div>
       </section>

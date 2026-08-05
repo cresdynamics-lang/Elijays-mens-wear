@@ -1,10 +1,11 @@
 export const SITE_URL = 'https://elijays-mens-wear.co.ke';
 export const SITE_NAME = "ELIJAY'S Men's Wear";
 export const DEFAULT_IMAGE = `${SITE_URL}/elijays-logo.png`;
-export const CONTACT_PHONE = '+254721844475';
+export const CONTACT_PHONE = '+254708269209';
 export const CONTACT_EMAIL = 'contact@elijays-mens-wear.co.ke';
 export const SOCIAL_INSTAGRAM = 'https://www.instagram.com/elijaysmenswear/';
 export const SOCIAL_FACEBOOK = 'https://www.facebook.com/elijaysmenswear';
+export const SOCIAL_TIKTOK = 'https://www.tiktok.com/@elijaysmenswear';
 
 export const routeSeo = {
   home: {
@@ -97,7 +98,7 @@ export const organizationSchema = {
     addressLocality: 'Nairobi',
     addressCountry: 'KE',
   },
-  sameAs: [SOCIAL_INSTAGRAM, SOCIAL_FACEBOOK],
+  sameAs: [SOCIAL_INSTAGRAM, SOCIAL_FACEBOOK, SOCIAL_TIKTOK],
 };
 
 export const localBusinessSchema = {

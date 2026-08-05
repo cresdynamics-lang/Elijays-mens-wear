@@ -36,3 +36,6 @@ backend/data/catalog-snapshots/*.json
 deploy-*.tar.gz
 yarn-debug.log*
 yarn-error.log*
+
+# Temporary Cursor deploy SSH keys (never commit)
+.deploy-keys/

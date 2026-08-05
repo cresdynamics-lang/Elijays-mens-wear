@@ -6,8 +6,11 @@ export const getSizeOptionsForCategory = (categoryName = '') => {
   if (name.includes('shoe') || name.includes('sneaker') || name.includes('loafer') || name.includes('boot')) {
     return ['38', '39', '40', '41', '42', '43', '44', '45', '46'];
   }
-  if (name.includes('trouser') || name.includes('chino') || name.includes('pant') || name.includes('khaki')) {
+  if (name.includes('trouser') || name.includes('chino') || name.includes('pant') || name.includes('khaki') || name.includes('official')) {
     return ['28', '30', '32', '34', '36', '38', '40', '42'];
+  }
+  if (name.includes('suit') || name.includes('jacket') || name.includes('blazer') || name.includes('formal')) {
+    return ['S', 'M', 'L', 'XL', 'XXL', '3XL'];
   }
   return ['S', 'M', 'L', 'XL', 'XXL', '3XL'];
 };

@@ -1,9 +1,9 @@
 import { BRAND_NAME } from './brand';
-import { CONTACT_PHONE, SITE_URL } from '../seo/seoData';
+import { SITE_URL } from '../seo/seoData';
 
-/** E.164 without + — default ELIJAY'S Men's Wear WhatsApp */
+/** E.164 without + — ELIJAY'S Men's Wear WhatsApp business */
 export const WHATSAPP_NUMBER = (
-  import.meta.env.VITE_WHATSAPP_NUMBER || CONTACT_PHONE.replace(/\D/g, '')
+  import.meta.env.VITE_WHATSAPP_NUMBER || '254708269209'
 ).replace(/\D/g, '');
 
 /** Placeholder — update when ELIJAY'S business details are ready */

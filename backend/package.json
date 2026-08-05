@@ -18,6 +18,7 @@
     "db:rebuild-commerce": "node src/db/rebuild-commerce.js",
     "seed:admin": "node seed-admin.js",
     "seed:dummy-products": "node seed-dummy-products.js",
+    "categories:sync": "node scripts/sync-catalogue-categories.js",
     "seed:store": "node seed-store.js",
     "seed:inventory": "node seed-inventory-demo.js",
     "export:products": "node scripts/export-products-json.js",
