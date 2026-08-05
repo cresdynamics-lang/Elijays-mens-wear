@@ -16,7 +16,6 @@ import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
 import Support from './pages/Support';
-import Contact from './pages/Contact';
 import Bespoke from './pages/Bespoke';
 import Shipping from './pages/Shipping';
 import SizeGuide from './pages/SizeGuide';
