@@ -93,42 +93,27 @@ const Home = () => {
           className="hero-kenburns absolute inset-0 w-full h-full object-cover object-[center_42%] md:object-[center_38%]"
           fetchPriority="high"
         />
-        {/* Soft readability veil — storefront sign + suits stay bright and visible */}
+        {/* Dark left veil so white copy stays readable over neon storefront */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(105deg, rgba(8,8,8,0.72) 0%, rgba(8,8,8,0.38) 38%, rgba(8,8,8,0.08) 68%, rgba(8,8,8,0.18) 100%), linear-gradient(180deg, rgba(8,8,8,0.2) 0%, transparent 22%, transparent 72%, rgba(8,8,8,0.45) 100%)',
+              'linear-gradient(105deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.72) 34%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.2) 100%), linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 28%, transparent 62%, rgba(0,0,0,0.55) 100%)',
           }}
-        />
-        {/* Sign-like gold & purple ambient glow */}
-        <div
-          className="pointer-events-none absolute top-[18%] left-[8%] md:left-[22%] h-48 w-72 md:h-64 md:w-[28rem] rounded-full blur-3xl opacity-40 hero-glow-gold"
-          style={{ background: 'radial-gradient(ellipse, rgba(242,210,120,0.55), transparent 68%)' }}
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute bottom-[18%] right-[6%] h-36 w-36 md:h-52 md:w-52 rounded-full blur-3xl opacity-30 hero-glow-purple"
-          style={{ background: 'radial-gradient(circle, rgba(142,47,191,0.5), transparent 70%)' }}
-          aria-hidden
         />
 
         <div className="relative z-10 container mx-auto px-5 md:px-8 min-h-[85vh] md:min-h-[94vh] flex flex-col justify-end md:justify-center pb-16 pt-28 md:py-24">
-          <div className="self-start max-w-xl w-full hero-copy-in">
-            <p className="font-display text-white text-[2.75rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[0.95] tracking-[0.06em] uppercase mb-2 [text-shadow:0_2px_0_#000,0_4px_18px_rgba(0,0,0,0.95)]">
+          <div className="self-start max-w-xl w-full hero-copy-in rounded-sm bg-black/55 backdrop-blur-[2px] border border-white/15 px-5 py-6 sm:px-7 sm:py-8 shadow-[0_12px_40px_rgba(0,0,0,0.65)]">
+            <p className="font-display text-white text-[2.75rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[0.95] tracking-[0.06em] uppercase mb-1 [text-shadow:0_1px_0_#000,0_3px_0_#000,0_6px_18px_#000]">
               ELIJAYS
             </p>
-            <div className="flex items-center gap-3 mb-6">
-              <span className="h-px w-8 bg-white/80 shrink-0" aria-hidden />
-              <p className="text-white text-[11px] md:text-xs tracking-[0.38em] uppercase font-sans font-medium mb-0 [text-shadow:0_1px_0_#000,0_3px_12px_rgba(0,0,0,0.9)]">
-                Men&apos;s Wear
-              </p>
-              <span className="h-px flex-1 max-w-[4.5rem] bg-gradient-to-r from-white/70 to-transparent" aria-hidden />
-            </div>
-            <h1 className="font-display text-[1.55rem] sm:text-2xl md:text-[1.85rem] leading-snug mb-0 font-normal text-white [text-shadow:0_2px_0_#000,0_6px_22px_rgba(0,0,0,0.95)]">
+            <p className="font-display text-white text-xl sm:text-2xl md:text-3xl leading-none tracking-[0.18em] uppercase mb-5 [text-shadow:0_1px_0_#000,0_3px_0_#000,0_5px_14px_#000]">
+              Men&apos;s Wear
+            </p>
+            <h1 className="font-display text-[1.65rem] sm:text-2xl md:text-[2rem] leading-snug mb-0 font-normal text-white [text-shadow:0_1px_0_#000,0_3px_0_#000,0_6px_16px_#000]">
               Tailored for the man who arrives.
             </h1>
-            <p className="mt-4 mb-0 max-w-md text-[15px] md:text-base font-normal leading-relaxed tracking-wide text-white [text-shadow:0_1px_0_#000,0_4px_14px_rgba(0,0,0,0.9)]">
+            <p className="mt-4 mb-0 max-w-md text-[15px] md:text-base font-normal leading-relaxed tracking-wide text-white [text-shadow:0_1px_0_#000,0_3px_10px_#000]">
               Suits, shirts and outerwear cut for Nairobi&apos;s CBD — walk in on Muindi Mbingu, feel the cloth, own the fit.
             </p>
             <div className="flex flex-row flex-wrap gap-3 mt-8">
