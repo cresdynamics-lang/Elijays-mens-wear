@@ -2,8 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ShoppingBag, Plus, Minus, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import SEO from '../components/SEO';
 import ProductDescription from '../components/product/ProductDescription';
 import { useCartStore } from '../store/useCartStore';
@@ -401,9 +400,9 @@ const ProductDetail = () => {
  );
  }
 
- return (
- <div className="bg-elijays-white min-h-screen">
- <SEO
+  return (
+  <Layout>
+  <SEO
  title={`${product.name} Kenya`}
  description={`Shop ${product.name} at ELIJAY'S Kenya. Discover premium styling, curated detail and Nairobi delivery for luxury wardrobes. Order today.`}
  path={`/product/${product.slug}`}
@@ -418,10 +417,8 @@ const ProductDetail = () => {
  ]),
  buildProductSchema(product, currentDisplayImage, displayPrice),
  ]}
- />
- <Navbar />
-
- <main className="pb-24">
+  />
+  <main className="pb-24">
  <div className="container mx-auto px-5 md:px-8 max-w-7xl pt-6 md:pt-10">
  <div className="flex items-center space-x-2 mb-8">
  <button type="button" onClick={() => navigate(-1)} className="text-elijays-gold hover:text-elijays-gold-dim transition-colors">
@@ -764,11 +761,9 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  </div>
  )}
  </div>
- </main>
-
- <Footer />
- </div>
- );
+  </main>
+  </Layout>
+  );
 };
 
 export default ProductDetail;

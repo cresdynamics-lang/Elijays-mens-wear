@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import SEO from '../components/SEO';
 import { useCartStore } from '../store/useCartStore';
 import { getPremiumImage } from '../utils/productImages';
@@ -259,9 +258,9 @@ const Products = ({ categoryOverride = null }) => {
     : 'bg-transparent border-elijays-ink/15 text-elijays-ink/70 hover:border-elijays-gold hover:text-elijays-gold'
   }`;
 
-  return (
-  <div className="bg-white min-h-screen">
-  <SEO
+   return (
+   <Layout>
+   <SEO
   {...seo}
   schema={[
   buildBreadcrumbSchema([
@@ -269,10 +268,8 @@ const Products = ({ categoryOverride = null }) => {
   { name: currentCategory === 'All' ? 'Shop' : selectedCategory?.name || 'Shop', path: seo.path },
   ]),
   ]}
-  />
-  <Navbar />
-
-  <main className="pb-20">
+   />
+   <main className="pb-20">
   <div className="bg-elijays-ink border-b border-elijays-gold/20">
   <div className="container mx-auto px-5 md:px-8 py-10 md:py-12">
   <button
@@ -421,11 +418,9 @@ const Products = ({ categoryOverride = null }) => {
   </div>
   )}
   </div>
-  </main>
-
-  <Footer />
-  </div>
-  );
+   </main>
+   </Layout>
+   );
 };
 
 export default Products;

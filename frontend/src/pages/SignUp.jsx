@@ -5,8 +5,7 @@ import { authAPI } from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
 import { useCartStore } from '../store/useCartStore';
 import { Mail, Lock, User, ArrowRight, LogIn } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 
 const SignUp = () => {
   const [name, setName] = useState('');
@@ -46,9 +45,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="bg-primary min-h-screen">
-      <Navbar />
-
+    <Layout>
       <main className="pt-44 pb-24 flex items-center justify-center px-6">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -137,9 +134,7 @@ const SignUp = () => {
           </div>
         </motion.div>
       </main>
-
-      <Footer />
-    </div>
+    </Layout>
   );
 };
 

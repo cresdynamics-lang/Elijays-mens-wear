@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ChevronLeft, Copy, Check } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import MpesaPaymentGuide from '../components/MpesaPaymentGuide';
 import { useAuthStore } from '../store/useAuthStore';
 import { orderAPI } from '../services/api';
@@ -68,10 +67,9 @@ const Payment = () => {
  }
  };
 
- return (
- <div className="bg-primary min-h-screen">
- <Navbar />
- <main className="pt-24 sm:pt-32 pb-16 sm:pb-24 container mx-auto px-4 sm:px-6 max-w-lg">
+  return (
+  <Layout>
+  <main className="pt-24 sm:pt-32 pb-16 sm:pb-24 container mx-auto px-4 sm:px-6 max-w-lg">
  <Link to="/products" className="inline-flex items-center text-accent-500 hover:text-accent-200 mb-6 sm:mb-10 text-[10px] uppercase tracking-widest">
  <ChevronLeft size={18} />
  Continue shopping
@@ -140,10 +138,9 @@ const Payment = () => {
  </Link>
  </div>
  )}
- </main>
- <Footer />
- </div>
- );
+  </main>
+  </Layout>
+  );
 };
 
 export default Payment;

@@ -4,8 +4,7 @@ import { User, Package, MapPin, Settings, LogOut, ChevronRight, ShoppingBag, Shi
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { orderAPI, authAPI } from '../services/api';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import { userInitials } from '../lib/format';
 
 const Profile = () => {
@@ -99,11 +98,9 @@ const Profile = () => {
 
   if (!isAuthenticated) return null;
 
-  return (
-    <div className="bg-primary min-h-screen font-sans">
-      <Navbar />
-
-      <main className="pt-32 pb-24">
+   return (
+     <Layout>
+       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 max-w-7xl">
           {/* Profile Header */}
           <div className="relative mb-16 overflow-hidden bg-utility-gray/40 border border-utility-gray/60 p-8 md:p-12">
@@ -379,11 +376,9 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
-  );
+       </main>
+     </Layout>
+   );
 };
 
 export default Profile;

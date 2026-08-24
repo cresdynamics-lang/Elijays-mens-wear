@@ -3,22 +3,19 @@ import { useCartStore } from '../store/useCartStore';
 import { Trash2, ShoppingBag, ArrowRight, Minus, Plus, ChevronLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 
 const Cart = () => {
- const { items, removeFromCart, updateQuantity, getTotal } = useCartStore();
- const { isAuthenticated } = useAuthStore();
- const navigate = useNavigate();
+  const { items, removeFromCart, updateQuantity, getTotal } = useCartStore();
+  const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
 
- const lineKey = (item) =>
- item.cartItemId ? `c-${item.cartItemId}` : `g-${item.productId}-${item.variantId}-${item.sizeLabel || ''}`;
+  const lineKey = (item) =>
+  item.cartItemId ? `c-${item.cartItemId}` : `g-${item.productId}-${item.variantId}-${item.sizeLabel || ''}`;
 
- return (
- <div className="bg-primary min-h-screen">
- <Navbar />
-
- <main className="pt-28 pb-24">
+  return (
+    <Layout>
+      <main className="pt-28 pb-24">
  <div className="container mx-auto px-6 max-w-6xl">
  <div className="flex items-center space-x-4 mb-10">
   <button onClick={() => navigate(-1)} className="text-secondary hover:text-accent transition-colors duration-300">
@@ -156,11 +153,9 @@ const Cart = () => {
  </div>
  </div>
  </div>
- </main>
-
- <Footer />
- </div>
- );
+  </main>
+  </Layout>
+);
 };
 
 export default Cart;

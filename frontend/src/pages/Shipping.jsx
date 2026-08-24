@@ -1,15 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Truck, Package, RefreshCw, Clock, MapPin, Shield } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 
 const Shipping = () => {
-  return (
-    <div className="bg-primary min-h-screen font-sans">
-      <Navbar />
-
-      <main className="pt-32 pb-24">
+   return (
+     <Layout>
+       <main className="pt-32 pb-24">
         <div className="container mx-auto px-6 max-w-7xl">
           {/* Hero Section */}
           <div className="relative mb-20 overflow-hidden bg-utility-gray/40 border border-utility-gray/60 p-12 md:p-20">
@@ -215,11 +212,9 @@ const Shipping = () => {
             </ul>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
-  );
+       </main>
+     </Layout>
+   );
 };
 
 export default Shipping;

@@ -5,8 +5,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { useCartStore } from '../store/useCartStore';
 import { authAPI } from '../services/api';
 import { Mail, Lock, ArrowRight, UserPlus } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -44,11 +43,9 @@ const Login = () => {
     }
   };
 
-  return (
-    <div className="bg-primary min-h-screen">
-      <Navbar />
-
-      <main className="pt-44 pb-24 flex items-center justify-center px-6">
+   return (
+     <Layout>
+       <main className="pt-44 pb-24 flex items-center justify-center px-6">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
@@ -120,11 +117,9 @@ const Login = () => {
             </Link>
           </div>
         </motion.div>
-      </main>
-
-      <Footer />
-    </div>
-  );
+       </main>
+     </Layout>
+   );
 };
 
 export default Login;

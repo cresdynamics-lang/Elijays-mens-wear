@@ -4,7 +4,9 @@ import Footer from './Footer';
 
 const Layout = ({ children }) => (
   <div className="bg-white text-elijays-ink min-h-screen font-sans">
-    {children}
+    <Navbar />
+    <main>{children}</main>
+    <Footer />
   </div>
 );
 

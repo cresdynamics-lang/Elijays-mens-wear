@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import { Truck, ChevronLeft, ShoppingBag } from 'lucide-react';
 import MpesaCheckoutSection from '../components/MpesaCheckoutSection';
 import { Link, Navigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Layout from '../components/Layout';
 import { useAuthStore } from '../store/useAuthStore';
 import { useCartStore } from '../store/useCartStore';
 import { orderAPI } from '../services/api';
@@ -156,11 +155,9 @@ const Checkout = () => {
  }
  };
 
- return (
- <div className="bg-primary min-h-screen">
- <Navbar />
-
- <main className="pt-24 sm:pt-32 pb-16 sm:pb-24">
+  return (
+  <Layout>
+  <main className="pt-24 sm:pt-32 pb-16 sm:pb-24">
  <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
  <div className="flex items-center space-x-3 sm:space-x-4 mb-6 sm:mb-8">
   <Link to="/cart" className="text-secondary hover:text-accent shrink-0 transition-colors duration-300">
@@ -360,11 +357,9 @@ const Checkout = () => {
  </section>
  </form>
  </div>
- </main>
-
- <Footer />
- </div>
- );
+  </main>
+  </Layout>
+  );
 };
 
 export default Checkout;
