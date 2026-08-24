@@ -66,21 +66,14 @@ const Home = () => {
       <SEO {...routeSeo.home} schema={[]} />
 
       {/* Hero Banner */}
-      <section className="relative w-full h-[60vh] md:h-[80vh] min-h-[500px] overflow-hidden bg-elijays-ink">
-        <img
-          src={HERO_IMAGE}
-          alt="ELIJAYS Men's Wear"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-          fetchPriority="high"
-        />
-        <div className="absolute inset-0 bg-black/60" />
+      <section className="relative w-full h-[60vh] md:h-[80vh] min-h-[500px] overflow-hidden bg-white">
         <div className="relative z-10 container mx-auto px-5 md:px-8 h-full flex items-center">
-          <div className="max-w-xl text-white">
+          <div className="max-w-xl text-elijays-ink">
             <p className="text-[11px] tracking-[0.2em] uppercase font-medium mb-3 text-elijays-gold">Premium Mens Fashion</p>
-            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-medium tracking-[0.02em] leading-tight mb-4 text-white">
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-medium tracking-[0.02em] leading-tight mb-4 text-elijays-ink">
               ELIJAYS Men&apos;s Wear
             </h1>
-            <p className="text-sm md:text-base text-white/90 mb-6 leading-relaxed max-w-md">
+            <p className="text-sm md:text-base text-elijays-muted mb-6 leading-relaxed max-w-md">
               Tailored for the man who arrives. Suits, shirts and outerwear cut for Nairobi&apos;s CBD.
             </p>
             <div className="flex flex-row flex-wrap gap-3">
@@ -90,7 +83,7 @@ const Home = () => {
               <button
                 type="button"
                 onClick={() => openWhatsAppGeneral("Hello ELIJAY'S, I'd like to book a fitting.")}
-                className="btn-white-outline text-center"
+                className="btn-outline text-center"
               >
                 Book a fitting
               </button>
