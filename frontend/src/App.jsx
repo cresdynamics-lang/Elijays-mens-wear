@@ -21,6 +21,7 @@ import Shipping from './pages/Shipping';
 import SizeGuide from './pages/SizeGuide';
 import Privacy from './pages/Privacy';
 import SEO from './components/SEO';
+import MetaPixel from './components/MetaPixel';
 import { useAuthStore } from './store/useAuthStore';
 import { useCartStore } from './store/useCartStore';
 
@@ -73,6 +74,7 @@ function App() {
 
   return (
     <Router>
+      <MetaPixel />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />

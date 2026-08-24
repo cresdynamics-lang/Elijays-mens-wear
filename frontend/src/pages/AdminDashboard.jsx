@@ -100,6 +100,7 @@ const AdminDashboard = () => {
  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, section: 'Overview' },
  { id: 'orders', label: 'Orders', icon: Package, section: 'Store' },
  { id: 'products', label: 'Products', icon: ShoppingBag, section: 'Store' },
+ { id: 'categories', label: 'Categories', icon: Tag, section: 'Store' },
  { id: 'blogs', label: 'Blog', icon: BookOpen, section: 'Store' },
  { id: 'users', label: 'Users', icon: Users, section: 'People' },
  { id: 'finance', label: 'Finance', icon: CreditCard, section: 'Operations' },
@@ -114,7 +115,7 @@ const AdminDashboard = () => {
  if (user?.role === 'staff') {
  if (item.id === 'finance') return canAccessFinance(user);
  if (item.id === 'users') return canViewCustomers(user);
- if (item.id === 'products') return canAccessProducts(user);
+ if (item.id === 'products' || item.id === 'categories') return canAccessProducts(user);
  return hasPermission(user, item.id) || (item.id === 'users' && hasPermission(user, 'customers'));
  }
  return false;
@@ -155,6 +156,7 @@ const AdminDashboard = () => {
  hasPermission(user, activeSection) ||
  (activeSection === 'users' && canViewCustomers(user)) ||
  (activeSection === 'products' && canAccessProducts(user)) ||
+ (activeSection === 'categories' && canAccessProducts(user)) ||
  (activeSection === 'finance' && canAccessFinance(user)) ||
  (activeSection === 'blogs' && hasPermission(user, 'blogs'));
  if (!allowed) {
@@ -181,6 +183,7 @@ const AdminDashboard = () => {
  case 'dashboard':
  return <DashboardView />;
  case 'orders': return <OrdersView />;
+ case 'categories': return <CategoriesView />;
  case 'products':
  case 'finance':
  return heavySection;
@@ -209,7 +212,7 @@ const AdminDashboard = () => {
 
  return (
  <ConfirmProvider>
- <div className="flex h-dvh bg-primary text-accent-50 font-sans overflow-hidden">
+ <div className="admin-shell flex h-dvh bg-primary text-secondary font-sans overflow-hidden">
  {isMobileNavOpen && (
  <button
  type="button"
@@ -223,11 +226,11 @@ const AdminDashboard = () => {
  <aside 
  className={`${
  isSidebarOpen ? 'w-72 lg:w-64' : 'w-72 lg:w-20'
- } fixed lg:relative inset-y-0 left-0 z-40 lg:z-20 bg-utility-gray/95 lg:bg-utility-gray/50 border-r border-utility-gray/60 transition-all duration-300 flex flex-col backdrop-blur-xl ${
+ } fixed lg:relative inset-y-0 left-0 z-40 lg:z-20 bg-utility-gray border-r border-black/10 shadow-sm transition-all duration-300 flex flex-col ${
  isMobileNavOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
  }`}
  >
- <div className="p-6 border-b border-utility-gray/60 flex items-center gap-3">
+ <div className="p-6 border-b border-black/10 flex items-center gap-3">
  <div className="w-10 h-10 bg-accent-600 rounded-lg flex items-center justify-center text-base-950 font-bold text-xl">
  PE
  </div>
@@ -258,17 +261,17 @@ const AdminDashboard = () => {
  onClick={() => handleNavClick(item.id)}
  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${
  activeSection === item.id
- ? 'bg-accent-600 text-base-950 shadow-lg shadow-accent-600/20'
- : 'text-secondary/70 hover:bg-utility-gray hover:text-accent-400'
+ ? 'bg-accent-600 text-base-950 shadow-md shadow-accent-600/25'
+ : 'text-secondary/80 hover:bg-primary hover:text-secondary'
  }`}
  >
- <item.icon size={20} className={activeSection === item.id ? 'text-base-950' : 'group-hover:text-accent-400'} />
+ <item.icon size={20} className={activeSection === item.id ? 'text-base-950' : 'group-hover:text-accent-600'} />
  {isSidebarOpen && (
  <span className="text-sm font-medium flex-1 text-left">{item.label}</span>
  )}
  {isSidebarOpen && item.badge && (
  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
- activeSection === item.id ? 'bg-primary text-accent-500' : 'bg-accent-600/20 text-accent-500'
+ activeSection === item.id ? 'bg-white/80 text-accent-800' : 'bg-accent-600/15 text-accent-700'
  }`}>
  {item.badge}
  </span>
@@ -293,7 +296,7 @@ const AdminDashboard = () => {
  {/* Main Content */}
  <main className="flex-1 flex flex-col overflow-hidden min-w-0 w-full lg:ml-0">
  {/* Topbar */}
- <header className="h-16 sm:h-20 bg-utility-gray/30 border-b border-utility-gray/60 flex items-center justify-between px-4 sm:px-6 lg:px-8 backdrop-blur-md shrink-0 gap-3">
+ <header className="h-16 sm:h-20 bg-utility-gray border-b border-black/10 flex items-center justify-between px-4 sm:px-6 lg:px-8 shrink-0 gap-3 shadow-sm">
  <div className="flex items-center gap-2 sm:gap-4 min-w-0">
  <button 
  type="button"
@@ -338,7 +341,7 @@ const AdminDashboard = () => {
  </header>
 
  {/* Scrollable Content */}
- <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 custom-scrollbar bg-gradient-to-b from-base-950 to-base-900/50">
+ <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 custom-scrollbar bg-primary">
  <AnimatePresence mode="wait">
  <motion.div
  key={activeSection}
@@ -482,6 +485,10 @@ const OrdersView = ({ readOnly = false }) => {
  const [loading, setLoading] = useState(true);
  const [error, setError] = useState('');
  const [filter, setFilter] = useState('All');
+ const [paymentFilter, setPaymentFilter] = useState('All');
+ const [searchQuery, setSearchQuery] = useState('');
+ const [dateFrom, setDateFrom] = useState('');
+ const [dateTo, setDateTo] = useState('');
  const [detailOrder, setDetailOrder] = useState(null);
  const [detailLoading, setDetailLoading] = useState(false);
  const [editOrder, setEditOrder] = useState(null);
@@ -494,7 +501,10 @@ const OrdersView = ({ readOnly = false }) => {
  setLoading(true);
  setError('');
  try {
- const res = await adminOrderAPI.getAll();
+ const params = {};
+ if (dateFrom) params.from = dateFrom;
+ if (dateTo) params.to = dateTo;
+ const res = await adminOrderAPI.getAll(params);
  setOrders(Array.isArray(res.data.data) ? res.data.data : []);
  } catch (err) {
  console.error('Error fetching orders:', err);
@@ -507,11 +517,25 @@ const OrdersView = ({ readOnly = false }) => {
 
  useEffect(() => {
  fetchOrders();
- }, []);
+ }, [dateFrom, dateTo]);
 
- const filteredOrders = filter === 'All'
- ? orders
- : orders.filter((o) => o.status.toLowerCase() === filter.toLowerCase());
+ const filteredOrders = orders.filter((o) => {
+ if (filter !== 'All' && String(o.status || '').toLowerCase() !== filter.toLowerCase()) return false;
+ if (paymentFilter !== 'All' && String(o.payment_status || '').toLowerCase() !== paymentFilter.toLowerCase()) return false;
+ const q = searchQuery.trim().toLowerCase();
+ if (q) {
+ const hay = [
+ o.id,
+ o.customer_name,
+ o.customer_email,
+ o.payment_method,
+ o.status,
+ o.payment_status,
+ ].filter(Boolean).join(' ').toLowerCase();
+ if (!hay.includes(q)) return false;
+ }
+ return true;
+ });
 
  const openOrderDetail = async (orderId) => {
  setDetailOrder(null);
@@ -637,7 +661,7 @@ const OrdersView = ({ readOnly = false }) => {
  {error}
  </div>
  )}
- <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
+ <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
  <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
  {['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].map((f) => (
  <button
@@ -672,6 +696,44 @@ const OrdersView = ({ readOnly = false }) => {
  </button>
  )}
  </div>
+ </div>
+
+ <div className="flex flex-col md:flex-row flex-wrap gap-3 mb-8">
+ <div className="relative flex-1 min-w-[200px]">
+ <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/50" />
+ <input
+ type="search"
+ value={searchQuery}
+ onChange={(e) => setSearchQuery(e.target.value)}
+ placeholder="Search customer, email, order id…"
+ className="w-full pl-9 pr-3 py-2.5 bg-utility-gray border border-utility-gray/60 rounded-xl text-secondary text-sm outline-none focus:border-accent-500/40"
+ />
+ </div>
+ <select
+ value={paymentFilter}
+ onChange={(e) => setPaymentFilter(e.target.value)}
+ className="bg-utility-gray border border-utility-gray/60 rounded-xl px-3 py-2.5 text-secondary text-sm min-w-[140px]"
+ >
+ <option value="All">All payments</option>
+ <option value="pending">Pending</option>
+ <option value="paid">Paid</option>
+ <option value="failed">Failed</option>
+ <option value="refunded">Refunded</option>
+ </select>
+ <input
+ type="date"
+ value={dateFrom}
+ onChange={(e) => setDateFrom(e.target.value)}
+ className="bg-utility-gray border border-utility-gray/60 rounded-xl px-3 py-2.5 text-secondary text-sm"
+ aria-label="From date"
+ />
+ <input
+ type="date"
+ value={dateTo}
+ onChange={(e) => setDateTo(e.target.value)}
+ className="bg-utility-gray border border-utility-gray/60 rounded-xl px-3 py-2.5 text-secondary text-sm"
+ aria-label="To date"
+ />
  </div>
 
  <div className="bg-utility-gray/40 border border-utility-gray/60 rounded-2xl overflow-hidden backdrop-blur-sm">
@@ -959,6 +1021,7 @@ const CategoriesView = () => {
  slug: '',
  description: '',
  image: '',
+ parent_id: '',
  is_featured: false,
  is_active: true
  });
@@ -978,6 +1041,22 @@ const CategoriesView = () => {
  useEffect(() => {
  fetchCategories();
  }, []);
+
+ const parentOptions = categories.filter((c) => !c.parent_id && c.id !== currentCategory?.id);
+ const orderedCategories = (() => {
+ const roots = categories.filter((c) => !c.parent_id);
+ const kidsOf = (id) => categories.filter((c) => c.parent_id === id);
+ const rows = [];
+ for (const root of roots) {
+ rows.push({ ...root, depth: 0 });
+ for (const kid of kidsOf(root.id)) rows.push({ ...kid, depth: 1 });
+ }
+ // Orphans (parent missing)
+ for (const c of categories) {
+ if (!rows.some((r) => r.id === c.id)) rows.push({ ...c, depth: c.parent_id ? 1 : 0 });
+ }
+ return rows;
+ })();
 
  const handleImageChange = async (e) => {
  const file = e.target.files[0];
@@ -1003,6 +1082,7 @@ const CategoriesView = () => {
  slug: category.slug || '',
  description: category.description || '',
  image: category.image || '',
+ parent_id: category.parent_id || '',
  is_featured: category.is_featured || false,
  is_active: category.is_active ?? true
  });
@@ -1013,6 +1093,7 @@ const CategoriesView = () => {
  slug: '',
  description: '',
  image: '',
+ parent_id: '',
  is_featured: false,
  is_active: true
  });
@@ -1040,10 +1121,14 @@ const CategoriesView = () => {
  e.preventDefault();
  setSubmitting(true);
  try {
+ const payload = {
+ ...formData,
+ parent_id: formData.parent_id || null,
+ };
  if (currentCategory) {
- await adminCategoryAPI.update(currentCategory.id, formData);
+ await adminCategoryAPI.update(currentCategory.id, payload);
  } else {
- await adminCategoryAPI.create(formData);
+ await adminCategoryAPI.create(payload);
  }
  setIsModalOpen(false);
  fetchCategories();
@@ -1056,8 +1141,13 @@ const CategoriesView = () => {
 
  return (
  <div className="space-y-6 relative">
- <div className="flex items-center justify-between mb-8">
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+ <div>
  <h3 className="text-xl font-serif font-bold text-secondary">Categories ({categories.length})</h3>
+ <p className="text-xs text-secondary/60 mt-1">
+ Align with storefront: Trousers, Shirts, Suits, Jackets, Sweaters, Formal Wear, Casual Wear, Accessories — plus their subcategories.
+ </p>
+ </div>
  <button 
  onClick={() => handleOpenModal()}
  className="flex items-center gap-2 px-6 py-3 bg-utility-gray border border-utility-gray/60 text-accent-500 rounded-xl font-bold hover:bg-utility-gray transition-all"
@@ -1071,11 +1161,12 @@ const CategoriesView = () => {
  <div className="py-24 text-center">
  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-500 mx-auto"></div>
  </div>
- ) : categories.length > 0 ? (
+ ) : orderedCategories.length > 0 ? (
  <table className="w-full text-left">
  <thead className="bg-utility-gray text-[10px] font-bold text-secondary/60 tracking-[0.2em]">
  <tr>
  <th className="px-6 py-4">Name</th>
+ <th className="px-6 py-4">Parent</th>
  <th className="px-6 py-4">Slug</th>
  <th className="px-6 py-4">Featured</th>
  <th className="px-6 py-4">Status</th>
@@ -1083,12 +1174,17 @@ const CategoriesView = () => {
  </tr>
  </thead>
  <tbody className="divide-y divide-accent-500/5">
- {categories.map((c) => (
+ {orderedCategories.map((c) => {
+ const parentName = categories.find((p) => p.id === c.parent_id)?.name;
+ return (
  <tr key={c.id} className="hover:bg-utility-gray transition-colors text-sm">
- <td className="px-6 py-4 font-bold text-secondary flex items-center gap-2">
- {c.parent_id && <ChevronRight size={14} className="text-accent-500/20" />}
+ <td className="px-6 py-4 font-bold text-secondary">
+ <span className={`inline-flex items-center gap-2 ${c.depth ? 'pl-5 text-secondary/90' : ''}`}>
+ {c.depth > 0 && <ChevronRight size={14} className="text-accent-500/40" />}
  {c.name}
+ </span>
  </td>
+ <td className="px-6 py-4 text-xs text-secondary/70">{parentName || '—'}</td>
  <td className="px-6 py-4 font-mono text-secondary/70 text-xs">{c.slug}</td>
  <td className="px-6 py-4 text-accent-200">{c.is_featured ? 'Yes' : 'No'}</td>
  <td className="px-6 py-4">
@@ -1115,7 +1211,8 @@ const CategoriesView = () => {
  </div>
  </td>
  </tr>
- ))}
+ );
+ })}
  </tbody>
  </table>
  ) : (
@@ -1168,6 +1265,21 @@ const CategoriesView = () => {
  </div>
 
  <div className="space-y-2">
+ <label className="text-[10px] text-secondary/60 font-black">Parent category</label>
+ <select
+ value={formData.parent_id}
+ onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
+ className="w-full bg-primary border border-utility-gray/60 rounded-xl py-3 px-4 text-secondary outline-none focus:border-accent-500/40 transition-all text-sm"
+ >
+ <option value="">None (top-level / storefront parent)</option>
+ {parentOptions.map((p) => (
+ <option key={p.id} value={p.id}>{p.name}</option>
+ ))}
+ </select>
+ <p className="text-[9px] text-secondary/50">Subcategories must sit under a parent so product filters work.</p>
+ </div>
+
+ <div className="space-y-2">
  <label className="text-[10px] text-secondary/60 font-black">Image</label>
  <div className="flex items-center gap-4">
  <div className="w-16 h-16 rounded-xl border border-utility-gray/60 overflow-hidden bg-primary flex items-center justify-center relative">
@@ -1213,7 +1325,7 @@ const CategoriesView = () => {
  disabled={submitting}
  className="w-full bg-accent-600 text-base-950 py-4 rounded-xl font-bold hover:bg-accent-500 transition-all disabled:opacity-50"
  >
- {submitting ? 'AUTHENTICATING...' : 'COMMIT CATEGORY'}
+ {submitting ? 'Saving…' : 'Save category'}
  </button>
  </form>
  </motion.div>

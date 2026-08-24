@@ -110,13 +110,13 @@ export default function Blog() {
         ]}
       />
 
-      <section className="bg-elijays-black border-b border-elijays-gold">
+      <section className="bg-elijays-ink">
         <div className="container mx-auto px-5 md:px-8 py-12 md:py-16 max-w-3xl">
           <p className="text-elijays-gold text-[12px] mb-3">Journal</p>
-          <h1 className="font-display text-3xl md:text-4xl text-elijays-white mb-3 leading-tight">
+          <h1 className="font-display text-3xl md:text-4xl text-white mb-3 leading-tight">
             From the floor
           </h1>
-          <p className="text-elijays-white/65 text-sm font-light leading-relaxed">
+          <p className="text-white/65 text-sm font-light leading-relaxed">
             Styling notes for Nairobi — linen in the heat, suiting for the occasion, and finishing the fit.
           </p>
         </div>

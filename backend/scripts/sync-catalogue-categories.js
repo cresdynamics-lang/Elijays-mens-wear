@@ -1,20 +1,16 @@
 /**
  * Syncs canonical catalogue categories into Postgres for admin product forms.
+ * Source: frontend/src/data/catalogue-tree.json (shared with storefront).
  * Usage: node scripts/sync-catalogue-categories.js
  */
 require('dotenv').config();
+const path = require('path');
 const db = require('../src/config/db');
 
-const CATALOGUE_TREE = [
-  { name: 'Trousers', slug: 'trousers', sub: ['Khaki', 'Formal', 'Official', 'Chino'] },
-  { name: 'Shirts', slug: 'shirts', sub: ['Polos', 'Cuban', 'Boss', 'Tommy Hilfiger', 'Lacoste'] },
-  { name: 'Suits', slug: 'suits', sub: ['Two Piece', 'Three Piece'] },
-  { name: 'Jackets', slug: 'jackets', sub: ['Jackets', 'Half Jackets', 'Blazers'] },
-  { name: 'Sweaters', slug: 'sweaters', sub: ['Crew Neck', 'V-Neck', 'Cardigan'] },
-  { name: 'Formal Wear', slug: 'formal-wear', sub: ['Official Shirts', 'Formal Trousers', 'Ties'] },
-  { name: 'Casual Wear', slug: 'casual-wear', sub: ['T-Shirts', 'Sweatshirts', 'Linen'] },
-  { name: 'Accessories', slug: 'accessories', sub: ['Belts & Ties', 'Caps & Hats'] },
-];
+const CATALOGUE_TREE = require(path.join(
+  __dirname,
+  '../../frontend/src/data/catalogue-tree.json'
+));
 
 const slugify = (value) =>
   String(value || '')
@@ -52,7 +48,6 @@ async function ensureCategory(name, parentId = null, preferredSlug = null) {
     return row.id;
   }
 
-  // If slug taken by another row, uniquify
   const slugTaken = await db.query('SELECT id FROM categories WHERE slug = $1', [slug]);
   if (slugTaken.rows.length) {
     slug = `${slug}-${parentId ? String(parentId).slice(0, 8) : 'root'}`;
@@ -68,7 +63,7 @@ async function ensureCategory(name, parentId = null, preferredSlug = null) {
 }
 
 async function main() {
-  console.log('Syncing catalogue categories…');
+  console.log('Syncing catalogue categories from catalogue-tree.json…');
   for (const category of CATALOGUE_TREE) {
     const parentId = await ensureCategory(category.name, null, category.slug);
     console.log('Parent', category.name, parentId);

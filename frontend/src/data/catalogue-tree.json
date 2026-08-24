@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Trousers",
+    "slug": "trousers",
+    "route": "/trousers",
+    "sub": ["Khaki", "Formal", "Official", "Chino"],
+    "match": ["trousers", "khaki", "chino", "official", "formal trouser", "pants"]
+  },
+  {
+    "name": "Shirts",
+    "slug": "shirts",
+    "route": "/shirts",
+    "sub": ["Polos", "Cuban", "Boss", "Tommy Hilfiger", "Lacoste"],
+    "match": ["shirts", "polo", "cuban", "boss", "tommy", "hilfiger", "lacoste"]
+  },
+  {
+    "name": "Suits",
+    "slug": "suits",
+    "route": "/suits",
+    "sub": ["Two Piece", "Three Piece"],
+    "match": ["suits", "suiting", "two piece", "three piece", "blazer"]
+  },
+  {
+    "name": "Jackets",
+    "slug": "jackets",
+    "route": "/jackets",
+    "sub": ["Jackets", "Half Jackets", "Blazers"],
+    "match": ["jackets", "jacket", "blazers", "half jacket", "outerwear"]
+  },
+  {
+    "name": "Sweaters",
+    "slug": "sweaters",
+    "route": "/sweaters",
+    "sub": ["Crew Neck", "V-Neck", "Cardigan"],
+    "match": ["sweaters", "sweater", "knit", "cardigan"]
+  },
+  {
+    "name": "Formal Wear",
+    "slug": "formal-wear",
+    "route": "/products?category=formal-wear",
+    "sub": ["Official Shirts", "Formal Trousers", "Ties"],
+    "match": ["formal-wear", "formal wear", "official", "formal", "presidential"]
+  },
+  {
+    "name": "Casual Wear",
+    "slug": "casual-wear",
+    "route": "/products?category=casual-wear",
+    "sub": ["T-Shirts", "Sweatshirts", "Linen"],
+    "match": ["casual-wear", "casual wear", "t-shirts", "sweat", "round-neck", "v-neck", "linen"]
+  },
+  {
+    "name": "Accessories",
+    "slug": "accessories",
+    "route": "/products?category=accessories",
+    "sub": ["Belts & Ties", "Caps & Hats"],
+    "match": ["accessories", "belts", "ties", "belts-ties", "caps", "hats"]
+  }
+]

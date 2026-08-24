@@ -247,185 +247,185 @@ const Products = ({ categoryOverride = null }) => {
    return [...set].sort((a, b) => a.localeCompare(b));
  }, [products]);
 
- const categoryHeading =
- currentCategory === 'All'
- ? 'Shop'
- : selectedCategory?.name || currentCategory;
+  const categoryHeading =
+  currentCategory === 'All'
+  ? 'Shop'
+  : selectedCategory?.name || currentCategory;
 
- const chipClass = (active) =>
- `shrink-0 px-4 py-2 text-[11px] tracking-[0.06em] border rounded-xl transition-colors ${
- active
- ? 'bg-elijays-gold border-elijays-gold text-elijays-ink'
- : 'bg-transparent border-elijays-ink/20 text-elijays-ink/70 hover:border-elijays-gold hover:text-elijays-gold'
- }`;
+  const chipClass = (active) =>
+  `shrink-0 px-4 py-2 text-[11px] tracking-[0.06em] border rounded-lg transition-colors ${
+  active
+    ? 'bg-elijays-ink border-elijays-ink text-white'
+    : 'bg-transparent border-elijays-ink/15 text-elijays-ink/70 hover:border-elijays-gold hover:text-elijays-gold'
+  }`;
 
- return (
- <div className="bg-elijays-white min-h-screen">
- <SEO
- {...seo}
- schema={[
- buildBreadcrumbSchema([
- { name: 'Home', path: '/' },
- { name: currentCategory === 'All' ? 'Shop' : selectedCategory?.name || 'Shop', path: seo.path },
- ]),
- ]}
- />
- <Navbar />
+  return (
+  <div className="bg-white min-h-screen">
+  <SEO
+  {...seo}
+  schema={[
+  buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: currentCategory === 'All' ? 'Shop' : selectedCategory?.name || 'Shop', path: seo.path },
+  ]),
+  ]}
+  />
+  <Navbar />
 
- <main className="pb-20">
- <div className="bg-elijays-black border-b border-elijays-gold">
- <div className="container mx-auto px-5 md:px-8 py-10 md:py-12">
- <button
- type="button"
- onClick={() => navigate(-1)}
- className="inline-flex items-center gap-1.5 text-elijays-gold/80 hover:text-elijays-gold text-[12px] mb-4"
- >
- <i className="fa-solid fa-chevron-left text-[10px]" aria-hidden /> Back
- </button>
- <h1 className="font-display text-3xl md:text-4xl text-elijays-white tracking-[0.02em] font-medium">
- {categoryHeading}
- </h1>
- {intro.copy && (
- <p className="mt-3 max-w-2xl text-sm text-elijays-white/65 font-light leading-relaxed">
- {intro.copy}
- </p>
- )}
- </div>
- </div>
+  <main className="pb-20">
+  <div className="bg-elijays-ink border-b border-elijays-gold/20">
+  <div className="container mx-auto px-5 md:px-8 py-10 md:py-12">
+  <button
+  type="button"
+  onClick={() => navigate(-1)}
+  className="inline-flex items-center gap-1.5 text-elijays-gold/80 hover:text-elijays-gold text-[12px] mb-4"
+  >
+  <i className="fa-solid fa-chevron-left text-[10px]" aria-hidden /> Back
+  </button>
+  <h1 className="font-display text-3xl md:text-4xl text-white tracking-[0.02em] font-medium">
+  {categoryHeading}
+  </h1>
+  {intro.copy && (
+  <p className="mt-3 max-w-2xl text-sm text-white/60 font-light leading-relaxed">
+  {intro.copy}
+  </p>
+  )}
+  </div>
+  </div>
 
- <div className="container mx-auto px-5 md:px-8 py-8 md:py-10">
- <div className="flex flex-col gap-6 mb-10">
- {!isDedicatedCategoryPage && (
- <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-1">
- {allCategoryData.map((cat) => (
- <button
- key={cat.id}
- type="button"
- onClick={() => setFilter(cat.id, 'All')}
- className={chipClass(
- currentCategory === cat.id ||
- currentCategory.toLowerCase() === cat.name.toLowerCase()
- )}
- >
- {cat.name}
- </button>
- ))}
- </div>
- )}
+  <div className="container mx-auto px-5 md:px-8 py-8 md:py-10">
+  <div className="flex flex-col gap-6 mb-10">
+  {!isDedicatedCategoryPage && (
+  <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-1">
+  {allCategoryData.map((cat) => (
+  <button
+  key={cat.id}
+  type="button"
+  onClick={() => setFilter(cat.id, 'All')}
+  className={chipClass(
+  currentCategory === cat.id ||
+  currentCategory.toLowerCase() === cat.name.toLowerCase()
+  )}
+  >
+  {cat.name}
+  </button>
+  ))}
+  </div>
+  )}
 
- {subCategoryList.length > 0 && (
- <div className="flex gap-2 flex-wrap items-center">
- <button
- type="button"
- onClick={() => setFilter(currentCategory, 'All')}
- className={chipClass(currentSub === 'All')}
- >
- All
- </button>
- {subCategoryList.map((sub) => (
- <button
- key={sub}
- type="button"
- onClick={() => setFilter(currentCategory, sub)}
- className={chipClass(currentSub === sub)}
- >
- {sub}
- </button>
- ))}
- </div>
- )}
+  {subCategoryList.length > 0 && (
+  <div className="flex gap-2 flex-wrap items-center">
+  <button
+  type="button"
+  onClick={() => setFilter(currentCategory, 'All')}
+  className={chipClass(currentSub === 'All')}
+  >
+  All
+  </button>
+  {subCategoryList.map((sub) => (
+  <button
+  key={sub}
+  type="button"
+  onClick={() => setFilter(currentCategory, sub)}
+  className={chipClass(currentSub === sub)}
+  >
+  {sub}
+  </button>
+  ))}
+  </div>
+  )}
 
- {availableColors.length > 0 && (
- <div className="flex gap-2 flex-wrap items-center">
- <span className="text-[11px] tracking-[0.12em] uppercase text-elijays-ink/50 mr-1">Colour</span>
- <button
- type="button"
- onClick={() => setFilter(currentCategory, currentSub, 'All')}
- className={chipClass(currentColor === 'All')}
- >
- All
- </button>
- {availableColors.map((color) => (
- <button
- key={color}
- type="button"
- onClick={() => setFilter(currentCategory, currentSub, color)}
- className={chipClass(currentColor === color)}
- >
- {color}
- </button>
- ))}
- </div>
- )}
+  {availableColors.length > 0 && (
+  <div className="flex gap-2 flex-wrap items-center">
+  <span className="text-[11px] tracking-[0.12em] uppercase text-elijays-ink/50 mr-1">Colour</span>
+  <button
+  type="button"
+  onClick={() => setFilter(currentCategory, currentSub, 'All')}
+  className={chipClass(currentColor === 'All')}
+  >
+  All
+  </button>
+  {availableColors.map((color) => (
+  <button
+  key={color}
+  type="button"
+  onClick={() => setFilter(currentCategory, currentSub, color)}
+  className={chipClass(currentColor === color)}
+  >
+  {color}
+  </button>
+  ))}
+  </div>
+  )}
 
- <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between border-t border-elijays-ink/10 pt-5">
- <div className="relative w-full sm:max-w-xs">
- <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-elijays-ink/40 text-[13px]" aria-hidden />
- <input
- type="text"
- placeholder={SEARCH_PLACEHOLDER}
- className="w-full pl-10 pr-3 py-2.5 text-sm bg-elijays-white border border-elijays-ink/15 text-elijays-ink outline-none focus:border-elijays-gold placeholder:text-elijays-ink/40 rounded-xl"
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- />
- </div>
- <select
- value={stockFilter}
- onChange={(e) => setStockFilter(e.target.value)}
- className="bg-elijays-white border border-elijays-ink/15 text-[12px] text-elijays-ink/70 px-3 py-2.5 outline-none focus:border-elijays-gold rounded-xl"
- >
- <option value="all">All availability</option>
- <option value="in_stock">In stock only</option>
- <option value="out_of_stock">Out of stock</option>
- </select>
- </div>
- </div>
+  <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between border-t border-elijays-ink/5 pt-5">
+  <div className="relative w-full sm:max-w-xs">
+  <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-elijays-muted text-[13px]" aria-hidden />
+  <input
+  type="text"
+  placeholder={SEARCH_PLACEHOLDER}
+  className="w-full pl-10 pr-3 py-2.5 text-sm bg-white border border-elijays-ink/10 text-elijays-ink outline-none focus:border-elijays-gold placeholder:text-elijays-muted rounded-lg"
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  />
+  </div>
+  <select
+  value={stockFilter}
+  onChange={(e) => setStockFilter(e.target.value)}
+  className="bg-white border border-elijays-ink/10 text-[12px] text-elijays-ink/70 px-3 py-2.5 outline-none focus:border-elijays-gold rounded-lg"
+  >
+  <option value="all">All availability</option>
+  <option value="in_stock">In stock only</option>
+  <option value="out_of_stock">Out of stock</option>
+  </select>
+  </div>
+  </div>
 
- {fetchError && (
- <p className="text-center text-red-700 text-sm py-8">{fetchError}</p>
- )}
+  {fetchError && (
+  <p className="text-center text-red-700 text-sm py-8">{fetchError}</p>
+  )}
 
- {loading ? (
- <p className="text-center text-elijays-ink/40 text-[11px] py-20 tracking-wider uppercase">
- Loading collection…
- </p>
- ) : (
- <div className="product-grid">
- <AnimatePresence mode="popLayout">
- {filteredProducts.map((product) => (
- <motion.div
- key={product.id}
- layout
- initial={{ opacity: 0, y: 16 }}
- animate={{ opacity: 1, y: 0 }}
- exit={{ opacity: 0, scale: 0.96 }}
- transition={{ duration: 0.35, ease: 'easeOut' }}
- >
- <ProductCard product={product} onAddToCart={handleQuickAdd} addedProductId={addedProductId} />
- </motion.div>
- ))}
- </AnimatePresence>
- </div>
- )}
+  {loading ? (
+  <p className="text-center text-elijays-muted text-[11px] py-20 tracking-wider uppercase">
+  Loading collection…
+  </p>
+  ) : (
+  <div className="product-grid">
+  <AnimatePresence mode="popLayout">
+  {filteredProducts.map((product) => (
+  <motion.div
+  key={product.id}
+  layout
+  initial={{ opacity: 0, y: 16 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, scale: 0.96 }}
+  transition={{ duration: 0.35, ease: 'easeOut' }}
+  >
+  <ProductCard product={product} onAddToCart={handleQuickAdd} addedProductId={addedProductId} />
+  </motion.div>
+  ))}
+  </AnimatePresence>
+  </div>
+  )}
 
- {!loading && filteredProducts.length === 0 && (
- <div className="text-center py-20 space-y-4">
- <p className="text-elijays-ink/50 text-sm">No pieces in this filter.</p>
- <button
- type="button"
- onClick={() => setFilter('All')}
- className="text-[12px] text-elijays-gold underline underline-offset-4"
- >
- Clear filters
- </button>
- </div>
- )}
- </div>
- </main>
+  {!loading && filteredProducts.length === 0 && (
+  <div className="text-center py-20 space-y-4">
+  <p className="text-elijays-muted text-sm">No pieces in this filter.</p>
+  <button
+  type="button"
+  onClick={() => setFilter('All')}
+  className="text-[12px] text-elijays-gold underline underline-offset-4"
+  >
+  Clear filters
+  </button>
+  </div>
+  )}
+  </div>
+  </main>
 
- <Footer />
- </div>
- );
+  <Footer />
+  </div>
+  );
 };
 
 export default Products;

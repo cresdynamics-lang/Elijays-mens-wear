@@ -86,14 +86,14 @@ export default function BlogArticle() {
       />
 
       {imageUrl && (
-        <div className="relative w-full h-[42vh] md:h-[52vh] bg-elijays-charcoal overflow-hidden">
+        <div className="relative w-full h-[42vh] md:h-[52vh] bg-gray-100 overflow-hidden">
           <img
             src={imageUrl}
             alt={blog.title}
             className="w-full h-full object-cover"
             onError={(e) => { e.currentTarget.src = fallbackImage; }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-elijays-black/70 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         </div>
       )}
 

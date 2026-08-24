@@ -11,6 +11,7 @@ import {
   newColorGroup,
   newSizeRow,
 } from '../../../utils/inventoryVariants';
+import { sortParentCategories } from '../../../data/catalogueTree';
 
 const inputCls = 'w-full bg-base-950 border border-accent-500/20 rounded p-2 text-white text-sm';
 const labelCls = 'text-accent-500/50 text-xs block mb-1';
@@ -24,6 +25,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
   const [source, setSource] = useState('draft');
   const [websiteLinked, setWebsiteLinked] = useState(false);
   const [form, setForm] = useState(emptyProductForm());
+  const [parentCategoryId, setParentCategoryId] = useState('');
   const [customSize, setCustomSize] = useState('');
 
   useEffect(() => {
@@ -34,9 +36,11 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
   useEffect(() => {
     if (itemId) return;
     if (defaultCategoryId) {
+      const cat = categories.find((c) => c.id === defaultCategoryId);
+      setParentCategoryId(cat?.parent_id || defaultCategoryId);
       setForm((f) => ({ ...f, category_id: defaultCategoryId }));
     }
-  }, [itemId, defaultCategoryId]);
+  }, [itemId, defaultCategoryId, categories]);
 
   useEffect(() => {
     if (!itemId) return;
@@ -47,10 +51,11 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
         const d = data?.details || {};
         setSource(data?.source || 'draft');
         setWebsiteLinked(Boolean(data?.website_product_id));
+        const catId = d.category_id || '';
         setForm({
           name: data?.name || '',
           sku: data?.sku || '',
-          category_id: d.category_id || '',
+          category_id: catId,
           shop_price: String(data?.shop_price ?? ''),
           cost_price: data?.cost_price != null ? String(data.cost_price) : '',
           opening_qty: data?.shop_qty ?? 0,
@@ -64,13 +69,28 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
           images: d.images || [],
           color_groups: buildColorGroupsFromDetail(d),
         });
+        setParentCategoryId(''); // resolved once categories load
       })
       .catch((err) => toast.error(err.response?.data?.message || 'Failed to load product'))
       .finally(() => setLoading(false));
   }, [itemId]);
 
+  useEffect(() => {
+    if (!form.category_id || !categories.length) return;
+    const leaf = categories.find((c) => c.id === form.category_id);
+    if (!leaf) return;
+    setParentCategoryId(leaf.parent_id || leaf.id);
+  }, [form.category_id, categories]);
+
+  const parentCategories = sortParentCategories(categories);
+  const subCategories = parentCategoryId
+    ? categories.filter((c) => c.parent_id === parentCategoryId)
+    : [];
   const selectedCategory = categories.find((c) => c.id === form.category_id);
-  const sizeOptions = getSizeOptionsForCategory(selectedCategory?.name || '');
+  const selectedParent = categories.find((c) => c.id === parentCategoryId);
+  const sizeOptions = getSizeOptionsForCategory(
+    selectedCategory?.name || selectedParent?.name || ''
+  );
 
   const retailPrice = Number(form.shop_price) || 0;
   const costPrice = Number(form.cost_price) || 0;
@@ -170,6 +190,10 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
     }
     if (!form.category_id) {
       toast.error('Select a website category');
+      return;
+    }
+    if (subCategories.length > 0 && !subCategories.some((s) => s.id === form.category_id)) {
+      toast.error('Select a subcategory so the product matches shop filters');
       return;
     }
     setBusy(true);
@@ -285,12 +309,47 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                   <input className={`${inputCls} font-mono`} value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value.toUpperCase() })} />
                 </div>
                 <div>
-                  <label className={labelCls}>Website category</label>
-                  <select className={inputCls} value={form.category_id} onChange={(e) => setForm({ ...form, category_id: e.target.value })}>
-                    <option value="">Select category</option>
-                    {categories.map((c) => (
+                  <label className={labelCls}>Website parent category</label>
+                  <select
+                    className={inputCls}
+                    value={parentCategoryId}
+                    onChange={(e) => {
+                      const nextParent = e.target.value;
+                      const kids = categories.filter((c) => c.parent_id === nextParent);
+                      setParentCategoryId(nextParent);
+                      setForm({
+                        ...form,
+                        category_id: kids.length ? '' : nextParent,
+                      });
+                    }}
+                  >
+                    <option value="">Select parent</option>
+                    {parentCategories.map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
+                  </select>
+                </div>
+                <div>
+                  <label className={labelCls}>
+                    Website subcategory{subCategories.length ? ' (required)' : ''}
+                  </label>
+                  <select
+                    className={inputCls}
+                    value={form.category_id}
+                    disabled={!parentCategoryId}
+                    onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+                  >
+                    <option value="">
+                      {subCategories.length ? 'Select subcategory' : 'Uses parent category'}
+                    </option>
+                    {subCategories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                    {!subCategories.length && parentCategoryId && (
+                      <option value={parentCategoryId}>
+                        {selectedParent?.name || 'Parent'}
+                      </option>
+                    )}
                   </select>
                 </div>
                 <div>

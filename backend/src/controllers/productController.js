@@ -75,7 +75,8 @@ exports.getProducts = async (req, res, next) => {
         const offset = (page - 1) * limit;
 
         let query = `
-            SELECT p.*, c.name as category_name, p_cat.name as parent_category_name, b.name as brand_name 
+            SELECT p.*, c.name as category_name, c.slug as category_slug,
+                   p_cat.name as parent_category_name, p_cat.slug as parent_category_slug, b.name as brand_name 
             FROM products p
             LEFT JOIN categories c ON p.category_id = c.id
             LEFT JOIN categories p_cat ON c.parent_id = p_cat.id
@@ -182,7 +183,7 @@ exports.getProductBySlug = async (req, res, next) => {
         const { slug } = req.params;
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(slug);
         const productResult = await db.query(
-            'SELECT p.*, c.name as category_name, p_cat.name as parent_category_name, b.name as brand_name FROM products p ' +
+            'SELECT p.*, c.name as category_name, c.slug as category_slug, p_cat.name as parent_category_name, p_cat.slug as parent_category_slug, b.name as brand_name FROM products p ' +
             'LEFT JOIN categories c ON p.category_id = c.id ' +
             'LEFT JOIN categories p_cat ON c.parent_id = p_cat.id ' +
             'LEFT JOIN brands b ON p.brand_id = b.id ' +
@@ -600,7 +601,14 @@ exports.adminGetProducts = async (req, res, next) => {
             ? `p.id, p.name, p.slug, p.sku, p.price, p.discount_price, p.cost_price, p.stock_quantity, p.is_active, p.is_featured, p.thumbnail, p.category_id, p.brand_id, p.created_at`
             : 'p.*';
         const result = await db.query(
-            `SELECT ${productCols}, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id${where} ORDER BY p.created_at DESC`,
+            `SELECT ${productCols},
+                    c.name as category_name, c.slug as category_slug, c.parent_id as category_parent_id,
+                    p_cat.name as parent_category_name, p_cat.slug as parent_category_slug
+             FROM products p
+             LEFT JOIN categories c ON p.category_id = c.id
+             LEFT JOIN categories p_cat ON c.parent_id = p_cat.id
+             ${where}
+             ORDER BY p.created_at DESC`,
             params
         );
         const products = result.rows;

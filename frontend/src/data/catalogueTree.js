@@ -3,6 +3,8 @@
  * Parent slugs are used in URLs: /products?category=trousers&sub=Khaki
  */
 
+import CATALOGUE_TREE_RAW from './catalogue-tree.json';
+
 export const slugify = (value) =>
   String(value || '')
     .toLowerCase()
@@ -11,64 +13,9 @@ export const slugify = (value) =>
     .replace(/^-|-$/g, '');
 
 /** Canonical catalogue hierarchy */
-export const CATALOGUE_TREE = [
-  {
-    name: 'Trousers',
-    slug: 'trousers',
-    route: '/trousers',
-    sub: ['Khaki', 'Formal', 'Official', 'Chino'],
-    match: ['trousers', 'khaki', 'chino', 'official', 'formal trouser', 'pants'],
-  },
-  {
-    name: 'Shirts',
-    slug: 'shirts',
-    route: '/shirts',
-    sub: ['Polos', 'Cuban', 'Boss', 'Tommy Hilfiger', 'Lacoste'],
-    match: ['shirts', 'polo', 'cuban', 'boss', 'tommy', 'hilfiger', 'lacoste'],
-  },
-  {
-    name: 'Suits',
-    slug: 'suits',
-    route: '/suits',
-    sub: ['Two Piece', 'Three Piece'],
-    match: ['suits', 'suiting', 'two piece', 'three piece', 'blazer'],
-  },
-  {
-    name: 'Jackets',
-    slug: 'jackets',
-    route: '/jackets',
-    sub: ['Jackets', 'Half Jackets', 'Blazers'],
-    match: ['jackets', 'jacket', 'blazers', 'half jacket', 'outerwear'],
-  },
-  {
-    name: 'Sweaters',
-    slug: 'sweaters',
-    route: '/sweaters',
-    sub: ['Crew Neck', 'V-Neck', 'Cardigan'],
-    match: ['sweaters', 'sweater', 'knit', 'cardigan'],
-  },
-  {
-    name: 'Formal Wear',
-    slug: 'formal-wear',
-    route: '/products?category=formal-wear',
-    sub: ['Official Shirts', 'Formal Trousers', 'Ties'],
-    match: ['formal-wear', 'formal wear', 'official', 'formal', 'presidential'],
-  },
-  {
-    name: 'Casual Wear',
-    slug: 'casual-wear',
-    route: '/products?category=casual-wear',
-    sub: ['T-Shirts', 'Sweatshirts', 'Linen'],
-    match: ['casual-wear', 'casual wear', 't-shirts', 'sweat', 'round-neck', 'v-neck', 'linen'],
-  },
-  {
-    name: 'Accessories',
-    slug: 'accessories',
-    route: '/products?category=accessories',
-    sub: ['Belts & Ties', 'Caps & Hats'],
-    match: ['accessories', 'belts', 'ties', 'belts-ties', 'caps', 'hats'],
-  },
-];
+export const CATALOGUE_TREE = CATALOGUE_TREE_RAW;
+
+export const CATALOGUE_PARENT_SLUGS = CATALOGUE_TREE.map((cat) => cat.slug);
 
 /** Navbar mega-menu derived from catalogue */
 export const buildNavParents = () =>
@@ -132,4 +79,32 @@ export const findCatalogueCategory = (value) => {
   return CATALOGUE_TREE.find(
     (cat) => cat.slug === key || slugify(cat.name) === key
   ) || null;
+};
+
+/** Sort DB root categories with catalogue parents first (storefront order). */
+export const sortParentCategories = (categories = []) => {
+  const roots = categories.filter((c) => !c.parent_id);
+  const order = new Map(CATALOGUE_TREE.map((cat, i) => [cat.slug, i]));
+  return [...roots].sort((a, b) => {
+    const ai = order.has(a.slug) ? order.get(a.slug) : 999;
+    const bi = order.has(b.slug) ? order.get(b.slug) : 999;
+    if (ai !== bi) return ai - bi;
+    return String(a.name).localeCompare(String(b.name));
+  });
+};
+
+/** Human label: Parent › Sub (or just name). */
+export const formatCategoryPath = (product, categories = []) => {
+  if (product?.parent_category_name && product?.category_name) {
+    return `${product.parent_category_name} › ${product.category_name}`;
+  }
+  if (product?.category_name && categories.length) {
+    const leaf = categories.find((c) => c.id === product.category_id);
+    if (leaf?.parent_id) {
+      const parent = categories.find((c) => c.id === leaf.parent_id);
+      if (parent) return `${parent.name} › ${leaf.name}`;
+    }
+    return product.category_name;
+  }
+  return product?.category_name || 'Uncategorized';
 };

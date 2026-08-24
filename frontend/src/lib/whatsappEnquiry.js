@@ -1,8 +1,10 @@
 import { WHATSAPP_NUMBER } from './storeContact';
 import { BRAND_NAME } from './brand';
+import { trackMetaContact } from './metaPixel';
 
 /** Open WhatsApp with a product enquiry prefilled (MVP commerce). */
 export const openWhatsAppEnquiry = (product = {}) => {
+  trackMetaContact(product);
   const name = product.name || 'a piece from your collection';
   const price = product.price != null
     ? ` (KSh ${Number(product.price).toLocaleString()})`
@@ -14,6 +16,7 @@ export const openWhatsAppEnquiry = (product = {}) => {
 };
 
 export const openWhatsAppGeneral = (message) => {
+  trackMetaContact();
   const text = message || `Hello ${BRAND_NAME}, I'd like to book a fitting / ask about stock.`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
 };

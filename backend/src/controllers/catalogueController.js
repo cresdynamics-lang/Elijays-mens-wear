@@ -157,3 +157,139 @@ exports.getCatalogueAds = async (req, res, next) => {
         next(error);
     }
 };
+
+const csvEscape = (value) => {
+    const str = value == null ? '' : String(value);
+    if (/[",\n\r]/.test(str)) {
+        return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+};
+
+const absoluteMediaUrl = (url, siteUrl) => {
+    if (!url) return '';
+    const raw = String(url).trim();
+    if (!raw) return '';
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (raw.startsWith('//')) return `https:${raw}`;
+    const base = String(siteUrl || '').replace(/\/$/, '');
+    if (!base) return raw;
+    return raw.startsWith('/') ? `${base}${raw}` : `${base}/${raw}`;
+};
+
+/**
+ * Meta Commerce Manager product catalogue CSV.
+ * @route GET /api/catalogue/meta-products.csv
+ * Paste this URL into Meta → Catalogue → Data sources → Scheduled feed.
+ */
+exports.getMetaCatalogueCsv = async (req, res, next) => {
+    try {
+        const siteUrl = (
+            process.env.FRONTEND_URL ||
+            process.env.CORS_ORIGIN ||
+            process.env.SITE_URL ||
+            'https://elijays-mens-wear.co.ke'
+        ).replace(/\/$/, '');
+
+        const result = await db.query(`
+            SELECT
+                p.id,
+                p.sku,
+                p.slug,
+                p.name,
+                p.description,
+                p.price,
+                p.discount_price,
+                p.stock_quantity,
+                p.thumbnail,
+                p.images,
+                p.is_active,
+                c.name AS category_name,
+                c.slug AS category_slug,
+                p_cat.name AS parent_category_name,
+                b.name AS brand_name
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            LEFT JOIN categories p_cat ON c.parent_id = p_cat.id
+            LEFT JOIN brands b ON p.brand_id = b.id
+            WHERE p.is_active = true
+            ORDER BY p.created_at DESC
+        `);
+
+        const header = [
+            'id',
+            'title',
+            'description',
+            'availability',
+            'condition',
+            'price',
+            'sale_price',
+            'link',
+            'image_link',
+            'brand',
+            'product_type',
+            'google_product_category',
+            'item_group_id',
+            'additional_image_link',
+        ];
+
+        const rows = result.rows.map((product) => {
+            const listPrice = Number(product.price) || 0;
+            const sale = product.discount_price != null ? Number(product.discount_price) : null;
+            const inStock = Number(product.stock_quantity) > 0;
+            const productType = [product.parent_category_name, product.category_name]
+                .filter(Boolean)
+                .join(' > ') || product.category_name || 'Menswear';
+
+            let extraImages = [];
+            try {
+                const imgs = typeof product.images === 'string'
+                    ? JSON.parse(product.images)
+                    : product.images;
+                if (Array.isArray(imgs)) {
+                    extraImages = imgs
+                        .map((img) => (typeof img === 'string' ? img : img?.url))
+                        .filter(Boolean)
+                        .slice(0, 5)
+                        .map((u) => absoluteMediaUrl(u, siteUrl));
+                }
+            } catch {
+                extraImages = [];
+            }
+
+            const imageLink = absoluteMediaUrl(product.thumbnail, siteUrl) || extraImages[0] || '';
+            const description = String(product.description || product.name || '')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .slice(0, 5000);
+
+            return [
+                product.sku || product.id,
+                product.name,
+                description || product.name,
+                inStock ? 'in stock' : 'out of stock',
+                'new',
+                `${listPrice.toFixed(2)} KES`,
+                sale != null && sale > 0 && sale < listPrice ? `${sale.toFixed(2)} KES` : '',
+                `${siteUrl}/product/${product.slug}`,
+                imageLink,
+                product.brand_name || "ELIJAY'S Men's Wear",
+                productType,
+                'Apparel & Accessories > Clothing',
+                product.slug || product.id,
+                extraImages.filter((u) => u && u !== imageLink).join(','),
+            ].map(csvEscape).join(',');
+        });
+
+        const csv = `${header.join(',')}\n${rows.join('\n')}\n`;
+
+        res.set({
+            'Content-Type': 'text/csv; charset=utf-8',
+            'Content-Disposition': 'inline; filename="meta-products.csv"',
+            'Cache-Control': 'public, max-age=900, stale-while-revalidate=1800',
+        });
+        res.status(200).send(csv);
+    } catch (error) {
+        next(error);
+    }
+};

@@ -112,13 +112,13 @@ const AdminLogin = () => {
 
  return (
 
- <div className="bg-primary min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
+ <div className="admin-shell bg-primary min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
 
  <div className="absolute top-0 left-0 w-full h-full">
 
- <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent-600/5 rounded-full blur-[120px]" />
+ <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent-600/15 rounded-full blur-[120px]" />
 
- <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-600/5 rounded-full blur-[120px]" />
+ <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-600/10 rounded-full blur-[120px]" />
 
  </div>
 
@@ -132,11 +132,11 @@ const AdminLogin = () => {
 
  >
 
- <div className="bg-utility-gray/40 border border-utility-gray/60 p-10 rounded-3xl backdrop-blur-2xl shadow-2xl">
+ <div className="bg-utility-gray border border-black/10 p-10 rounded-3xl shadow-xl">
 
  <div className="text-center space-y-4 mb-10">
 
- <div className="w-16 h-16 bg-accent-600/10 border border-utility-gray/60 rounded-2xl flex items-center justify-center mx-auto mb-6">
+ <div className="w-16 h-16 bg-accent-600/15 border border-accent-600/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
 
  <ShieldCheck className="text-accent-500" size={32} />
 
@@ -190,7 +190,7 @@ const AdminLogin = () => {
 
  onChange={(e) => setEmail(e.target.value)}
 
- className="w-full bg-primary/50 border border-utility-gray/60 py-4 pl-12 pr-6 text-secondary text-sm rounded-xl focus:border-accent-500 outline-none transition-all placeholder:text-secondary"
+ className="w-full bg-primary border border-black/15 py-4 pl-12 pr-6 text-secondary text-sm rounded-xl focus:border-accent-500 outline-none transition-all placeholder:text-secondary/50"
 
  placeholder="seller@elijays.co.ke"
 
@@ -218,7 +218,7 @@ const AdminLogin = () => {
 
  onChange={(e) => setPassword(e.target.value)}
 
- className="w-full bg-primary/50 border border-utility-gray/60 py-4 pl-12 pr-6 text-secondary text-sm rounded-xl focus:border-accent-500 outline-none transition-all placeholder:text-secondary"
+ className="w-full bg-primary border border-black/15 py-4 pl-12 pr-6 text-secondary text-sm rounded-xl focus:border-accent-500 outline-none transition-all placeholder:text-secondary/50"
 
  placeholder="••••••••"
 

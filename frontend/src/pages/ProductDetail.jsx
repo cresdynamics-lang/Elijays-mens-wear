@@ -16,6 +16,7 @@ import { buildBreadcrumbSchema, buildProductSchema } from '../seo/seoData';
 import { toCartVariantId } from '../utils/ids';
 import { DUMMY_PRODUCTS } from '../utils/dummyData';
 import { openWhatsAppEnquiry } from '../lib/whatsappEnquiry';
+import { trackMetaViewContent } from '../lib/metaPixel';
 
 const variantStockQty = (variant) => {
  if (!variant) return null;
@@ -240,6 +241,7 @@ const ProductDetail = () => {
  setSelectedImage(productHero);
  setProduct(p);
  setRelated(rel);
+ trackMetaViewContent(p);
  };
 
  fetchProduct();

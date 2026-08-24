@@ -17,6 +17,7 @@ import {
 } from '../../utils/inventoryVariants';
 import { useConfirm } from './ConfirmDialog';
 import { isFullAdmin } from '../../utils/staffPermissions';
+import { sortParentCategories, formatCategoryPath } from '../../data/catalogueTree';
 
 const AdminTable = ({ children }) => (
  <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">{children}</div>
@@ -335,7 +336,7 @@ const ProductsView = () => {
  fetchData();
  }, []);
 
- const parentCategories = categories.filter((category) => !category.parent_id);
+ const parentCategories = sortParentCategories(categories);
  const selectedParentCategory = categories.find((category) => category.id === formData.parent_category_id);
  const selectedCategory = categories.find((category) => category.id === formData.category_id);
  const subCategories = formData.parent_category_id ? categories.filter((category) => category.parent_id === formData.parent_category_id) : [];
@@ -348,7 +349,12 @@ const ProductsView = () => {
  p.sku?.toLowerCase().includes(q) ||
  p.slug?.toLowerCase().includes(q)
  )) return false;
- if (categoryFilter && p.category_id !== categoryFilter) return false;
+ if (categoryFilter) {
+ const leaf = categories.find((c) => c.id === p.category_id);
+ const matchesLeaf = p.category_id === categoryFilter;
+ const matchesParent = leaf?.parent_id === categoryFilter || (!leaf?.parent_id && p.category_id === categoryFilter);
+ if (!matchesLeaf && !matchesParent) return false;
+ }
  const stock = Number(p.stock_quantity ?? 0);
  if (stockFilter === 'in_stock' && stock <= 0) return false;
  if (stockFilter === 'out_of_stock' && stock > 0) return false;
@@ -425,10 +431,12 @@ const ProductsView = () => {
  };
 
  const handleCategorySelect = (category) => {
+ const kids = categories.filter((c) => c.parent_id === category.id);
  setFormData({
  ...formData,
  parent_category_id: category.id,
- category_id: category.id,
+ // Require a subcategory when the parent has children (storefront filters by leaf).
+ category_id: kids.length ? '' : category.id,
  sizeRows: [],
  stock_quantity: 0,
  });
@@ -545,6 +553,10 @@ const ProductsView = () => {
  adminToast.error('Please select a category before saving this product.');
  return;
  }
+ if (subCategories.length > 0 && !subCategories.some((s) => s.id === formData.category_id)) {
+ adminToast.error('Select a subcategory so this product shows under the right shop filter.');
+ return;
+ }
  setSubmitting(true);
  try {
  const payload = { ...formData };
@@ -633,12 +645,20 @@ const ProductsView = () => {
  <select
  value={categoryFilter}
  onChange={(e) => setCategoryFilter(e.target.value)}
- className="bg-primary border border-utility-gray/60 rounded-xl px-3 py-2.5 text-secondary text-sm min-w-[160px]"
+ className="bg-primary border border-utility-gray/60 rounded-xl px-3 py-2.5 text-secondary text-sm min-w-[200px]"
  >
  <option value="">All categories</option>
- {categories.map((c) => (
- <option key={c.id} value={c.id}>{c.name}</option>
+ {parentCategories.map((parent) => {
+ const kids = categories.filter((c) => c.parent_id === parent.id);
+ return (
+ <optgroup key={parent.id} label={parent.name}>
+ <option value={parent.id}>{parent.name} (all)</option>
+ {kids.map((sub) => (
+ <option key={sub.id} value={sub.id}>{sub.name}</option>
  ))}
+ </optgroup>
+ );
+ })}
  </select>
  <select
  value={stockFilter}
@@ -768,7 +788,7 @@ const ProductsView = () => {
  </div>
  </td>
  <td className="px-6 py-4 font-mono text-[10px] text-accent ">{p.sku || 'â€”'}</td>
- <td className="px-6 py-4 text-[10px] font-bold text-accent/80 ">{p.category_name || 'Uncategorized'}</td>
+ <td className="px-6 py-4 text-[10px] font-bold text-accent/80 ">{formatCategoryPath(p, categories)}</td>
  <td className="px-6 py-4 font-bold text-secondary">KSh {parseFloat(p.price).toLocaleString()}</td>
  <td className="px-6 py-4">
  <div className={`text-[10px] font-black ${p.stock_quantity === 0 ? 'text-red-600' : p.stock_quantity < 10 ? 'text-accent-500' : 'text-green-600'}`}>
@@ -980,7 +1000,9 @@ const ProductsView = () => {
  <div className="rounded-2xl border border-utility-gray/60 bg-primary p-5 space-y-5">
  <div>
  <p className="text-[10px] font-black tracking-[0.25em] text-accent-400">Category</p>
- <p className="text-[9px] tracking-wider text-accent-500/35 mt-1">Tick the main category first, then tick a subcategory when it applies.</p>
+ <p className="text-[9px] tracking-wider text-accent-500/35 mt-1">
+ Choose a storefront parent, then a subcategory — products need a subcategory for shop filters.
+ </p>
  </div>
 
  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -994,10 +1016,11 @@ const ProductsView = () => {
  }`}
  >
  <input
- type="checkbox"
+ type="radio"
+ name="admin-parent-category"
  checked={formData.parent_category_id === category.id}
  onChange={() => handleCategorySelect(category)}
- className="h-4 w-4 rounded border-accent-500/30 bg-primary text-accent-600 focus:ring-0"
+ className="h-4 w-4 border-accent-500/30 bg-primary text-accent-600 focus:ring-0"
  />
  <span className="text-[10px] font-black ">{category.name}</span>
  </label>
@@ -1006,7 +1029,9 @@ const ProductsView = () => {
 
  {subCategories.length > 0 && (
  <div className="space-y-3 pt-4 border-t border-utility-gray/60">
- <p className="text-[9px] font-black tracking-[0.25em] text-secondary/50">Subcategory</p>
+ <p className="text-[9px] font-black tracking-[0.25em] text-secondary/50">
+ Subcategory <span className="text-red-500/80">required</span>
+ </p>
  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
  {subCategories.map((category) => (
  <label
@@ -1018,10 +1043,11 @@ const ProductsView = () => {
  }`}
  >
  <input
- type="checkbox"
+ type="radio"
+ name="admin-sub-category"
  checked={formData.category_id === category.id}
  onChange={() => handleSubCategorySelect(category)}
- className="h-4 w-4 rounded border-accent-500/30 bg-primary text-accent-600 focus:ring-0"
+ className="h-4 w-4 border-accent-500/30 bg-primary text-accent-600 focus:ring-0"
  />
  <span className="text-[10px] font-black ">{category.name}</span>
  </label>
