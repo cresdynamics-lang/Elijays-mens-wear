@@ -73,14 +73,14 @@ const Home = () => {
           className="absolute inset-0 w-full h-full object-cover object-center"
           fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 container mx-auto px-5 md:px-8 h-full flex items-center">
           <div className="max-w-xl text-white">
             <p className="text-[11px] tracking-[0.2em] uppercase font-medium mb-3 text-elijays-gold">Premium Mens Fashion</p>
-            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-medium tracking-[0.02em] leading-tight mb-4">
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-medium tracking-[0.02em] leading-tight mb-4 text-white">
               ELIJAYS Men&apos;s Wear
             </h1>
-            <p className="text-sm md:text-base text-white/80 mb-6 leading-relaxed max-w-md">
+            <p className="text-sm md:text-base text-white/90 mb-6 leading-relaxed max-w-md">
               Tailored for the man who arrives. Suits, shirts and outerwear cut for Nairobi&apos;s CBD.
             </p>
             <div className="flex flex-row flex-wrap gap-3">
