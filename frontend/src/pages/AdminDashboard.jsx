@@ -231,9 +231,9 @@ const AdminDashboard = () => {
  }`}
  >
  <div className="p-6 border-b border-black/10 flex items-center gap-3">
- <div className="w-10 h-10 bg-accent-600 rounded-lg flex items-center justify-center text-base-950 font-bold text-xl">
- PE
- </div>
+  <div className="w-10 h-10 bg-accent-600 rounded-lg flex items-center justify-center text-base-950 font-bold text-xl">
+  EJ
+  </div>
  {isSidebarOpen && (
  <motion.div 
  initial={{ opacity: 0 }} 
@@ -2205,7 +2205,7 @@ const AdminsView = ({ roleFilter = null }) => {
  value={formData.email}
  onChange={(e) => setFormData({...formData, email: e.target.value})}
  className={`w-full bg-primary/50 border border-utility-gray/60 rounded-xl px-4 py-3 text-secondary focus:outline-none focus:border-accent-500/50 transition-colors placeholder:text-accent-500/20 ${editingStaff ? 'opacity-60 cursor-not-allowed' : ''}`}
- placeholder="staff@prince-esquare.com"
+  placeholder="staff@elijays.co.ke"
  />
  </div>
 

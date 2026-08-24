@@ -9,7 +9,7 @@ const SECTION_HEADERS = [
   { key: 'colors', patterns: [/available color/i, /color variants?/i] },
   { key: 'sizes', patterns: [/available sizes?/i, /size run/i] },
   { key: 'delivery', patterns: [/delivery\s*&\s*service/i, /shipping\s*&\s*delivery/i] },
-  { key: 'why', patterns: [/why prince esquire/i, /why choose/i] },
+  { key: 'why', patterns: [/why elijays/i, /why choose/i] },
 ];
 
 const cleanLine = (line) => line.replace(BULLET_RE, '').trim();

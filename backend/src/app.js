@@ -158,7 +158,85 @@ app.use('/api/pos-admin', require('./routes/posOverview.routes'));
 app.use('/api/health', require('./routes/healthRoutes'));
 
 app.get('/', (_req, res) => {
-  res.json({ message: 'Welcome to Prince Esquare API', version: '1.0.0' });
+  res.json({ message: 'Welcome to ELIJAY\'S API', version: '1.0.0' });
+});
+
+app.get('/sitemap.xml', async (_req, res) => {
+  try {
+    const siteUrl = (
+      process.env.FRONTEND_URL ||
+      process.env.CORS_ORIGIN ||
+      process.env.SITE_URL ||
+      'https://elijays-mens-wear.co.ke'
+    ).replace(/\/$/, '');
+
+    const [productsResult, categoriesResult] = await Promise.all([
+      db.query(`
+        SELECT p.slug, p.updated_at
+        FROM products p
+        WHERE p.is_active = true
+        ORDER BY p.updated_at DESC
+      `),
+      db.query(`
+        SELECT c.slug, c.updated_at
+        FROM categories c
+        WHERE c.is_active = true
+        ORDER BY c.updated_at DESC
+      `),
+    ]);
+
+    const staticUrls = [
+      { loc: '/', changefreq: 'daily', priority: '1.0' },
+      { loc: '/products', changefreq: 'daily', priority: '0.9' },
+      { loc: '/suits', changefreq: 'weekly', priority: '0.9' },
+      { loc: '/shirts', changefreq: 'weekly', priority: '0.8' },
+      { loc: '/trousers', changefreq: 'weekly', priority: '0.8' },
+      { loc: '/jackets', changefreq: 'weekly', priority: '0.8' },
+      { loc: '/sweaters', changefreq: 'weekly', priority: '0.8' },
+      { loc: '/linen', changefreq: 'weekly', priority: '0.8' },
+      { loc: '/about', changefreq: 'monthly', priority: '0.7' },
+      { loc: '/contact', changefreq: 'monthly', priority: '0.8' },
+      { loc: '/journal', changefreq: 'weekly', priority: '0.7' },
+    ];
+
+    const productUrls = productsResult.rows
+      .filter((p) => p.slug)
+      .map((p) => ({
+        loc: `/product/${encodeURIComponent(p.slug)}`,
+        changefreq: 'weekly',
+        priority: '0.7',
+        lastmod: p.updated_at ? new Date(p.updated_at).toISOString().split('T')[0] : undefined,
+      }));
+
+    const categoryUrls = categoriesResult.rows
+      .filter((c) => c.slug)
+      .map((c) => ({
+        loc: `/${encodeURIComponent(c.slug)}`,
+        changefreq: 'weekly',
+        priority: '0.8',
+        lastmod: c.updated_at ? new Date(c.updated_at).toISOString().split('T')[0] : undefined,
+      }));
+
+    const allUrls = [...staticUrls, ...categoryUrls, ...productUrls];
+
+    const xml = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      ...allUrls.map((u) => {
+        const attrs = [`<loc>${siteUrl}${u.loc}</loc>`, `<changefreq>${u.changefreq}</changefreq>`, `<priority>${u.priority}</priority>`];
+        if (u.lastmod) attrs.push(`<lastmod>${u.lastmod}</lastmod>`);
+        return `  <url>\n    ${attrs.join('\n    ')}\n  </url>`;
+      }),
+      '</urlset>',
+    ].join('\n');
+
+    res.set('Content-Type', 'application/xml; charset=utf-8');
+    res.set('Cache-Control', 'public, max-age=3600, stale-while-revalidate=7200');
+    res.status(200).send(xml);
+  } catch (err) {
+    console.error('Sitemap generation error:', err);
+    res.status(500).send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>');
+  }
 });
 
 app.use((err, req, res, _next) => {
