@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import Layout from '../components/Layout';
 import ProductShowcase from '../components/ProductShowcase';
+import CategoryCards from '../components/CategoryCards';
 import { bannerAPI } from '../services/api';
 import { routeSeo } from '../seo/seoData';
 import { DUMMY_PRODUCTS } from '../utils/dummyData';
@@ -66,31 +67,38 @@ const Home = () => {
       <SEO {...routeSeo.home} schema={[]} />
 
       {/* Hero Banner */}
-      <section className="relative w-full h-[60vh] md:h-[80vh] min-h-[500px] overflow-hidden bg-white">
-        <div className="relative z-10 container mx-auto px-5 md:px-8 h-full flex items-center">
-          <div className="max-w-xl text-elijays-ink">
-            <p className="text-[11px] tracking-[0.2em] uppercase font-medium mb-3 text-elijays-gold">Premium Mens Fashion</p>
-            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-medium tracking-[0.02em] leading-tight mb-4 text-elijays-ink">
-              ELIJAYS Men&apos;s Wear
-            </h1>
-            <p className="text-sm md:text-base text-elijays-muted mb-6 leading-relaxed max-w-md">
-              Tailored for the man who arrives. Suits, shirts and outerwear cut for Nairobi&apos;s CBD.
-            </p>
-            <div className="flex flex-row flex-wrap gap-3">
-              <Link to="/suits" className="btn-gold text-center">
-                Shop suits
-              </Link>
-              <button
-                type="button"
-                onClick={() => openWhatsAppGeneral("Hello ELIJAY'S, I'd like to book a fitting.")}
-                className="btn-outline text-center"
-              >
-                Book a fitting
-              </button>
-            </div>
+      <section className="relative w-full h-[72vh] md:h-[88vh] min-h-[520px] overflow-hidden">
+        <img
+          src={HERO_IMAGE}
+          alt="ELIJAYS Men's Wear"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/65" />
+        <div className="relative z-10 container mx-auto px-5 md:px-8 h-full flex flex-col items-center justify-center text-center text-white">
+          <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4 text-elijays-gold">Premium Mens Fashion</p>
+          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-medium tracking-[0.02em] leading-tight mb-5">
+            ELIJAYS Men&apos;s Wear
+          </h1>
+          <p className="text-sm md:text-lg text-white/85 mb-8 leading-relaxed max-w-xl">
+            Tailored for the man who arrives. Suits, shirts and outerwear cut for Nairobi&apos;s CBD.
+          </p>
+          <div className="flex flex-row flex-wrap gap-3 justify-center">
+            <Link to="/suits" className="btn-gold text-center">
+              Shop suits
+            </Link>
+            <button
+              type="button"
+              onClick={() => openWhatsAppGeneral("Hello ELIJAY'S, I'd like to book a fitting.")}
+              className="btn-gold-outline text-center"
+            >
+              Book a fitting
+            </button>
           </div>
         </div>
       </section>
+
+      {/* Category cards — MensWorld-style image grid */}
+      <CategoryCards />
 
       {/* Category Sections with Banners */}
       {categorySections.map((section) => (
