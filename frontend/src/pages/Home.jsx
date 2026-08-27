@@ -141,11 +141,11 @@ const Home = () => {
           alt="ELIJAYS Store"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <div className="text-center text-white">
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center px-5">
+          <div className="bg-black/70 rounded-2xl px-6 py-8 md:px-10 md:py-10 text-center text-white max-w-lg shadow-xl">
             <p className="text-[11px] tracking-[0.2em] uppercase font-medium mb-2 text-elijays-gold">Find Us</p>
             <h2 className="font-display text-2xl md:text-4xl font-medium tracking-[0.02em] mb-4">Store Locator</h2>
-            <p className="text-sm text-white/80 mb-6 max-w-md mx-auto">
+            <p className="text-sm text-white mb-6 max-w-md mx-auto">
               Visit us at Muindi Mbingu Street × Biashara Street, Nairobi CBD. Open Mon – Sat, 9AM – 6PM.
             </p>
             <a
