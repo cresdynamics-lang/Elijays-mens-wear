@@ -23,14 +23,14 @@ const CategoryCards = () => {
   return (
     <section className="py-14 md:py-20 bg-white">
       <div className="container mx-auto px-5 md:px-8">
-        <div className="text-center mb-10 md:mb-14">
-          <p className="text-elijays-gold text-[11px] tracking-[0.25em] uppercase font-semibold mb-2">
-            In Stock at ELIJAY&apos;S
-          </p>
-          <h2 className="font-display text-3xl md:text-4xl text-elijays-ink tracking-tight">
-            Shop by Category
-          </h2>
-        </div>
+          <div className="text-center mb-10 md:mb-14">
+            <p className="text-elijays-gold text-[11px] tracking-[0.25em] uppercase font-semibold mb-2">
+              In Stock at ELIJAY&apos;S
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl text-elijays-ink tracking-tight">
+              See Your Wardrobe
+            </h2>
+          </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {HOMEPAGE_CATEGORY_CARDS.map((cat, i) => (

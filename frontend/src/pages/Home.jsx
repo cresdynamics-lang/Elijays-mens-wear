@@ -67,32 +67,21 @@ const Home = () => {
       <SEO {...routeSeo.home} schema={[]} />
 
       {/* Hero Banner */}
-      <section className="relative w-full h-[72vh] md:h-[88vh] min-h-[520px] overflow-hidden">
+      <section className="relative w-full h-[80vh] md:h-[92vh] min-h-[520px] overflow-hidden">
         <img
           src={HERO_IMAGE}
           alt="ELIJAYS Men's Wear"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-black/65" />
-        <div className="relative z-10 container mx-auto px-5 md:px-8 h-full flex flex-col items-center justify-center text-center text-white">
-          <p className="text-[11px] tracking-[0.25em] uppercase font-medium mb-4 text-elijays-gold">Premium Mens Fashion</p>
-          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-medium tracking-[0.02em] leading-tight mb-5">
-            ELIJAYS Men&apos;s Wear
-          </h1>
-          <p className="text-sm md:text-lg text-white/85 mb-8 leading-relaxed max-w-xl">
-            Tailored for the man who arrives. Suits, shirts and outerwear cut for Nairobi&apos;s CBD.
-          </p>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+        <div className="relative z-10 container mx-auto px-5 md:px-8 h-full flex flex-col items-center justify-end pb-12 md:pb-16 text-center text-white">
           <div className="flex flex-row flex-wrap gap-3 justify-center">
-            <Link to="/suits" className="btn-gold text-center">
-              Shop suits
+            <Link to="/products?sort=new" className="btn-gold text-center">
+              New Arrivals
             </Link>
-            <button
-              type="button"
-              onClick={() => openWhatsAppGeneral("Hello ELIJAY'S, I'd like to book a fitting.")}
-              className="btn-gold-outline text-center"
-            >
-              Book a fitting
-            </button>
+            <Link to="/products" className="btn-gold-outline text-center">
+              Shop All
+            </Link>
           </div>
         </div>
       </section>

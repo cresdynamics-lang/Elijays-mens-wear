@@ -77,7 +77,7 @@ const Footer = () => (
       <div className="border-t border-elijays-ink/5 pt-5 flex flex-col md:flex-row justify-between gap-2 text-xs text-elijays-muted">
         <p>© {new Date().getFullYear()} Elijay&apos;s Men&apos;s Wear. All rights reserved.</p>
         <div className="flex items-center gap-4">
-          <Link to="/admin/login" className="hover:text-elijays-ink tracking-[0.12em] uppercase">Staff</Link>
+          <Link to="/admin/login" className="hover:text-elijays-ink tracking-[0.12em] uppercase">Staff Login</Link>
           <span>{SITE_URL}</span>
         </div>
       </div>
