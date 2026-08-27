@@ -8,7 +8,7 @@ const API = axios.create({
 });
 
 // Flag to use dummy data when backend is unavailable
-const USE_DUMMY_DATA = true; // Always use dummy data since backend is not deployed
+const USE_DUMMY_DATA = false; // Backend is deployed — use real API data
 
 const requestId = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();

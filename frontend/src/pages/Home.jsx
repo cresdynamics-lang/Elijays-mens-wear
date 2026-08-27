@@ -17,10 +17,8 @@ import { openWhatsAppGeneral } from '../lib/whatsappEnquiry';
 const HERO_IMAGE = '/hero/hero-elijays.jpg';
 
 const Home = () => {
-  const [allProducts, setAllProducts] = useState(DUMMY_PRODUCTS);
-  const [featuredProducts, setFeaturedProducts] = useState(
-    DUMMY_PRODUCTS.filter((p) => p.category_name !== 'belts-ties').slice(0, 12)
-  );
+  const [allProducts, setAllProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -29,8 +27,8 @@ const Home = () => {
       .then((res) => {
         if (cancelled) return;
         const data = res.data?.data || res.data;
-        const arrivals = data?.new_arrivals || [];
-        const best = data?.best_sellers || [];
+        const arrivals = data?.newArrivals || data?.new_arrivals || [];
+        const best = data?.bestSellers || data?.best_sellers || [];
         const merged = [...arrivals, ...best, ...DUMMY_PRODUCTS];
         const unique = [];
         const seen = new Set();
