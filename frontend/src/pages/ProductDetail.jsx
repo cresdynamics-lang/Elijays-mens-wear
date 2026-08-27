@@ -181,8 +181,9 @@ const ProductDetail = () => {
  const [selectedImage, setSelectedImage] = useState('');
 
  const [quantity, setQuantity] = useState(1);
- const [addedToCart, setAddedToCart] = useState(false);
- const [colorCarouselIndex, setColorCarouselIndex] = useState(0);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [infoTab, setInfoTab] = useState('description');
+  const [colorCarouselIndex, setColorCarouselIndex] = useState(0);
 
  const touchStartX = useRef(null);
  const relatedSectionRef = useRef(null);
@@ -568,37 +569,36 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  )}
  </div>
 
- {hasMultipleColors && (
- <div className="space-y-4">
- <h3 className="text-[10px] tracking-[0.22em] font-bold text-accent uppercase">
- {variantMeta.isShoe ? 'Color' : 'Variant'}
- </h3>
- <div className="flex flex-col gap-2">
- {variantMeta.colors.map(({ color, variants: colorVariants }) => {
- const isSelected = selectedColor === color;
- const colorAvailable = colorVariants.some(isVariantAvailable);
-
- return (
- <button
- key={color}
- type="button"
- disabled={!colorAvailable}
- onClick={() => handleColorSelect(color)}
- className={`flex items-center justify-between w-full px-4 py-3.5 border text-left transition-all duration-300 rounded-lg ${
- !colorAvailable ? 'opacity-35 cursor-not-allowed border-utility-gray' :
- isSelected
- ? 'border-accent/40 bg-accent/10 text-secondary'
- : 'border-utility-gray text-secondary/70 hover:border-accent/25'
- }`}
- >
- <span className="text-[11px] font-medium tracking-wide">{color}</span>
- {isSelected && <Check size={14} className="text-accent shrink-0" />}
- </button>
- );
- })}
- </div>
- </div>
- )}
+  {hasMultipleColors && (
+  <div className="space-y-3">
+  <h3 className="text-[11px] tracking-[0.14em] font-medium text-elijays-ink uppercase">
+  {variantMeta.isShoe ? 'Color' : 'Color / Variant'}
+  </h3>
+  <div className="flex flex-wrap gap-2.5">
+  {variantMeta.colors.map(({ color, variants: colorVariants }) => {
+  const isSelected = selectedColor === color;
+  const colorAvailable = colorVariants.some(isVariantAvailable);
+  return (
+  <button
+  key={color}
+  type="button"
+  disabled={!colorAvailable}
+  onClick={() => handleColorSelect(color)}
+  className={`px-4 py-2 rounded-full border text-[11px] font-medium tracking-wide transition-all duration-300 ${
+  !colorAvailable
+  ? 'opacity-35 cursor-not-allowed border-utility-gray text-elijays-ink/40'
+  : isSelected
+  ? 'border-elijays-gold bg-elijays-gold text-elijays-ink'
+  : 'border-elijays-ink/20 text-elijays-ink hover:border-elijays-gold'
+  }`}
+  >
+  {color}
+  </button>
+  );
+  })}
+  </div>
+  </div>
+  )}
 
  {availableSizes.length > 0 && (
  <div className="space-y-4">
@@ -711,17 +711,91 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
  </AnimatePresence>
  </div>
 
- <div className="pt-8 border-t border-utility-gray/30">
- <ProductDescription
- productName={product.name}
- brandName={product.brand_name}
- description={product.description}
- parsedColors={parsedColorList}
- parsedSizes={parsedSizes}
- isShoe={variantMeta.isShoe}
- keyFeatures={product.key_features}
- />
- </div>
+  <div className="pt-8 border-t border-utility-gray/30">
+  <div className="flex gap-6 border-b border-utility-gray/30 mb-6">
+  {[
+  { id: 'description', label: 'Description' },
+  { id: 'details', label: 'Details' },
+  { id: 'shipping', label: 'Shipping & Returns' },
+  ].map((tab) => (
+  <button
+  key={tab.id}
+  type="button"
+  onClick={() => setInfoTab(tab.id)}
+  className={`pb-3 text-[11px] tracking-[0.14em] uppercase font-medium transition-colors ${
+  infoTab === tab.id
+  ? 'text-elijays-gold border-b-2 border-elijays-gold'
+  : 'text-elijays-ink/50 hover:text-elijays-ink'
+  }`}
+  >
+  {tab.label}
+  </button>
+  ))}
+  </div>
+
+  {infoTab === 'description' && (
+  <ProductDescription
+  productName={product.name}
+  brandName={product.brand_name}
+  description={product.description}
+  parsedColors={parsedColorList}
+  parsedSizes={parsedSizes}
+  isShoe={variantMeta.isShoe}
+  keyFeatures={product.key_features}
+  />
+  )}
+
+  {infoTab === 'details' && (
+  <div className="text-sm text-elijays-ink/70 space-y-3 leading-relaxed">
+  <p>
+  <span className="font-semibold text-elijays-ink">Category:</span>{' '}
+  {[product.parent_category_name, product.category_name].filter(Boolean).join(' › ') || '—'}
+  </p>
+  {product.brand_name && (
+  <p>
+  <span className="font-semibold text-elijays-ink">Brand:</span> {product.brand_name}
+  </p>
+  )}
+  {parsedColorList.length > 0 && (
+  <p>
+  <span className="font-semibold text-elijays-ink">Available colours:</span>{' '}
+  {parsedColorList.join(', ')}
+  </p>
+  )}
+  {parsedSizes.length > 0 && (
+  <p>
+  <span className="font-semibold text-elijays-ink">Available sizes:</span>{' '}
+  {parsedSizes.join(', ')}
+  </p>
+  )}
+  {product.key_features?.length > 0 && (
+  <ul className="list-disc pl-5 space-y-1">
+  {product.key_features.map((f, i) => (
+  <li key={i}>{f}</li>
+  ))}
+  </ul>
+  )}
+  </div>
+  )}
+
+  {infoTab === 'shipping' && (
+  <div className="text-sm text-elijays-ink/70 space-y-3 leading-relaxed">
+  <p>
+  <span className="font-semibold text-elijays-ink">Delivery:</span> Cash on delivery
+  and M-Pesa available nationwide. Nairobi CBD orders can be collected in-store on
+  Muindi Mbingu Street × Biashara Street.
+  </p>
+  <p>
+  <span className="font-semibold text-elijays-ink">Returns:</span> Unworn items with
+  tags may be exchanged within 7 days. Made-to-measure pieces are final sale.
+  </p>
+  <p>
+  <span className="font-semibold text-elijays-ink">Need a fitting?</span> Book a
+  consultation on WhatsApp before you buy — we&apos;ll size you properly.
+  </p>
+  </div>
+  )}
+  </div>
  </div>
  </div>
 
