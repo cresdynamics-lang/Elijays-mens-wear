@@ -59,31 +59,28 @@ const CategoryCards = () => {
               <button
                 type="button"
                 onClick={() => navigate(cat.link)}
-                aria-label={`View ${cat.shortcut} collection`}
-                className="relative block aspect-[3/4] w-full overflow-hidden rounded-2xl bg-elijays-charcoal focus:outline-none focus:ring-2 focus:ring-elijays-gold"
+                aria-label={`View ${cat.title} collection`}
+                className="block w-full overflow-hidden rounded-2xl bg-white text-left shadow-sm ring-1 ring-black/5 transition group-hover:ring-elijays-gold/60 focus:outline-none focus:ring-2 focus:ring-elijays-gold"
               >
-                <img
-                  src={cat.image}
-                  alt={cat.title}
-                  loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.src = fallbackImage(cat.title);
-                  }}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 pr-28 text-left">
-                  <p className="text-elijays-gold/90 text-[9px] tracking-[0.3em] uppercase font-semibold mb-1">
-                    {cat.subtitle}
-                  </p>
-                  <h3 className="text-white font-display text-lg md:text-xl tracking-wide">
-                    {cat.title}
-                  </h3>
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-elijays-charcoal">
+                  <img
+                    src={cat.image}
+                    alt={cat.title}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = fallbackImage(cat.title);
+                    }}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+                  />
                 </div>
-                <span className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-elijays-ink shadow-md">
-                  <span>{cat.shortcut}</span>
-                  <ArrowRight />
-                </span>
+                <div className="flex items-center justify-between gap-2 bg-white px-4 py-3">
+                  <span className="text-sm font-medium text-elijays-ink">
+                    {cat.title}
+                  </span>
+                  <span className="shrink-0 text-elijays-gold">
+                    <ArrowRight />
+                  </span>
+                </div>
               </button>
             </motion.div>
           ))}
