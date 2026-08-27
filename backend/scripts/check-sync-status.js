@@ -9,7 +9,7 @@ const db = require('../src/config/db');
 
 async function main() {
   const syncPath = path.join(__dirname, '..', 'data', 'full-sync.json');
-  console.log('=== Prince Esquare data check ===\n');
+  console.log('=== ELIJAYS data check ===\n');
   console.log('DB:', process.env.DB_NAME || 'eljays_db');
   if (fs.existsSync(syncPath)) {
     const mb = (fs.statSync(syncPath).size / 1024 / 1024).toFixed(2);

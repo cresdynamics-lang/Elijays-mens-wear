@@ -158,7 +158,7 @@ const exportInventoryCatalogWorkbook = async ({ category = '' } = {}) => {
   ]);
 
   const wb = new ExcelJS.Workbook();
-  wb.creator = 'Prince Esquare';
+  wb.creator = 'ELIJAYS';
   wb.created = new Date();
 
   const wsInv = wb.addWorksheet('Inventory Catalog');
@@ -260,7 +260,7 @@ const exportInventoryCatalogWorkbook = async ({ category = '' } = {}) => {
   }
 
   const wsInfo = wb.addWorksheet('Read Me');
-  wsInfo.addRow(['Prince Esquare — Live Catalogue Export', new Date().toISOString().slice(0, 16)]);
+  wsInfo.addRow(['ELIJAYS — Live Catalogue Export', new Date().toISOString().slice(0, 16)]);
   wsInfo.addRow(['Category filter', category || 'All categories']);
   wsInfo.addRow(['Inventory rows', pieces.length]);
   wsInfo.addRow(['Website rows', websiteRows.length]);

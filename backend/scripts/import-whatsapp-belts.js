@@ -61,7 +61,7 @@ async function ensureCategory(name, parentId = null) {
   if (bySlug.rows.length) return bySlug.rows[0].id;
   const r = await db.query(
     'INSERT INTO categories (name, slug, description, parent_id) VALUES ($1, $2, $3, $4) RETURNING id',
-    [name, slug, `${name} — Prince Esquare`, parentId]
+    [name, slug, `${name} — ELIJAYS`, parentId]
   );
   return r.rows[0].id;
 }
@@ -78,11 +78,11 @@ async function ensureBrand(name) {
 }
 
 const buildDescription = (item) =>
-  `${item.description}\n\nKey features:\n• Genuine leather strap with tonal edge stitching.\n• Classic dress width for suit trousers and chinos.\n• Pin buckle closure with leather keeper loop(s).\n• Formal-to-smart-casual versatility.\n\nCare: Wipe with a damp cloth. Condition leather periodically. Store flat or coiled loosely.\n\nExclusively at Prince Esquare.`;
+  `${item.description}\n\nKey features:\n• Genuine leather strap with tonal edge stitching.\n• Classic dress width for suit trousers and chinos.\n• Pin buckle closure with leather keeper loop(s).\n• Formal-to-smart-casual versatility.\n\nCare: Wipe with a damp cloth. Condition leather periodically. Store flat or coiled loosely.\n\nExclusively at ELIJAYS.`;
 
 (async () => {
   const beltsId = await ensureCategory('Belts & Ties');
-  const brandId = await ensureBrand('Prince Esquare');
+  const brandId = await ensureBrand('ELIJAYS');
 
   let imported = 0;
   for (const item of CATALOG) {

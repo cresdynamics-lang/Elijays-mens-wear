@@ -1,4 +1,4 @@
-/** ELIJAY'S homepage — distinct from Prince Esquire; aligned to June 16 inventory */
+/** ELIJAY'S homepage — distinct from ELIJAYS; aligned to June 16 inventory */
 
 export const HERO_SLIDES = [
   {

@@ -1,6 +1,6 @@
 # Move generated images from Cursor assets folder into frontend/public/generated-products
-$assetsDir = "C:\Users\Spine\.cursor\projects\c-Users-Spine-Prince-Esquare\assets"
-$publicRoot = "C:\Users\Spine\Prince-Esquare\frontend\public\generated-products"
+$assetsDir = "C:\Users\Spine\.cursor\projects\c-Users-Spine-Elijays\assets"
+$publicRoot = "C:\Users\Spine\Elijays\frontend\public\generated-products"
 $manifest = @{}
 
 Get-ChildItem $assetsDir -Filter "*-front.png" | ForEach-Object {
@@ -26,7 +26,7 @@ Get-ChildItem $assetsDir -Filter "*-front.png" | ForEach-Object {
 }
 
 Write-Host "Organized $($manifest.Count) products with front/side/back PNGs"
-Push-Location "C:\Users\Spine\Prince-Esquare\backend"
+Push-Location "C:\Users\Spine\Elijays\backend"
 npm run angles:manifest
 Pop-Location
 Write-Host "Run 'npm run angles:apply' to update the database."

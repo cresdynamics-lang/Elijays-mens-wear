@@ -19,13 +19,13 @@ cd "$REPO_ROOT"
 
 BACKEND="$REPO_ROOT/backend"
 FRONTEND="$REPO_ROOT/frontend"
-BACKUP_DIR="${BACKUP_DIR:-/var/backups/prince-esquare}"
+BACKUP_DIR="${BACKUP_DIR:-/var/backups/elijays}"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 RUN_MIGRATE="${RUN_MIGRATE:-1}"
 SKIP_BACKUP="${SKIP_BACKUP:-0}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
 
-echo "=== Prince Esquare production update ==="
+echo "=== ELIJAY'S production update ==="
 echo "Repo: $REPO_ROOT"
 
 if [ ! -f "$BACKEND/package.json" ]; then
@@ -90,7 +90,7 @@ echo ""
 echo "=== Restart API ==="
 cd "$BACKEND"
 if command -v pm2 >/dev/null 2>&1; then
-  pm2 restart all || pm2 start src/index.js --name prince-api
+  pm2 restart all || pm2 start src/index.js --name elijays-api
   pm2 save
 else
   echo "PM2 not found. Restart your node service manually (systemd/supervisor)."

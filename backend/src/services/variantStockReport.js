@@ -263,7 +263,7 @@ const styleActionCell = (cell, action) => {
 const exportVariantStockWorkbook = async ({ category = '' } = {}) => {
   const { physicalRows, productRows } = await buildReport({ category });
   const wb = new ExcelJS.Workbook();
-  wb.creator = 'Prince Esquare';
+  wb.creator = 'ELIJAYS';
   wb.created = new Date();
 
   const wsPhys = wb.addWorksheet('Physical by Category');

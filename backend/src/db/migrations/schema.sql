@@ -1,4 +1,4 @@
--- Prince Esquare Database Schema
+-- ELIJAYS Database Schema
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

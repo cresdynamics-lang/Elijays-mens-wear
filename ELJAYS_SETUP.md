@@ -1,6 +1,6 @@
 # ELIJAY'S — Local & Production Setup
 
-This project is **completely separate** from Prince Esquire. Do not deploy to Prince's server or push to the Prince repo.
+This is the standalone **ELIJAY'S Men's Wear** platform, deployed independently of any other project.
 
 ## 1. Prerequisites
 
@@ -56,9 +56,9 @@ npm run seed:eljays-inventory
 
 This creates POS stock lines for all 30 Excel categories (belts, suits, shirts, jackets, khakis, etc.) with opening stock from the sheet.
 
-## 4. Import website catalog (Prince structure, no shoes)
+## 4. Import website catalog (no footwear)
 
-Product images live in `backend/data/*-images/` (copied from Prince). Footwear folders are kept on disk but **not imported**.
+Product images live in `backend/data/*-images/`. Footwear folders are kept on disk but **not imported**.
 
 Preview plan:
 
@@ -99,7 +99,7 @@ git push -u origin main
 
 ## 7. Production (when ready)
 
-Use a **new server or new site** — not Prince Esquire's DigitalOcean deploy.
+Use a **dedicated server or new site** for ELIJAY'S (do not mix with other deployments).
 
 1. Create PostgreSQL database `eljays_db` on the new host
 2. Set production `.env` (domain, M-Pesa, Cloudinary, JWT)

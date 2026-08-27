@@ -1,4 +1,24 @@
-# Update live site on DigitalOcean (161.35.58.181)
+# Deploy & update live site on DigitalOcean (161.35.58.181)
+
+## 0. First-time setup (fresh Ubuntu droplet)
+
+SSH in, then run the bootstrap script. It installs Node/Postgres/nginx/PM2, clones
+the repo, writes `.env` files, migrates + seeds the DB, builds the frontend, and
+configures nginx + PM2.
+
+```bash
+ssh root@161.35.58.181
+DO_DOMAIN=elijays.co.ke \
+CLOUDINARY_URL='cloudinary://key:secret@account' \
+EMAIL_FOR_SSL=admin@elijays.co.ke \
+bash scripts/server-setup.sh
+```
+
+Set `EMAIL_FOR_SSL` to auto-provision a Let's Encrypt certificate. The script
+autogenerates `JWT_SECRET`, `INTERNAL_KEY`, and the Postgres password unless you
+pass them. Admin login defaults to `admin@elijays.co.ke` / `elijays2026`.
+
+After this, skip to step 4 below for every future update.
 
 ## 1. SSH into the server
 
@@ -21,7 +41,6 @@ bash /path/to/Elijays-Mens-Wear/scripts/server-find-app.sh
 Common locations:
 
 - `/var/www/Elijays-Mens-Wear`
-- `/var/www/prince-esquare`
 - `/home/ubuntu/Elijays-Mens-Wear`
 
 Look for a folder that contains both `backend/` and `frontend/`.

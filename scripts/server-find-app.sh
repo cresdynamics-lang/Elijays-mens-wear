@@ -12,7 +12,7 @@ pm2 list 2>/dev/null || echo "(pm2 not installed or no processes)"
 echo ""
 echo "=== Nginx sites ==="
 ls -la /etc/nginx/sites-enabled/ 2>/dev/null || true
-grep -r "root\|proxy_pass\|Prince\|esquare\|esquire" /etc/nginx/sites-enabled/ 2>/dev/null || true
+grep -r "root\|proxy_pass\|Elijays\|elijays" /etc/nginx/sites-enabled/ 2>/dev/null || true
 
 echo ""
 echo "=== Search backend package.json ==="
@@ -29,4 +29,4 @@ ps aux | grep -E "node|nginx" | grep -v grep || true
 echo ""
 echo "=== PostgreSQL ==="
 systemctl is-active postgresql 2>/dev/null || true
-sudo -u postgres psql -l 2>/dev/null | grep -i prince || true
+sudo -u postgres psql -l 2>/dev/null | grep -i elijays || true

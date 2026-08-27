@@ -1,6 +1,6 @@
 # ELIJAY'S Men's Wear
 
-Luxury menswear platform — full stack clone of Prince Esquire **without footwear**, separate database, repo, and deployment.
+Luxury menswear platform — full stack clone of ELIJAYS **without footwear**, separate database, repo, and deployment.
 
 - **Repo:** [github.com/cresdynamics-lang/Elijays-mens-wear](https://github.com/cresdynamics-lang/Elijays-mens-wear)
 - **Database:** `eljays_db`
@@ -19,11 +19,11 @@ To reset from scratch: `node scripts/eljays-setup-local.js`
 
 See **[ELJAYS_SETUP.md](./ELJAYS_SETUP.md)** for the full guide.
 
-## What is different from Prince Esquire
+## What is different from ELIJAYS
 
-| | Prince Esquire | ELIJAY'S |
+| | ELIJAYS | ELIJAY'S |
 |---|----------------|----------|
-| Repo | Prince-Esquare | Elijays-mens-wear |
+| Repo | Elijays | Elijays-mens-wear |
 | Database | prince_esquare | eljays_db |
 | Footwear | Yes | **No** |
 | Theme | Navy + gold | **Black + gold** |
