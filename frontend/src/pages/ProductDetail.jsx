@@ -206,45 +206,36 @@ const ProductDetail = () => {
  ), [variantMeta]);
 
   useEffect(() => {
- const fetchProduct = async () => {
- setProduct(null);
- setSelectedColor('');
- setSelectedSize('');
- setSelectedImage('');
- setColorCarouselIndex(0);
+  const fetchProduct = async () => {
+  setProduct(null);
+  setSelectedColor('');
+  setSelectedSize('');
+  setSelectedImage('');
+  setColorCarouselIndex(0);
+  setLoadError('');
 
- // Use dummy data instead of API
- let found = DUMMY_PRODUCTS.find(p => p.slug === slug);
+  try {
+  const res = await productAPI.getBySlug(slug);
+  const p = res?.data;
+  if (!p) {
+  setLoadError('Product not found.');
+  return;
+  }
+  const relRes = await productAPI.related(p.id).catch(() => ({ data: [] }));
+  const rel = (relRes?.data || []).filter((x) => x.id !== p.id).slice(0, 4);
+  const productHero = getProductBaseImage(p) || getPremiumImage(p);
 
- if (!found) {
- setLoadError('Product not found.');
- return;
- }
+  setSelectedImage(productHero);
+  setProduct(p);
+  setRelated(rel);
+  trackMetaViewContent(p);
+  } catch (err) {
+  setLoadError('Product not found.');
+  }
+  };
 
- // For dummy products, create a simple variant structure
- const p = {
- ...found,
- thumbnail: found.thumbnail,
- description: found.description,
- variants: [], // No variants for simple dummy products
- };
-
- // Get related products from same category
- const rel = DUMMY_PRODUCTS.filter(p => 
- p.category_name === found.category_name && p.id !== found.id
- ).slice(0, 4);
-
- const meta = buildVariantMeta(p.variants, p.category_name);
- const productHero = getProductBaseImage(p) || getPremiumImage(p);
-
- setSelectedImage(productHero);
- setProduct(p);
- setRelated(rel);
- trackMetaViewContent(p);
- };
-
- fetchProduct();
- }, [slug]);
+  fetchProduct();
+  }, [slug]);
 
  const isBelt = `${product?.category_name || ''} ${product?.parent_category_name || ''}`.toLowerCase().includes('belt');
  const currentVariant = (!isBelt && selectedSize && findVariant(selectedColor, selectedSize)) || (selectedColor ? variantMeta.variants.find((v) => v.color === selectedColor) : null) || variantMeta.variants[0];

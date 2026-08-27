@@ -43,7 +43,7 @@ const CategoryCards = () => {
               type="button"
               onClick={() => navigate(cat.link)}
               aria-label={cat.title}
-              className="group relative block aspect-[3/4] overflow-hidden bg-elijays-charcoal focus:outline-none focus:ring-2 focus:ring-elijays-gold"
+              className="group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-elijays-charcoal focus:outline-none focus:ring-2 focus:ring-elijays-gold"
             >
               <img
                 src={cat.image}

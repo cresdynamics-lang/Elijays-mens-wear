@@ -9,43 +9,43 @@ export const HOMEPAGE_CATEGORY_CARDS = [
   {
     title: 'Suits',
     subtitle: 'Tailored Presence',
-    image: '/suits.png',
+    image: '/suits.jpg',
     link: '/suits',
   },
   {
     title: 'Formal Trousers',
     subtitle: 'Boardroom Sharp',
-    image: '/formal-trousers.png',
+    image: '/formal-trousers.jpg',
     link: '/trousers?sub=Formal',
   },
   {
     title: 'Khakis',
     subtitle: 'Everyday Structure',
-    image: '/khakitrouser.png',
+    image: '/khakitrouser.jpg',
     link: '/trousers?sub=Khaki',
   },
   {
     title: 'Jeans',
     subtitle: 'Casual Denim',
-    image: '/jeans.png',
+    image: '/jeans.jpg',
     link: '/products?category=jeans',
   },
   {
     title: 'Long-sleeve Shirts',
     subtitle: 'Official & Floral',
-    image: '/formalshits.png',
+    image: '/formalshits.jpg',
     link: '/shirts',
   },
   {
     title: 'Polo Shirts',
     subtitle: 'Smart Casual',
-    image: '/sweatshirtpolo.jpeg',
+    image: '/sweatshirtpolo.jpg',
     link: '/shirts?sub=Polos',
   },
   {
     title: 'Sweaters',
     subtitle: 'Crew & V-Neck',
-    image: '/sweaters.png',
+    image: '/sweaters.jpg',
     link: '/sweaters',
   },
   {
@@ -63,7 +63,7 @@ export const HOMEPAGE_CATEGORY_CARDS = [
   {
     title: 'Blazers',
     subtitle: 'Sharp Shoulders',
-    image: '/blazers.png',
+    image: '/blazers.jpg',
     link: '/jackets?sub=Blazers',
   },
 ];
