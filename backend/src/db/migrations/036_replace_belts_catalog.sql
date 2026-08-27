@@ -34,10 +34,10 @@ BEGIN
     images
   )
   SELECT
-    'Black Leather Belt Set',
+    'Leather Belt',
     'black-leather-belt-set',
     'A clean black leather belt set with mixed buckle shapes and smooth-to-textured finishes for formal and smart-casual dressing. Adjustable and easy to pair with trousers, suits, and weekend tailoring.',
-    2400,
+    2000,
     belts_id,
     b.id,
     12,
@@ -74,10 +74,10 @@ BEGIN
     images
   )
   SELECT
-    'Dark Brown Leather Belt Set',
+    'Belt with Wallet',
     'dark-brown-leather-belt-set',
     'A refined dark brown leather belt set with polished metal buckles and balanced grain for office and evening dressing. Versatile with navy, charcoal, and tan tailoring.',
-    2400,
+    3500,
     belts_id,
     b.id,
     12,
