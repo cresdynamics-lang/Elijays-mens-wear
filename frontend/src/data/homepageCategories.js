@@ -57,7 +57,7 @@ export const HOMEPAGE_CATEGORY_CARDS = [
   {
     title: 'Belts & Ties',
     subtitle: 'Finishing Touch',
-    image: 'https://loremflickr.com/600/800/mens,belt?lock=29',
+    image: '/belt-001.jpeg',
     link: '/products?category=belts-ties',
   },
   {

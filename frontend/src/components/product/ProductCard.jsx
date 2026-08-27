@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { getPremiumImage } from '../../utils/productImages';
 import { openWhatsAppEnquiry } from '../../lib/whatsappEnquiry';
+import { useCartStore } from '../../store/useCartStore';
 
 const formatPrice = (price) => `KSh ${parseFloat(price).toLocaleString()}`;
 
 /**
- * Product grid card — elegant menswear typography.
- * MVP CTA opens WhatsApp (cart-ready for Phase 2).
+ * Product grid card — image, name, price, and two CTAs:
+ * Add to Cart (cart store) and WhatsApp Order (enquiry).
  */
 const ProductCard = ({ product, showSale = true }) => {
   const listPrice = parseFloat(product.price);
@@ -19,6 +20,23 @@ const ProductCard = ({ product, showSale = true }) => {
       : null;
   const onSale = showSale && comparePrice != null && comparePrice > price;
   const image = product.image_url || product.thumbnail || getPremiumImage(product, { width: 500 });
+  const addToCart = useCartStore((s) => s.addToCart);
+
+  const handleAddToCart = async () => {
+    try {
+      await addToCart({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image,
+        slug: product.slug,
+        quantity: 1,
+      });
+    } catch (err) {
+      // Not purchasable (e.g. demo item) — send to the product page.
+      window.location.href = `/product/${product.slug}`;
+    }
+  };
 
   return (
     <article className="group flex flex-col min-w-0 w-full">
@@ -31,11 +49,6 @@ const ProductCard = ({ product, showSale = true }) => {
             decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white text-elijays-ink text-[10px] font-semibold tracking-[0.12em] uppercase px-4 py-2 rounded-lg">
-              Quick View
-            </span>
-          </div>
           {onSale && (
             <span className="absolute top-2 left-2 bg-elijays-ink text-white text-[9px] font-semibold px-2 py-1 tracking-[0.12em] uppercase font-sans rounded-md">
               Sale
@@ -45,20 +58,35 @@ const ProductCard = ({ product, showSale = true }) => {
         <h3 className="product-name text-[14px] sm:text-[15px] text-elijays-ink mb-1.5 line-clamp-2 group-hover:text-elijays-gold-dim transition-colors">
           {product.name}
         </h3>
-        <div className="flex items-baseline gap-2 flex-wrap mb-2">
-          <span className="product-price text-[13px] sm:text-[14px] text-elijays-ink font-medium">
-            {formatPrice(price)}
-          </span>
-          {onSale && (
-            <span className="product-price text-[11px] sm:text-[12px] text-elijays-muted line-through font-normal">
-              {formatPrice(comparePrice)}
-            </span>
-          )}
-        </div>
-        <span className="inline-block text-[11px] font-medium tracking-[0.1em] uppercase text-elijays-gold border-b border-elijays-gold pb-0.5 group-hover:text-elijays-ink group-hover:border-elijays-ink transition-colors">
-          View Product
-        </span>
       </Link>
+
+      <div className="flex items-baseline gap-2 flex-wrap mb-2">
+        <span className="product-price text-[13px] sm:text-[14px] text-elijays-ink font-medium">
+          {formatPrice(price)}
+        </span>
+        {onSale && (
+          <span className="product-price text-[11px] sm:text-[12px] text-elijays-muted line-through font-normal">
+            {formatPrice(comparePrice)}
+          </span>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 mt-auto">
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className="btn-gold !px-2 !py-2.5 text-[10px] tracking-[0.08em]"
+        >
+          Add to Cart
+        </button>
+        <button
+          type="button"
+          onClick={() => openWhatsAppEnquiry(product)}
+          className="btn-gold-outline !px-2 !py-2.5 text-[10px] tracking-[0.08em]"
+        >
+          WhatsApp
+        </button>
+      </div>
     </article>
   );
 };
