@@ -78,6 +78,7 @@ const Footer = () => (
         <p>© {new Date().getFullYear()} Elijay&apos;s Men&apos;s Wear. All rights reserved.</p>
         <div className="flex items-center gap-4">
           <Link to="/admin/login" className="hover:text-elijays-ink tracking-[0.12em] uppercase">Staff Login</Link>
+          <a href="https://cresdynamics.com" target="_blank" rel="noopener" className="hover:text-elijays-ink tracking-[0.12em] uppercase">Built by Cresdynamics</a>
           <span>{SITE_URL}</span>
         </div>
       </div>
