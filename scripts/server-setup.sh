@@ -4,7 +4,7 @@
 #
 # What it does:
 #   1. Installs Node 20, PostgreSQL, nginx, PM2
-#   2. Clones the repo to /var/www/Elijays-Mens-Wear
+#   2. Clones the repo to /var/www/Elijays-mens-wear
 #   3. Writes backend/.env and frontend/.env.production
 #   4. Creates the database, runs migrations, seeds admin
 #   5. Builds the frontend
@@ -31,7 +31,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/cresdynamics-lang/Elijays-Mens-Wear.git"
-APP_DIR="${APP_DIR:-/var/www/Elijays-Mens-Wear}"
+APP_DIR="${APP_DIR:-/var/www/Elijays-mens-wear}"
 DO_DOMAIN="${DO_DOMAIN:-}"
 CLOUDINARY_URL="${CLOUDINARY_URL:-}"
 ADMIN_EMAIL="${ADMIN_EMAIL:-admin@elijays.co.ke}"

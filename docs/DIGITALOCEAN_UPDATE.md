@@ -1,4 +1,4 @@
-# Deploy & update live site on DigitalOcean (161.35.58.181)
+# Deploy & update live site on DigitalOcean (167.71.17.195)
 
 ## 0. First-time setup (fresh Ubuntu droplet)
 
@@ -7,7 +7,7 @@ the repo, writes `.env` files, migrates + seeds the DB, builds the frontend, and
 configures nginx + PM2.
 
 ```bash
-ssh root@161.35.58.181
+ssh root@167.71.17.195
 DO_DOMAIN=elijays.co.ke \
 CLOUDINARY_URL='cloudinary://key:secret@account' \
 EMAIL_FOR_SSL=admin@elijays.co.ke \
@@ -25,9 +25,9 @@ After this, skip to step 4 below for every future update.
 You need the droplet SSH private key (from DigitalOcean → Droplet → Access).
 
 ```bash
-ssh root@161.35.58.181
+ssh root@167.71.17.195
 # or
-ssh ubuntu@161.35.58.181
+ssh ubuntu@167.71.17.195
 ```
 
 If `Permission denied (publickey)`, add your key in DigitalOcean console or use the one-time password reset.
@@ -40,7 +40,7 @@ bash /path/to/Elijays-Mens-Wear/scripts/server-find-app.sh
 
 Common locations:
 
-- `/var/www/Elijays-Mens-Wear`
+- `/var/www/Elijays-mens-wear`
 - `/home/ubuntu/Elijays-Mens-Wear`
 
 Look for a folder that contains both `backend/` and `frontend/`.
@@ -61,7 +61,7 @@ pg_dump eljays_db | gzip > ~/backup_$(date +%F).sql.gz
 ## 4. Update code safely
 
 ```bash
-cd /var/www/Elijays-Mens-Wear   # your actual path
+cd /var/www/Elijays-mens-wear   # your actual path
 git pull origin main
 bash scripts/server-update.sh
 ```
@@ -116,7 +116,7 @@ Set `AUTO_BOOTSTRAP=false` for the first restart if you want to skip automatic P
 After frontend build, nginx should serve `frontend/dist`. Example:
 
 ```nginx
-root /var/www/Elijays-Mens-Wear/frontend/dist;
+root /var/www/Elijays-mens-wear/frontend/dist;
 location /api/ {
     proxy_pass http://127.0.0.1:8000;
 }
