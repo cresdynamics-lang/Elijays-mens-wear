@@ -10,7 +10,8 @@ BEGIN
   LIMIT 1;
 
   IF belts_id IS NULL THEN
-    RAISE EXCEPTION 'Belts & Ties category not found';
+    RAISE NOTICE 'Belts & Ties category not found — skipping belt catalog replacement.';
+    RETURN;
   END IF;
 
   UPDATE products
