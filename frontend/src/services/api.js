@@ -245,8 +245,8 @@ export const bannerAPI = {
       data: {
         banners: [],
         categories: [],
-        new_arrivals: DUMMY_PRODUCTS.slice(0, 8),
-        best_sellers: DUMMY_PRODUCTS.slice(8, 16),
+        new_arrivals: [],
+        best_sellers: [],
         hero_slides: [],
         category_tiles: [],
         product_rows: []
