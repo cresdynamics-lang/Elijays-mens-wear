@@ -59,7 +59,7 @@ const CategoryCards = () => {
               <button
                 type="button"
                 onClick={() => navigate(cat.link)}
-                aria-label={cat.title}
+                aria-label={`View ${cat.shortcut} collection`}
                 className="relative block aspect-[3/4] w-full overflow-hidden rounded-2xl bg-elijays-charcoal focus:outline-none focus:ring-2 focus:ring-elijays-gold"
               >
                 <img
@@ -72,7 +72,7 @@ const CategoryCards = () => {
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 text-left">
+                <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 pr-28 text-left">
                   <p className="text-elijays-gold/90 text-[9px] tracking-[0.3em] uppercase font-semibold mb-1">
                     {cat.subtitle}
                   </p>
@@ -80,18 +80,8 @@ const CategoryCards = () => {
                     {cat.title}
                   </h3>
                 </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => navigate(cat.link)}
-                aria-label={`View ${cat.shortcut} collection`}
-                className="mt-3 flex w-full items-center justify-between rounded-xl bg-white px-4 py-2.5 text-left shadow-sm ring-1 ring-black/5 transition group-hover:ring-elijays-gold/60 focus:outline-none focus:ring-2 focus:ring-elijays-gold"
-              >
-                <span className="text-sm font-medium text-elijays-ink">
-                  {cat.shortcut}
-                </span>
-                <span className="text-elijays-gold">
+                <span className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-medium text-elijays-ink shadow-md">
+                  <span>{cat.shortcut}</span>
                   <ArrowRight />
                 </span>
               </button>
