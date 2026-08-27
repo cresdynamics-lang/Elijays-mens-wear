@@ -9,43 +9,43 @@ export const HOMEPAGE_CATEGORY_CARDS = [
   {
     title: 'Suits',
     subtitle: 'Tailored Presence',
-    image: 'https://loremflickr.com/600/800/mens,suit?lock=21',
+    image: '/suits.png',
     link: '/suits',
   },
   {
     title: 'Formal Trousers',
     subtitle: 'Boardroom Sharp',
-    image: 'https://loremflickr.com/600/800/mens,trousers,formal?lock=22',
+    image: '/formal-trousers.png',
     link: '/trousers?sub=Formal',
   },
   {
     title: 'Khakis',
     subtitle: 'Everyday Structure',
-    image: 'https://loremflickr.com/600/800/mens,khaki?lock=23',
+    image: '/khakitrouser.png',
     link: '/trousers?sub=Khaki',
   },
   {
     title: 'Jeans',
     subtitle: 'Casual Denim',
-    image: 'https://loremflickr.com/600/800/mens,jeans?lock=24',
+    image: '/jeans.png',
     link: '/products?category=jeans',
   },
   {
     title: 'Long-sleeve Shirts',
     subtitle: 'Official & Floral',
-    image: 'https://loremflickr.com/600/800/mens,shirt?lock=25',
+    image: '/formalshits.png',
     link: '/shirts',
   },
   {
     title: 'Polo Shirts',
     subtitle: 'Smart Casual',
-    image: 'https://loremflickr.com/600/800/mens,polo?lock=26',
+    image: '/sweatshirtpolo.jpeg',
     link: '/shirts?sub=Polos',
   },
   {
     title: 'Sweaters',
     subtitle: 'Crew & V-Neck',
-    image: 'https://loremflickr.com/600/800/mens,sweater?lock=27',
+    image: '/sweaters.png',
     link: '/sweaters',
   },
   {
@@ -63,7 +63,7 @@ export const HOMEPAGE_CATEGORY_CARDS = [
   {
     title: 'Blazers',
     subtitle: 'Sharp Shoulders',
-    image: 'https://loremflickr.com/600/800/mens,blazer?lock=30',
+    image: '/blazers.png',
     link: '/jackets?sub=Blazers',
   },
 ];
