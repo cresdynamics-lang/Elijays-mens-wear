@@ -5,6 +5,27 @@ const db = require('../config/db');
 const { getPosStockForProductIds } = require('../services/productPosLink');
 const { attachVariantAvailability } = require('../utils/productAvailability');
 const { generateProductSku, generateVariantSku } = require('../utils/sku');
+
+const slugify = (value) =>
+  String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+async function ensureUniqueSlug(baseSlug, excludeId = null) {
+  let slug = baseSlug;
+  let attempt = 0;
+  while (true) {
+    const q = excludeId
+      ? 'SELECT 1 FROM products WHERE slug = $1 AND id != $2'
+      : 'SELECT 1 FROM products WHERE slug = $1';
+    const params = excludeId ? [slug, excludeId] : [slug];
+    const { rows } = await db.query(q, params);
+    if (rows.length === 0) return slug;
+    attempt++;
+    slug = `${baseSlug}-${attempt}`;
+  }
+}
 const { isAdminRole, isSellerRole } = require('../utils/posHelpers');
 
 const isStaffUser = (user) => user && (isAdminRole(user) || isSellerRole(user));
@@ -250,7 +271,7 @@ exports.createProduct = async (req, res, next) => {
             'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
             [
                 name,
-                slug,
+                await ensureUniqueSlug(slug),
                 productSku,
                 description || null,
                 price || 0,
@@ -343,10 +364,12 @@ exports.updateProduct = async (req, res, next) => {
 
         const parsedCost = cost_price != null && cost_price !== '' ? parseFloat(cost_price) : null;
 
+        const uniqueSlug = await ensureUniqueSlug(slug, id);
+
         const result = await db.query(
             'UPDATE products SET name = $1, slug = $2, sku = $3, description = $4, price = $5, discount_price = $6, pos_sell_price = $7, cost_price = $8, category_id = $9, brand_id = $10, ' +
             'stock_quantity = $11, is_featured = $12, is_active = $13, thumbnail = $14, images = $15 WHERE id = $16 RETURNING *',
-            [name, slug, productSku, description || null, price || 0, discount_price || null, pos_sell_price ?? null, parsedCost, category_id || null, brand_id || null, 0, is_featured || false, nextActive, thumbnail || null, JSON.stringify(images || []), id]
+            [name, uniqueSlug, productSku, description || null, price || 0, discount_price || null, pos_sell_price ?? null, parsedCost, category_id || null, brand_id || null, 0, is_featured || false, nextActive, thumbnail || null, JSON.stringify(images || []), id]
         );
 
         if (result.rows.length === 0) {
