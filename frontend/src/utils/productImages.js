@@ -105,6 +105,7 @@ export const getPremiumImage = (product, { width = 400 } = {}) => {
   const name = product.name?.toLowerCase() || '';
   const category = product.category_name?.toLowerCase() || '';
   const sub = product.subcategory?.toLowerCase() || '';
+  const key = String(product.id || product.slug || product.name || '');
 
   // Try subcategory first
   if (PREMIUM_IMAGES[sub]) return PREMIUM_IMAGES[sub];
