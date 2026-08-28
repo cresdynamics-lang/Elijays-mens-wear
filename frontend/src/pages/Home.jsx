@@ -87,17 +87,6 @@ const Home = () => {
       {/* Category cards — MensWorld-style image grid */}
       <CategoryCards />
 
-      {/* Category Sections with Banners */}
-      {categorySections.map((section) => (
-        <ProductShowcase
-          key={section.title}
-          title={section.title}
-          products={section.products}
-          viewAllPath={section.viewAllPath}
-          bannerImage={section.products[0]?.image_url || section.products[0]?.thumbnail}
-        />
-      ))}
-
       {/* Features Section */}
       <section className="bg-elijays-charcoal py-10 md:py-14">
         <div className="container mx-auto px-5 md:px-8">
@@ -181,13 +170,6 @@ const Home = () => {
           </form>
         </div>
       </section>
-
-      {/* New Arrivals Showcase */}
-      <ProductShowcase
-        title="New arrivals"
-        products={featuredProducts}
-        viewAllPath="/products"
-      />
 
       {/* Journal Section */}
       <section className="py-12 md:py-16 bg-white">
