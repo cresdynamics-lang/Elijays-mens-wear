@@ -97,8 +97,11 @@ const ProductDetail = () => {
   const colorImages = useMemo(() => buildColorImages(variantMeta, product), [variantMeta, product]);
   const currentColorImages = useMemo(() => colorImages[selectedColor] || [], [colorImages, selectedColor]);
 
+  const sizesForColorRef = useRef((color) => []);
+  
   const sizesForColor = useCallback((color) => {
-    const category = `${product?.category_name || ''} ${product?.parent_category_name || ''}`.toLowerCase();
+    if (!product) return [];
+    const category = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase();
     if (category.includes('belt')) return [];
     const sizes = variantMeta.variants
       .filter((v) => v.color === color)
@@ -106,12 +109,13 @@ const ProductDetail = () => {
     return sortSizes(sizes, variantMeta.isShoe);
   }, [variantMeta, product]);
 
+  useEffect(() => {
+    sizesForColorRef.current = sizesForColor;
+  }, [sizesForColor]);
+
   const findVariant = useCallback((color, size) => (
     variantMeta.variants.find((v) => v.color === color && v.size === size)
   ), [variantMeta]);
-
-  const sizesForColorRef = useRef(sizesForColor);
-  sizesForColorRef.current = sizesForColor;
 
   useEffect(() => {
     let cancelled = false;
@@ -159,81 +163,6 @@ const ProductDetail = () => {
     fetchProduct();
     return () => { cancelled = true; mounted = false; };
   }, [slug]);
-
-  const isBelt = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase().includes('belt');
-  const currentVariant = (!isBelt && selectedSize && findVariant(selectedColor, selectedSize)) || (selectedColor ? variantMeta.variants.find((v) => v.color === selectedColor) : null) || variantMeta.variants[0];
-
-  const availableSizes = isBelt ? [] : sizesForColor(selectedColor);
-  const showColorPicker = variantMeta.colors.length > 1
-    || (variantMeta.colors.length === 1 && variantMeta.colors[0]?.color
-    && !['original', 'standard', 'default'].includes(variantMeta.colors[0].color.toLowerCase()));
-  const shopOutOfStock = product.is_active === false;
-
-  const basePrice = parseFloat(product.price);
-  const saleBase = product.discount_price ? parseFloat(product.discount_price) : null;
-  const modifier = currentVariant ? parseFloat(currentVariant.price_modifier) : 0;
-  const displayPrice = (saleBase ?? basePrice) + modifier;
-  const compareAtPrice = saleBase != null ? basePrice + modifier : null;
-
-  const variantSummary = [selectedColor, isBelt ? '' : selectedSize].filter(Boolean).join(' / ');
-
-  const parsedColorList = variantMeta.colors.map((c) => c.color);
-  const allSizes = sortSizes(
-    variantMeta.variants.map((v) => v.size),
-    variantMeta.isShoe
-  );
-  const sizeLine = variantMeta.isShoe
-    ? `EU ${allSizes[0]} – ${allSizes[allSizes.length - 1]}`
-    : allSizes.join(' · ');
-  const parsedSizes = isBelt ? [] : [sizeLine];
-
-  const buildPayload = () => ({
-    productId: product.id,
-    variantId: toCartVariantId(currentVariant?.id),
-    quantity,
-    sizeLabel: selectedSize,
-    colorLabel: selectedColor,
-    name: product.name,
-    price: displayPrice,
-    image: currentDisplayImage,
-    slug: product.slug,
-    brandName: product.brand_name,
-    variantValue: variantSummary,
-  });
-
-  const handleColorSelect = (color) => {
-    setSelectedColor(color);
-    setImageIndex(0);
-    const sizes = sizesForColor(color);
-    const inStockSizes = sizes.filter((s) => isVariantAvailable(findVariant(color, s)));
-    const keepSize = inStockSizes.includes(selectedSize) ? selectedSize : null;
-    const nextSize = isBelt ? '' : (keepSize || inStockSizes[0] || sizes[0] || '');
-    setSelectedSize(nextSize);
-    setImageIndex(0);
-  };
-
-  const handleSizeSelect = (size) => {
-    setSelectedSize(size);
-  };
-
-  const handleImageClick = (index) => setImageIndex(index);
-  const handlePrevImage = () => setImageIndex(i => (i - 1 + currentColorImages.length) % currentColorImages.length);
-  const handleNextImage = () => setImageIndex(i => (i + 1) % currentColorImages.length);
-
-  const currentDisplayImage = currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product);
-
-  const handleAddToCart = async () => {
-    if (!product || shopOutOfStock) return;
-    await addToCart(buildPayload());
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 3000);
-  };
-
-  const handleBuyNow = async () => {
-    if (!product || shopOutOfStock) return;
-    await addToCart(buildPayload());
-    navigate('/checkout');
-  };
 
   if (isLoading) {
     return (
@@ -285,6 +214,98 @@ const ProductDetail = () => {
       </Layout>
     );
   }
+
+  // All calculations and handlers inside render block after product exists
+  const variantMeta = useMemo(() => buildVariantMeta(product.variants, product.category_name), [product]);
+  const colorImages = useMemo(() => buildColorImages(variantMeta, product), [variantMeta, product]);
+  const currentColorImages = useMemo(() => colorImages[selectedColor] || [], [colorImages, selectedColor]);
+
+  const sizesForColor = useCallback((color) => {
+    const category = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase();
+    if (category.includes('belt')) return [];
+    const sizes = variantMeta.variants
+      .filter((v) => v.color === color)
+      .map((v) => v.size);
+    return sortSizes(sizes, variantMeta.isShoe);
+  }, [variantMeta, product]);
+
+  const findVariant = useCallback((color, size) => (
+    variantMeta.variants.find((v) => v.color === color && v.size === size)
+  ), [variantMeta]);
+
+  const isBelt = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase().includes('belt');
+  const currentVariant = (!isBelt && selectedSize && findVariant(selectedColor, selectedSize)) || (selectedColor ? variantMeta.variants.find((v) => v.color === selectedColor) : null) || variantMeta.variants[0];
+
+  const availableSizes = isBelt ? [] : sizesForColor(selectedColor);
+  const showColorPicker = variantMeta.colors.length > 1
+    || (variantMeta.colors.length === 1 && variantMeta.colors[0]?.color
+    && !['original', 'standard', 'default'].includes(variantMeta.colors[0].color.toLowerCase()));
+  const shopOutOfStock = product.is_active === false;
+
+  const basePrice = parseFloat(product.price);
+  const saleBase = product.discount_price ? parseFloat(product.discount_price) : null;
+  const modifier = currentVariant ? parseFloat(currentVariant.price_modifier) : 0;
+  const displayPrice = (saleBase ?? basePrice) + modifier;
+  const compareAtPrice = saleBase != null ? basePrice + modifier : null;
+
+  const variantSummary = [selectedColor, isBelt ? '' : selectedSize].filter(Boolean).join(' / ');
+
+  const parsedColorList = variantMeta.colors.map((c) => c.color);
+  const allSizes = sortSizes(
+    variantMeta.variants.map((v) => v.size),
+    variantMeta.isShoe
+  );
+  const sizeLine = variantMeta.isShoe
+    ? `EU ${allSizes[0]} – ${allSizes[allSizes.length - 1]}`
+    : allSizes.join(' · ');
+  const parsedSizes = isBelt ? [] : [sizeLine];
+
+  const buildPayload = () => ({
+    productId: product.id,
+    variantId: toCartVariantId(currentVariant?.id),
+    quantity,
+    sizeLabel: selectedSize,
+    colorLabel: selectedColor,
+    name: product.name,
+    price: displayPrice,
+    image: currentDisplayImage,
+    slug: product.slug,
+    brandName: product.brand_name,
+    variantValue: variantSummary,
+  );
+
+  const currentDisplayImage = currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product);
+
+  const handleColorSelect = (color) => {
+    setSelectedColor(color);
+    setImageIndex(0);
+    const sizes = sizesForColor(color);
+    const inStockSizes = sizes.filter((s) => isVariantAvailable(findVariant(color, s)));
+    const keepSize = inStockSizes.includes(selectedSize) ? selectedSize : null;
+    const nextSize = isBelt ? '' : (keepSize || inStockSizes[0] || sizes[0] || '');
+    setSelectedSize(nextSize);
+    setImageIndex(0);
+  };
+
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+  };
+
+  const handlePrevImage = () => setImageIndex(i => (i - 1 + currentColorImages.length) % currentColorImages.length);
+  const handleNextImage = () => setImageIndex(i => (i + 1) % currentColorImages.length);
+
+  const handleAddToCart = async () => {
+    if (!product || shopOutOfStock) return;
+    await addToCart(buildPayload());
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 3000);
+  };
+
+  const handleBuyNow = async () => {
+    if (!product || shopOutOfStock) return;
+    await addToCart(buildPayload());
+    navigate('/checkout');
+  };
 
   return (
     <Layout>
@@ -596,17 +617,17 @@ const ProductDetail = () => {
                   ))}
                 </div>
 
-{infoTab === 'description' && (
-      <ProductDescription
-        productName={product.name}
-        brandName={product.brand_name}
-        description={product.description}
-        parsedColors={parsedColorList}
-        parsedSizes={parsedSizes}
-        isShoe={variantMeta.isShoe}
-        keyFeatures={product.key_features}
-      />
-      )}
+                {infoTab === 'description' && (
+                  <ProductDescription
+                    productName={product.name}
+                    brandName={product.brand_name}
+                    description={product.description}
+                    parsedColors={parsedColorList}
+                    parsedSizes={parsedSizes}
+                    isShoe={variantMeta.isShoe}
+                    keyFeatures={product.key_features}
+                  />
+                )}
 
                 {infoTab === 'details' && (
                   <div className="text-sm text-elijays-ink/70 space-y-3 leading-relaxed">
@@ -660,90 +681,90 @@ const ProductDetail = () => {
                 )}
               </div>
             </div>
-          </div>
 
-          {variantMeta.colors.length > 1 && (
-            <div className="mt-16 pt-12 border-t border-utility-gray/30">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="font-display text-xl md:text-2xl text-elijays-ink">All variants</h2>
-                <button
-                  type="button"
-                  onClick={() => setShowVariantMatrix(!showVariantMatrix)}
-                  className="text-[11px] text-elijays-gold hover:text-elijays-gold-dim transition-colors flex items-center gap-1"
-                >
-                  {showVariantMatrix ? 'Hide' : 'Show'} all variants
-                  {showVariantMatrix ? <X size={12} /> : <Plus size={12} />}
-                </button>
-              </div>
-
-              {showVariantMatrix && (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-elijays-ink/80">
-                    <thead>
-                      <tr className="border-b border-utility-gray/30 text-left text-[10px] uppercase tracking-wider text-elijays-ink/50">
-                        <th className="pb-3 pr-4">Color</th>
-                        <th className="pb-3 pr-4">Size</th>
-                        <th className="pb-3 pr-4">Price</th>
-                        <th className="pb-3 pr-4">Stock</th>
-                        <th className="pb-3">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {variantMeta.colors.flatMap(({ color, variants: colorVariants }) =>
-                        colorVariants.map((v) => {
-                          const stock = variantStockQty(v);
-                          const inStock = stock == null || stock > 0;
-                          const variantPrice = displayPrice;
-                          return (
-                            <tr key={v.id} className="border-b border-utility-gray/20 hover:bg-primary/30 transition-colors">
-                              <td className="py-3 pr-4 font-medium">{color}</td>
-                              <td className="py-3 pr-4">{v.size || '—'}</td>
-                              <td className="py-3 pr-4">KSh {variantPrice.toLocaleString()}</td>
-                              <td className="py-3 pr-4">{stock != null ? stock : '—'}</td>
-                              <td className="py-3">
-                                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium ${
-                                  inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                }`}>
-                                  {inStock ? 'In stock' : 'Out of stock'}
-                                </span>
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
+            {variantMeta.colors.length > 1 && (
+              <div className="mt-16 pt-12 border-t border-utility-gray/30">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="font-display text-xl md:text-2xl text-elijays-ink">All variants</h2>
+                  <button
+                    type="button"
+                    onClick={() => setShowVariantMatrix(!showVariantMatrix)}
+                    className="text-[11px] text-elijays-gold hover:text-elijays-gold-dim transition-colors flex items-center gap-1"
+                  >
+                    {showVariantMatrix ? 'Hide' : 'Show'} all variants
+                    {showVariantMatrix ? <X size={12} /> : <Plus size={12} />}
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
 
-          {related.length > 0 && (
-            <div className="mt-20 pt-12 border-t border-elijays-ink/10">
-              <h2 className="font-display text-xl md:text-2xl text-elijays-ink mb-8">You may also like</h2>
-              <div className="product-grid grid grid-cols-2 md:grid-cols-4 gap-6">
-                {related.slice(0, 4).map((p) => (
-                  <Link to={`/product/${p.slug}`} key={p.id} className="group block">
-                    <div className="aspect-square bg-elijays-white overflow-hidden mb-3 border border-elijays-ink/8">
-                      <img
-                        src={getPremiumImage(p)}
-                        alt={p.name}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                    </div>
-                    <h3 className="text-sm font-medium text-elijays-ink line-clamp-2 group-hover:text-elijays-gold-dim transition-colors">
-                      {p.name}
-                    </h3>
-                    <p className="text-sm text-elijays-gold mt-1">
-                      KSh {parseFloat(p.discount_price || p.price).toLocaleString()}
-                    </p>
-                  </Link>
-                ))}
+                {showVariantMatrix && (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-elijays-ink/80">
+                      <thead>
+                        <tr className="border-b border-utility-gray/30 text-left text-[10px] uppercase tracking-wider text-elijays-ink/50">
+                          <th className="pb-3 pr-4">Color</th>
+                          <th className="pb-3 pr-4">Size</th>
+                          <th className="pb-3 pr-4">Price</th>
+                          <th className="pb-3 pr-4">Stock</th>
+                          <th className="pb-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {variantMeta.colors.flatMap(({ color, variants: colorVariants }) =>
+                          colorVariants.map((v) => {
+                            const stock = variantStockQty(v);
+                            const inStock = stock == null || stock > 0;
+                            const variantPrice = displayPrice;
+                            return (
+                              <tr key={v.id} className="border-b border-utility-gray/20 hover:bg-primary/30 transition-colors">
+                                <td className="py-3 pr-4 font-medium">{color}</td>
+                                <td className="py-3 pr-4">{v.size || '—'}</td>
+                                <td className="py-3 pr-4">KSh {variantPrice.toLocaleString()}</td>
+                                <td className="py-3 pr-4">{stock != null ? stock : '—'}</td>
+                                <td className="py-3">
+                                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium ${
+                                    inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                  }`}>
+                                    {inStock ? 'In stock' : 'Out of stock'}
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
+            )}
+
+            {related.length > 0 && (
+              <div className="mt-20 pt-12 border-t border-elijays-ink/10">
+                <h2 className="font-display text-xl md:text-2xl text-elijays-ink mb-8">You may also like</h2>
+                <div className="product-grid grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {related.slice(0, 4).map((p) => (
+                    <Link to={`/product/${p.slug}`} key={p.id} className="group block">
+                      <div className="aspect-square bg-elijays-white overflow-hidden mb-3 border border-elijays-ink/8">
+                        <img
+                          src={getPremiumImage(p)}
+                          alt={p.name}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      </div>
+                      <h3 className="text-sm font-medium text-elijays-ink line-clamp-2 group-hover:text-elijays-gold-dim transition-colors">
+                        {p.name}
+                      </h3>
+                      <p className="text-sm text-elijays-gold mt-1">
+                        KSh {parseFloat(p.discount_price || p.price).toLocaleString()}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </main>
     </Layout>
