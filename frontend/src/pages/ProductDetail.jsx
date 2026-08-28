@@ -267,11 +267,11 @@ const ProductDetail = () => {
  getProductBaseImage(product) ||
  getPremiumImage(product);
 
- const basePrice = product ? parseFloat(product.price) : 0;
- const saleBase = product?.discount_price ? parseFloat(product.discount_price) : null;
- const modifier = parseFloat(currentVariant?.price_modifier || 0);
- const displayPrice = (saleBase ?? basePrice) + modifier;
- const compareAtPrice = saleBase != null ? basePrice + modifier : null;
+const basePrice = product ? parseFloat(product.price) || 0 : 0;
+  const saleBase = product?.discount_price ? parseFloat(product.discount_price) : null;
+  const modifier = currentVariant ? parseFloat(currentVariant.price_modifier) || 0 : 0;
+  const displayPrice = ((saleBase ?? basePrice) || 0) + (modifier || 0);
+  const compareAtPrice = saleBase != null ? (basePrice || 0) + (modifier || 0) : null;
 
  const variantSummary = [selectedColor, isBelt ? '' : selectedSize].filter(Boolean).join(' / ');
 
@@ -740,13 +740,13 @@ className={`h-1.5 rounded-full transition-all duration-500 ${
 
   {infoTab === 'description' && (
   <ProductDescription
-  productName={product.name}
-  brandName={product.brand_name}
-  description={product.description}
+  productName={product?.name || 'this item'}
+  brandName={product?.brand_name}
+  description={product?.description}
   parsedColors={parsedColorList}
   parsedSizes={parsedSizes}
   isShoe={variantMeta.isShoe}
-  keyFeatures={product.key_features}
+  keyFeatures={product?.key_features}
   />
   )}
 
