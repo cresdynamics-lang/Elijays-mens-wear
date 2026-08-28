@@ -76,6 +76,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loadError, setLoadError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
@@ -111,6 +112,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     let cancelled = false;
+    let mounted = true;
     const fetchProduct = async () => {
       setProduct(null);
       setSelectedColor('');
@@ -118,21 +120,23 @@ const ProductDetail = () => {
       setSelectedImage('');
       setImageIndex(0);
       setLoadError('');
+      setIsLoading(true);
 
       try {
         const res = await productAPI.getBySlug(slug);
-        if (cancelled) return;
+        if (cancelled || !mounted) return;
         const p = res?.data;
         if (!p) {
           setLoadError('Product not found.');
+          setIsLoading(false);
           return;
         }
         const relRes = await productAPI.related(p.id).catch(() => ({ data: [] }));
-        if (cancelled) return;
+        if (cancelled || !mounted) return;
         const rel = (relRes?.data || []).filter((x) => x.id !== p.id).slice(0, 4);
         const productHero = getProductBaseImage(p) || getPremiumImage(p);
 
-        const firstColor = variantMeta?.colors?.[0]?.color || '';
+        const firstColor = p?.variants?.[0]?.color || '';
         setSelectedColor(firstColor);
         const sizes = sizesForColor(firstColor);
         setSelectedSize(sizes[0] || '');
@@ -142,13 +146,15 @@ const ProductDetail = () => {
         setRelated(rel);
         trackMetaViewContent(p);
       } catch (err) {
-        if (cancelled) return;
+        if (cancelled || !mounted) return;
         setLoadError('Product not found.');
+      } finally {
+        if (mounted) setIsLoading(false);
       }
     };
 
     fetchProduct();
-    return () => { cancelled = true; };
+    return () => { cancelled = true; mounted = false; };
   }, [slug, sizesForColor, variantMeta]);
 
   const isBelt = `${product?.category_name || ''} ${product?.parent_category_name || ''}`.toLowerCase().includes('belt');
@@ -227,12 +233,40 @@ const ProductDetail = () => {
     navigate('/checkout');
   };
 
+  if (isLoading) {
+    return (
+      <Layout>
+        <main className="min-h-screen bg-primary">
+          <div className="container mx-auto px-5 md:px-8 max-w-7xl pt-6 md:pt-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+              <div className="space-y-6">
+                <div className="aspect-square bg-primary/30 animate-pulse border border-utility-gray/50" />
+                {Array.from({length: 5}).map((_, i) => (
+                  <div key={i} className="h-16 bg-primary/30 animate-pulse rounded border border-utility-gray/30" />
+                ))}
+              </div>
+              <div className="space-y-8">
+                <div className="h-8 bg-primary/30 animate-pulse rounded w-1/2" />
+                <div className="h-10 bg-primary/30 animate-pulse rounded w-1/3" />
+                <div className="h-6 bg-primary/30 animate-pulse rounded w-1/4" />
+                <div className="space-y-4">
+                  <div className="h-8 bg-primary/30 animate-pulse rounded w-1/4" />
+                  <div className="h-8 bg-primary/30 animate-pulse rounded w-1/3" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </Layout>
+    );
+  }
+
   if (loadError) {
     return (
       <Layout>
         <main className="min-h-screen pt-32 text-center text-secondary bg-primary">
           <p className="text-secondary font-medium text-sm">{loadError}</p>
-          <Link to="/products" className="inline-block mt-4 text-accent/80 text-[10px] font-semibold tracking-wider hover:text-accent transition-colors">
+          <Link to="/products" className="inline-block mt-4 text-elijays-gold/80 text-[10px] font-semibold tracking-wider hover:text-elijays-gold transition-colors">
             Back to products
           </Link>
         </main>
@@ -243,8 +277,8 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <Layout>
-        <main className="min-h-screen pt-32 text-center text-accent/80 bg-primary text-[10px] tracking-wider font-bold uppercase">
-          Loading product...
+        <main className="min-h-screen pt-32 text-center text-elijays-gold/80 bg-primary text-[10px] tracking-wider font-bold uppercase">
+          Product unavailable
         </main>
       </Layout>
     );
