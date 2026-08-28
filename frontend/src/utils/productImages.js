@@ -114,7 +114,7 @@ export const getPremiumImage = (product, { width = 400 } = {}) => {
   if (name.includes('gurkha')) return PREMIUM_IMAGES['gurkha'];
   if (name.includes('linen')) return PREMIUM_IMAGES['linen'];
   if (name.includes('tracksuit') || name.includes('track suit')) {
-    return PREMIUM_IMAGES['track-suits'] || '/WhatsApp Image 2026-05-12 at 8.07.38 PM.jpeg';
+    return PREMIUM_IMAGES['track-suits'] || LOCAL_IMAGES[Math.abs(key.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0)) % LOCAL_IMAGES.length];
   }
   if (name.includes('suit')) return PREMIUM_IMAGES['suits'];
   if (name.includes('shoe') || name.includes('loafers')) return PREMIUM_IMAGES['shoes'];
