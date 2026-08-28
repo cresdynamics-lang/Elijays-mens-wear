@@ -207,6 +207,7 @@ const ProductDetail = () => {
  ), [variantMeta]);
 
   useEffect(() => {
+  let cancelled = false;
   const fetchProduct = async () => {
   setProduct(null);
   setSelectedColor('');
@@ -217,12 +218,14 @@ const ProductDetail = () => {
 
   try {
   const res = await productAPI.getBySlug(slug);
+  if (cancelled) return;
   const p = res?.data;
   if (!p) {
   setLoadError('Product not found.');
   return;
   }
   const relRes = await productAPI.related(p.id).catch(() => ({ data: [] }));
+  if (cancelled) return;
   const rel = (relRes?.data || []).filter((x) => x.id !== p.id).slice(0, 4);
   const productHero = getProductBaseImage(p) || getPremiumImage(p);
 
@@ -231,11 +234,13 @@ const ProductDetail = () => {
   setRelated(rel);
   trackMetaViewContent(p);
   } catch (err) {
+  if (cancelled) return;
   setLoadError('Product not found.');
   }
   };
 
   fetchProduct();
+  return () => { cancelled = true; };
   }, [slug]);
 
  const isBelt = `${product?.category_name || ''} ${product?.parent_category_name || ''}`.toLowerCase().includes('belt');
