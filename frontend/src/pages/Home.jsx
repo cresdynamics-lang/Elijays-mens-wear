@@ -135,7 +135,7 @@ const Home = () => {
             <p className="text-[11px] tracking-[0.2em] uppercase font-bold mb-2 text-white">Find Us</p>
             <h2 className="font-display text-2xl md:text-4xl font-bold tracking-[0.02em] mb-4 text-white">Store Locator</h2>
             <p className="text-sm font-bold text-white mb-6 max-w-md mx-auto">
-              Visit us at Muindi Mbingu Street × Biashara Street, Nairobi CBD. Open Mon – Sat, 9AM – 6PM.
+              Visit us at Muindi Mbingu Street × Biashara Street, Nairobi CBD. Open Mon – Sat, 8AM – 8PM.
             </p>
             <a
               href="https://maps.google.com/?q=Muindi+Mbingu+Street+Biashara+Street+Nairobi"
