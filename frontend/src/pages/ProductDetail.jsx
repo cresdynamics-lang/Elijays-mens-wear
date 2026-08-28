@@ -110,6 +110,9 @@ const ProductDetail = () => {
     variantMeta.variants.find((v) => v.color === color && v.size === size)
   ), [variantMeta]);
 
+  const sizesForColorRef = useRef(sizesForColor);
+  sizesForColorRef.current = sizesForColor;
+
   useEffect(() => {
     let cancelled = false;
     let mounted = true;
@@ -138,7 +141,7 @@ const ProductDetail = () => {
 
         const firstColor = p?.variants?.[0]?.color || '';
         setSelectedColor(firstColor);
-        const sizes = sizesForColor(firstColor);
+        const sizes = sizesForColorRef.current(firstColor);
         setSelectedSize(sizes[0] || '');
 
         setSelectedImage(productHero);
@@ -155,23 +158,22 @@ const ProductDetail = () => {
 
     fetchProduct();
     return () => { cancelled = true; mounted = false; };
-  }, [slug, sizesForColor, variantMeta]);
+  }, [slug]);
 
-  const isBelt = `${product?.category_name || ''} ${product?.parent_category_name || ''}`.toLowerCase().includes('belt');
+  const isBelt = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase().includes('belt');
   const currentVariant = (!isBelt && selectedSize && findVariant(selectedColor, selectedSize)) || (selectedColor ? variantMeta.variants.find((v) => v.color === selectedColor) : null) || variantMeta.variants[0];
 
   const availableSizes = isBelt ? [] : sizesForColor(selectedColor);
-  const hasVariants = variantMeta.variants.length > 0;
   const showColorPicker = variantMeta.colors.length > 1
     || (variantMeta.colors.length === 1 && variantMeta.colors[0]?.color
     && !['original', 'standard', 'default'].includes(variantMeta.colors[0].color.toLowerCase()));
-  const shopOutOfStock = product?.is_active === false;
+  const shopOutOfStock = product.is_active === false;
 
-  const basePrice = product ? parseFloat(product.price) || 0 : 0;
-  const saleBase = product?.discount_price ? parseFloat(product.discount_price) : null;
-  const modifier = currentVariant ? parseFloat(currentVariant.price_modifier) || 0 : 0;
-  const displayPrice = ((saleBase ?? basePrice) || 0) + (modifier || 0);
-  const compareAtPrice = saleBase != null ? (basePrice || 0) + (modifier || 0) : null;
+  const basePrice = parseFloat(product.price);
+  const saleBase = product.discount_price ? parseFloat(product.discount_price) : null;
+  const modifier = currentVariant ? parseFloat(currentVariant.price_modifier) : 0;
+  const displayPrice = (saleBase ?? basePrice) + modifier;
+  const compareAtPrice = saleBase != null ? basePrice + modifier : null;
 
   const variantSummary = [selectedColor, isBelt ? '' : selectedSize].filter(Boolean).join(' / ');
 
@@ -186,16 +188,16 @@ const ProductDetail = () => {
   const parsedSizes = isBelt ? [] : [sizeLine];
 
   const buildPayload = () => ({
-    productId: product?.id,
+    productId: product.id,
     variantId: toCartVariantId(currentVariant?.id),
     quantity,
     sizeLabel: selectedSize,
     colorLabel: selectedColor,
-    name: product?.name,
+    name: product.name,
     price: displayPrice,
     image: currentDisplayImage,
-    slug: product?.slug,
-    brandName: product?.brand_name,
+    slug: product.slug,
+    brandName: product.brand_name,
     variantValue: variantSummary,
   });
 
@@ -594,17 +596,17 @@ const ProductDetail = () => {
                   ))}
                 </div>
 
-                {infoTab === 'description' && (
-                  <ProductDescription
-                    productName={product?.name || 'this item'}
-                    brandName={product?.brand_name}
-                    description={product?.description}
-                    parsedColors={parsedColorList}
-                    parsedSizes={parsedSizes}
-                    isShoe={variantMeta.isShoe}
-                    keyFeatures={product?.key_features}
-                  />
-                )}
+{infoTab === 'description' && (
+      <ProductDescription
+        productName={product.name}
+        brandName={product.brand_name}
+        description={product.description}
+        parsedColors={parsedColorList}
+        parsedSizes={parsedSizes}
+        isShoe={variantMeta.isShoe}
+        keyFeatures={product.key_features}
+      />
+      )}
 
                 {infoTab === 'details' && (
                   <div className="text-sm text-elijays-ink/70 space-y-3 leading-relaxed">
