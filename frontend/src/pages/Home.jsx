@@ -141,7 +141,7 @@ const Home = () => {
               href="https://maps.google.com/?q=Muindi+Mbingu+Street+Biashara+Street+Nairobi"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-gold text-center"
+              className="btn-gold text-center font-bold"
             >
               Get Directions
             </a>
