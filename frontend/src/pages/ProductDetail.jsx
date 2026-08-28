@@ -89,6 +89,7 @@ const ProductDetail = () => {
 
   const touchStartX = useRef(null);
 
+  // Hooks at top level - must be unconditional
   const variantMeta = useMemo(() => {
     if (!product) return { colors: [], variants: [], isShoe: false };
     return buildVariantMeta(product.variants, product.category_name);
@@ -101,7 +102,7 @@ const ProductDetail = () => {
   
   const sizesForColor = useCallback((color) => {
     if (!product) return [];
-    const category = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase();
+    const category = `${product?.category_name || ''} ${product?.parent_category_name || ''}`.toLowerCase();
     if (category.includes('belt')) return [];
     const sizes = variantMeta.variants
       .filter((v) => v.color === color)
@@ -164,6 +165,7 @@ const ProductDetail = () => {
     return () => { cancelled = true; mounted = false; };
   }, [slug]);
 
+  // Early returns - AFTER hooks
   if (isLoading) {
     return (
       <Layout>
@@ -215,24 +217,7 @@ const ProductDetail = () => {
     );
   }
 
-  // All calculations and handlers inside render block after product exists
-  const variantMeta = useMemo(() => buildVariantMeta(product.variants, product.category_name), [product]);
-  const colorImages = useMemo(() => buildColorImages(variantMeta, product), [variantMeta, product]);
-  const currentColorImages = useMemo(() => colorImages[selectedColor] || [], [colorImages, selectedColor]);
-
-  const sizesForColor = useCallback((color) => {
-    const category = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase();
-    if (category.includes('belt')) return [];
-    const sizes = variantMeta.variants
-      .filter((v) => v.color === color)
-      .map((v) => v.size);
-    return sortSizes(sizes, variantMeta.isShoe);
-  }, [variantMeta, product]);
-
-  const findVariant = useCallback((color, size) => (
-    variantMeta.variants.find((v) => v.color === color && v.size === size)
-  ), [variantMeta]);
-
+  // Product exists - safe to compute
   const isBelt = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase().includes('belt');
   const currentVariant = (!isBelt && selectedSize && findVariant(selectedColor, selectedSize)) || (selectedColor ? variantMeta.variants.find((v) => v.color === selectedColor) : null) || variantMeta.variants[0];
 
