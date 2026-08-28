@@ -131,33 +131,33 @@ const Products = ({ categoryOverride = null }) => {
  const currentSub = searchParams.get('sub') || 'All';
  const currentColor = searchParams.get('color') || 'All';
 
-  useEffect(() => {
- const fetchData = async () => {
- setLoading(true);
- setFetchError('');
- const params = {};
- if (currentCategory !== 'All') params.category = currentCategory;
- if (currentSub !== 'All') params.sub = currentSub;
+useEffect(() => {
+  const fetchData = async () => {
+  setLoading(true);
+  setFetchError('');
+  const params = {};
+  if (currentCategory !== 'All') params.category = currentCategory;
+  if (currentSub !== 'All') params.sub = currentSub;
 
- let fetchedProducts = DUMMY_PRODUCTS;
- try {
-   const res = await productAPI.list(params);
-   const rows = res?.data?.data || res?.data || [];
-   if (Array.isArray(rows) && rows.length) {
-     fetchedProducts = rows;
-   }
- } catch {
-   /* keep dummy fallback */
- }
+  let fetchedProducts = DUMMY_PRODUCTS;
+  try {
+    const res = await productAPI.list(params);
+    const rows = res?.data?.data?.products || res?.data?.products || [];
+    if (Array.isArray(rows) && rows.length) {
+      fetchedProducts = rows;
+    }
+  } catch {
+    /* keep dummy fallback */
+  }
 
- fetchedProducts = filterCatalogueProducts(fetchedProducts, currentCategory, currentSub);
+  fetchedProducts = filterCatalogueProducts(fetchedProducts, currentCategory, currentSub);
 
- setProducts(fetchedProducts);
- setLoading(false);
- window.scrollTo(0, 0);
- };
- fetchData();
- }, [currentCategory, currentSub]);
+  setProducts(fetchedProducts);
+  setLoading(false);
+  window.scrollTo(0, 0);
+  };
+  fetchData();
+  }, [currentCategory, currentSub]);
 
  const allCategoryData = dynamicCategories.length ? orderDatabaseCategories(dynamicCategories) : CATEGORY_DATA;
 
