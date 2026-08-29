@@ -257,7 +257,7 @@ const ProductDetail = () => {
     slug: product.slug,
     brandName: product.brand_name,
     variantValue: variantSummary,
-  );
+  });
 
   const currentDisplayImage = currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product);
 

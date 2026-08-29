@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
- Package, ShoppingBag, Plus, Search, Trash2, Edit, X, Image as ImageIcon,
+ Package, ShoppingBag, Plus, Search, Trash2, Edit, X, Image as ImageIcon, Sparkles,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { adminToast, apiErrorMessage } from '../../lib/adminToast';
-import { adminProductAPI, adminCategoryAPI, adminUploadAPI } from '../../services/api';
+import { adminProductAPI, adminCategoryAPI, adminUploadAPI, adminAiAPI } from '../../services/api';
 import { compressImageFile } from '../../utils/compressImage';
 import {
  getPersistImageUrl, getImageSrc, parseProductImages, toImageJson,
@@ -46,6 +46,8 @@ const ProductsView = () => {
  const [currentProduct, setCurrentProduct] = useState(null);
  const [submitting, setSubmitting] = useState(false);
  const [uploading, setUploading] = useState(false);
+ const [aiBusy, setAiBusy] = useState(false);
+ const thumbnailFileRef = React.useRef(null);
  const [customSize, setCustomSize] = useState('');
  const [searchQuery, setSearchQuery] = useState('');
  const [categoryFilter, setCategoryFilter] = useState('');
@@ -127,6 +129,7 @@ const ProductsView = () => {
  if (rawFile) {
  setUploading(true);
  const file = await compressImageFile(rawFile).catch(() => rawFile);
+ thumbnailFileRef.current = file;
  const localPreview = URL.createObjectURL(file);
  setFormData((prev) => {
  revokeBlobUrl(prev.thumbnailPreview);
@@ -545,6 +548,51 @@ const ProductsView = () => {
  return next;
  });
  }
+ };
+
+ const handleAiDescribe = async () => {
+   const file = thumbnailFileRef.current;
+   if (!file) {
+     adminToast.error('Upload a main thumbnail first, then run AI describe.');
+     return;
+   }
+   setAiBusy(true);
+   try {
+     const res = await adminAiAPI.analyzeImage(file);
+     const analysis = res.data?.data;
+     if (!analysis || !analysis.name) {
+       throw new Error(res.data?.message || 'AI returned no product data');
+     }
+     setFormData((prev) => {
+       const colors = analysis.colors && analysis.colors.length ? analysis.colors : ['Original'];
+       const nextGroups = colors.slice(0, 4).map((color, i) => {
+         const base = prev.color_groups[i];
+         return {
+          ...(base || newColorGroup(color)),
+          _key: base?._key || Math.random().toString(36).slice(2),
+          color,
+          image_url: base?.image_url || '',
+         };
+       });
+       return {
+         ...prev,
+         name: analysis.name.toUpperCase(),
+         slug: analysis.slug || analysis.name.toLowerCase().replace(/\s+/g, '-'),
+         description: analysis.description
+           ? analysis.description.toUpperCase()
+           : prev.description,
+         color_groups: nextGroups,
+         sku: prev.sku ? prev.sku : buildProductSku(analysis.name),
+       };
+     });
+     window.dispatchEvent(new Event('inventory:reload'));
+     adminToast.success('AI description applied — review fields, then save.');
+   } catch (error) {
+     console.error('AI describe failed:', error);
+     adminToast.error(apiErrorMessage(error, 'AI could not describe this image'));
+   } finally {
+     setAiBusy(false);
+   }
  };
 
  const handleSubmit = async (e) => {
@@ -1113,6 +1161,22 @@ const ProductsView = () => {
  <p className="text-[9px] text-secondary/60 tracking-wider">
  {formData.thumbnailPreview ? 'Hover to remove and select a different one' : 'Drag and drop or click to upload'}
  </p>
+ {formData.thumbnailPreview && (
+ <div className="pt-1">
+ <button
+ type="button"
+ onClick={handleAiDescribe}
+ disabled={aiBusy}
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent-600/15 border border-accent-500/30 text-accent-300 text-[10px] font-black tracking-wider hover:bg-accent-600/25 transition-all disabled:opacity-50 disabled:cursor-wait"
+ >
+ <Sparkles size={12} />
+ {aiBusy ? 'AI describing...' : 'AI Describe Product'}
+ </button>
+ <p className="text-[8px] text-accent-500/40 tracking-wider mt-1">
+ Auto-fills name, slug, colors, description from this photo
+ </p>
+ </div>
+ )}
  </div>
  </div>
  </div>

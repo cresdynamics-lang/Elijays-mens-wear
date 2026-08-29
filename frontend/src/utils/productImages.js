@@ -124,7 +124,6 @@ export const getPremiumImage = (product, { width = 400 } = {}) => {
   if (PREMIUM_IMAGES[category]) return PREMIUM_IMAGES[category];
 
   // If no match, use product id/slug hash to pick a consistent local fallback (not always polo)
-  const key = String(product.id || product.slug || product.name || '');
   const hash = key.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
   return LOCAL_IMAGES[hash % LOCAL_IMAGES.length];
 };

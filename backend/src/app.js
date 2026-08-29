@@ -139,6 +139,7 @@ app.use('/api/admin/coupons', require('./routes/adminCouponRoutes'));
 app.use('/api/admin/banners', require('./routes/adminBannerRoutes'));
 app.use('/api/admin/blog', require('./routes/adminBlogRoutes'));
 app.use('/api/admin/upload', require('./routes/adminUploadRoutes'));
+app.use('/api/admin/upload', require('./routes/adminAiRoutes'));
 app.use('/api/admin/customers', require('./routes/customerRoutes'));
 app.use('/api/admin/dashboard', require('./routes/analyticsRoutes'));
 app.use('/api/admin/settings', require('./routes/settingsRoutes'));
