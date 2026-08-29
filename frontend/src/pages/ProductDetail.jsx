@@ -227,11 +227,15 @@ const ProductDetail = () => {
     && !['original', 'standard', 'default'].includes(variantMeta.colors[0].color.toLowerCase()));
   const shopOutOfStock = product.is_active === false;
 
-  const basePrice = parseFloat(product.price);
-  const saleBase = product.discount_price ? parseFloat(product.discount_price) : null;
-  const modifier = currentVariant ? parseFloat(currentVariant.price_modifier) : 0;
+  const basePriceNum = parseFloat(product.price);
+  const basePrice = Number.isFinite(basePriceNum) ? basePriceNum : 0;
+  const saleNum = product.discount_price ? parseFloat(product.discount_price) : Number.NaN;
+  const saleBase = Number.isFinite(saleNum) ? saleNum : null;
+  const modifierNum = currentVariant ? parseFloat(currentVariant.price_modifier) : 0;
+  const modifier = Number.isFinite(modifierNum) ? modifierNum : 0;
   const displayPrice = (saleBase ?? basePrice) + modifier;
   const compareAtPrice = saleBase != null ? basePrice + modifier : null;
+  const hasListedPrice = basePrice + modifier > 0;
 
   const variantSummary = [selectedColor, isBelt ? '' : selectedSize].filter(Boolean).join(' / ');
 
@@ -280,6 +284,10 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     if (!product || shopOutOfStock) return;
+    if (!hasListedPrice) {
+      openWhatsAppEnquiry(product);
+      return;
+    }
     await addToCart(buildPayload());
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 3000);
@@ -287,6 +295,10 @@ const ProductDetail = () => {
 
   const handleBuyNow = async () => {
     if (!product || shopOutOfStock) return;
+    if (!hasListedPrice) {
+      openWhatsAppEnquiry(product);
+      return;
+    }
     await addToCart(buildPayload());
     navigate('/checkout');
   };
@@ -440,12 +452,20 @@ const ProductDetail = () => {
                 <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] text-elijays-ink leading-[1.15] font-display">{product.name}</h1>
 
                 <div className="flex items-baseline gap-3 flex-wrap">
-                  <p className="text-2xl md:text-3xl text-elijays-gold tracking-tight font-semibold">
-                    KSh {displayPrice.toLocaleString()}
-                  </p>
-                  {compareAtPrice != null && compareAtPrice > displayPrice && (
-                    <p className="text-xl md:text-2xl text-secondary/60 line-through font-normal">
-                      KSh {compareAtPrice.toLocaleString()}
+                  {hasListedPrice ? (
+                    <>
+                      <p className="text-2xl md:text-3xl text-elijays-gold tracking-tight font-semibold">
+                        KSh {displayPrice.toLocaleString()}
+                      </p>
+                      {compareAtPrice != null && compareAtPrice > displayPrice && (
+                        <p className="text-xl md:text-2xl text-secondary/60 line-through font-normal">
+                          KSh {compareAtPrice.toLocaleString()}
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-xl md:text-2xl text-[#5c5c5c] italic font-normal">
+                      Price coming soon — enquire on WhatsApp
                     </p>
                   )}
                 </div>
@@ -605,7 +625,7 @@ const ProductDetail = () => {
                   }`}
                 >
                   <ShoppingBag size={13} />
-                  <span>{addedToCart ? 'Saved to bag' : 'Add to bag'}</span>
+                  <span>{addedToCart ? 'Saved to bag' : hasListedPrice ? 'Add to bag' : 'Enquire for price'}</span>
                 </motion.button>
 
                 <p className="text-[11px] text-[#5c5c5c] text-center font-light">

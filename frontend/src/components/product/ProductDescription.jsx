@@ -71,7 +71,7 @@ const ProductDescription = ({
             </ul>
           ) : (
             <p>
-              Premium cloth selected for Nairobi wear — ask in-store or on WhatsApp for fabric details on {productName}.
+              Premium cloth selected for Nairobi wear — ask in-store or on WhatsApp for fabric details{productName ? ` on ${productName}` : ''}.
             </p>
           )}
           {colorLines.length > 0 && (
