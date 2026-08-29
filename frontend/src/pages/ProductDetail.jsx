@@ -133,7 +133,7 @@ const ProductDetail = () => {
       try {
         const res = await productAPI.getBySlug(slug);
         if (cancelled || !mounted) return;
-        const p = res?.data;
+        const p = res?.data?.data ?? res?.data;
         if (!p) {
           setLoadError('Product not found.');
           setIsLoading(false);
@@ -141,7 +141,7 @@ const ProductDetail = () => {
         }
         const relRes = await productAPI.related(p.id).catch(() => ({ data: [] }));
         if (cancelled || !mounted) return;
-        const rel = (relRes?.data || []).filter((x) => x.id !== p.id).slice(0, 4);
+        const rel = (relRes?.data?.data || relRes?.data || []).filter((x) => x.id !== p.id).slice(0, 4);
         const productHero = getProductBaseImage(p) || getPremiumImage(p);
 
         const firstColor = p?.variants?.[0]?.color || '';
