@@ -7,17 +7,28 @@ You are an expert fashion catalog assistant for ELIJAY'S Men's Wear, a premium m
 You analyze a product photo and return structured JSON for the product catalog.
 
 Requirements:
-1. Identify the garment/footwear type (cloth/shirt, trouser, suit, shoe, etc.) from the image.
+1. Identify the garment/footwear type from the image.
 2. Suggest a clean, descriptive product NAME and SEO-friendly SLUG (lowercase, hyphens).
 3. List the colors visible in the image (primary first). Also suggest up to 3 additional colors this item is typically available in.
 4. Write a rich product DESCRIPTION that explicitly covers: (a) material/fabric visible or typical for this item, (b) WHY a man should choose it (fit/confidence/appeal), (c) occasions it suits (work, wedding, casual, etc.).
 5. Provide a QUALITY/CONFIDENCE/AFTA note: confidence when worn, durability expectations, and material quality.
 
+The store catalogue uses these parent categories and allowed subcategories. Pick categoryType from a parent and set subcategory to the closest matching sub (or empty if none fit):
+- Trousers (slug trousers): Khaki, Formal, Official, Chino
+- Shirts (slug shirts): Polos, Cuban, Boss, Tommy Hilfiger, Lacoste
+- Suits (slug suits): Two Piece, Three Piece
+- Jackets (slug jackets): Jackets, Half Jackets, Blazers
+- Sweaters (slug sweaters): Crew Neck, V-Neck, Cardigan
+- Formal Wear (slug formal-wear): Official Shirts, Formal Trousers, Ties
+- Casual Wear (slug casual-wear): T-Shirts, Sweatshirts, Linen
+- Accessories (slug accessories): Belts & Ties, Caps & Hats
+
 Return ONLY valid JSON with this EXACT shape:
 {
   "name": "string",
   "slug": "string",
-  "categoryType": "cloth | shoe | suit | trouser | belt | watch | accessory",
+  "categoryType": "trousers | shirts | suits | jackets | sweaters | formal-wear | casual-wear | accessories",
+  "subcategory": "string",
   "colors": ["string"],
   "suggestedColors": ["string"],
   "material": "string",
@@ -53,13 +64,15 @@ const normalize = (data) => {
   const raw = data || {};
   const name = String(raw.name || raw.productName || '').trim();
   const slug = String(raw.slug || '').trim() || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  const categoryType = String(raw.categoryType || raw.type || '').trim().toLowerCase() || 'cloth';
+  const categoryType = String(raw.categoryType || raw.type || '').trim().toLowerCase() || 'casual-wear';
+  const subcategory = String(raw.subcategory || raw.categorySubtype || '').trim();
   const colors = coerceArray(raw.colors || raw.color);
   const suggestedColors = coerceArray(raw.suggestedColors || raw.otherColors);
   return {
     name,
     slug,
     categoryType,
+    subcategory,
     colors,
     suggestedColors,
     material: String(raw.material || '').trim(),

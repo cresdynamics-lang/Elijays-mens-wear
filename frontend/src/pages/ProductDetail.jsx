@@ -261,15 +261,14 @@ const ProductDetail = () => {
 
   const currentDisplayImage = currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product);
 
-  const handleColorSelect = (color) => {
+  const handleColorSelect = (color, index = 0) => {
     setSelectedColor(color);
-    setImageIndex(0);
+    setImageIndex(index);
     const sizes = sizesForColor(color);
     const inStockSizes = sizes.filter((s) => isVariantAvailable(findVariant(color, s)));
     const keepSize = inStockSizes.includes(selectedSize) ? selectedSize : null;
     const nextSize = isBelt ? '' : (keepSize || inStockSizes[0] || sizes[0] || '');
     setSelectedSize(nextSize);
-    setImageIndex(0);
   };
 
   const handleSizeSelect = (size) => {
@@ -385,33 +384,50 @@ const ProductDetail = () => {
                 )}
               </div>
 
-              {currentColorImages.length > 1 && (
-                <div className="flex gap-2.5 overflow-x-auto custom-scrollbar pb-1 snap-x snap-mandatory">
-                  {currentColorImages.map((img, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => setImageIndex(index)}
-                      className={`relative shrink-0 snap-start rounded-md overflow-hidden bg-primary border transition-all duration-300 w-16 h-16 sm:w-20 sm:h-20 ${
-                        index === imageIndex
-                          ? 'border-elijays-gold/50 shadow-lg shadow-elijays-gold/10'
-                          : 'border-utility-gray/50 hover:border-elijays-gold/25'
-                      }`}
-                    >
-                      <img
-                        src={img}
-                        alt={`${product.name} view ${index + 1}`}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-contain p-1"
-                      />
-                      {index === imageIndex && (
-                        <span className="absolute top-1 left-1 flex h-4 w-4 items-center justify-center rounded-full bg-elijays-gold text-white">
-                          <Check size={9} strokeWidth={3} />
-                        </span>
-                      )}
-                    </button>
-                  ))}
+              {variantMeta.colors.filter(({ color }) => (colorImages[color] || []).length > 0).length > 0 && (
+                <div className="space-y-5">
+                  {variantMeta.colors.map(({ color }) => {
+                    const images = colorImages[color] || [];
+                    if (!images.length) return null;
+                    const isActiveColor = color === selectedColor;
+                    return (
+                      <div key={color} className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-block h-1.5 w-1.5 rounded-full ${isActiveColor ? 'bg-elijays-gold' : 'bg-utility-gray'}`} />
+                          <p className={`text-[10px] font-medium tracking-[0.14em] uppercase ${isActiveColor ? 'text-elijays-gold' : 'text-elijays-ink/60'}`}>
+                            {color}
+                          </p>
+                        </div>
+                        <div className="flex gap-2.5 overflow-x-auto custom-scrollbar pb-1 snap-x snap-mandatory">
+                          {images.map((img, index) => (
+                            <button
+                              key={`${color}-${index}`}
+                              type="button"
+                              onClick={() => handleColorSelect(color, index)}
+                              className={`relative shrink-0 snap-start rounded-md overflow-hidden bg-primary border transition-all duration-300 w-16 h-16 sm:w-20 sm:h-20 ${
+                                isActiveColor && index === imageIndex
+                                  ? 'border-elijays-gold/50 shadow-lg shadow-elijays-gold/10'
+                                  : 'border-utility-gray/50 hover:border-elijays-gold/25'
+                              }`}
+                            >
+                              <img
+                                src={img}
+                                alt={`${color} view ${index + 1}`}
+                                loading="lazy"
+                                decoding="async"
+                                className="w-full h-full object-contain p-1"
+                              />
+                              {isActiveColor && index === imageIndex && (
+                                <span className="absolute top-1 left-1 flex h-4 w-4 items-center justify-center rounded-full bg-elijays-gold text-white">
+                                  <Check size={9} strokeWidth={3} />
+                                </span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -446,25 +462,55 @@ const ProductDetail = () => {
                   <h3 className="text-[11px] tracking-[0.14em] font-medium text-elijays-ink uppercase">
                     Color
                   </h3>
-                  <div className="flex flex-wrap gap-2.5">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-2.5">
                     {variantMeta.colors.map(({ color, variants: colorVariants }) => {
                       const isSelected = selectedColor === color;
                       const colorAvailable = colorVariants.some(isVariantAvailable);
+                      const colorImage = (colorImages[color] || [])[0];
+                      const fallbackInitial = color.replace(/^[^A-Za-z]*/, '').charAt(0).toUpperCase();
                       return (
                         <button
                           key={color}
                           type="button"
                           disabled={!colorAvailable}
                           onClick={() => handleColorSelect(color)}
-                          className={`px-4 py-2 rounded-full border text-[11px] font-medium tracking-wide transition-all duration-300 ${
+                          title={color}
+                          className={`group flex flex-col items-center gap-2 px-2 py-3 rounded-xl border transition-all duration-300 ${
                             !colorAvailable
-                              ? 'opacity-35 cursor-not-allowed border-utility-gray text-elijays-ink/40'
+                              ? 'opacity-35 cursor-not-allowed border-utility-gray'
                               : isSelected
-                                ? 'border-elijays-gold bg-elijays-gold text-elijays-ink'
-                                : 'border-elijays-ink/20 text-elijays-ink hover:border-elijays-gold'
+                                ? 'border-elijays-gold bg-elijays-gold/5 shadow-sm shadow-elijays-gold/10'
+                                : 'border-elijays-ink/15 bg-primary hover:border-elijays-gold/50'
                           }`}
                         >
-                          {color}
+                          <span
+                            className={`relative h-12 w-12 rounded-full overflow-hidden ring-2 ring-offset-2 transition-all duration-300 ${
+                              isSelected && colorAvailable
+                                ? 'ring-elijays-gold ring-offset-primary'
+                                : 'ring-utility-gray/50 ring-offset-primary group-hover:ring-elijays-gold/40'
+                            }`}
+                          >
+                            {colorImage ? (
+                              <img
+                                src={colorImage}
+                                alt={color}
+                                loading="lazy"
+                                decoding="async"
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <span className="flex h-full w-full items-center justify-center bg-primary text-[13px] font-semibold text-elijays-ink/60 border border-utility-gray/40">
+                                {fallbackInitial}
+                              </span>
+                            )}
+                          </span>
+                          <span
+                            className={`text-center text-[10px] font-medium tracking-wide leading-tight ${
+                              isSelected && colorAvailable ? 'text-elijays-gold' : 'text-elijays-ink/70 group-hover:text-elijays-ink'
+                            }`}
+                          >
+                            {color}
+                          </span>
                         </button>
                       );
                     })}

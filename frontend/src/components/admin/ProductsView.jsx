@@ -34,6 +34,57 @@ const buildProductSku = (productName) => {
  return productPart;
 };
 
+const normToken = (value) => String(value || '')
+ .toLowerCase()
+ .replace(/[^a-z0-9]+/g, ' ')
+ .trim();
+
+/**
+ * Map Gemini's categoryType/subcategory to real storefront categories.
+ * Returns { parent_category_id, category_id } or {} when nothing matches.
+ */
+const resolveAiCategory = (categories = [], analysis = {}) => {
+ const all = Array.isArray(categories) ? categories : [];
+ const target = normToken(analysis.categoryType);
+ const parent = all.find((c) => !c.parent_id && (
+  (normToken(c.slug) === target) ||
+  (normToken(c.name) === target)
+ ));
+ if (!parent) return {};
+ const kids = all.filter((c) => c.parent_id === parent.id);
+ if (!kids.length) return { parent_category_id: parent.id, category_id: parent.id };
+
+ const sub = normToken(analysis.subcategory);
+ const subTokens = sub.split(' ').filter(Boolean);
+ const scoreKid = (kid) => {
+  const tokens = normToken(kid.name).split(' ').filter(Boolean);
+  if (normToken(kid.name) === sub) return 1000;
+  if (sub.includes(normToken(kid.name))) return 800;
+  if (normToken(kid.name).includes(sub)) return 700;
+  const overlap = tokens.filter((t) => subTokens.includes(t)).length;
+  return overlap * 100 + (tokens.length >= 2 ? 10 : 0);
+ };
+ const sorted = [...kids].sort((a, b) => scoreKid(b) - scoreKid(a));
+ const best = sorted[0];
+ if (!best) return { parent_category_id: parent.id, category_id: parent.id };
+ return { parent_category_id: parent.id, category_id: best.id };
+};
+
+/**
+ * Return a File for AI scanning: a freshly-selected thumbnail, or the currently
+ * previewed thumbnail fetched as a blob (covers editing existing products).
+ */
+const getAiImageFile = async (fileRef, previewUrl) => {
+ if (fileRef.current) return fileRef.current;
+ if (previewUrl && !String(previewUrl).startsWith('blob:')) {
+  const blob = await fetch(previewUrl).then((r) => r.blob());
+  if (blob && blob.size > 0) {
+   return new File([blob], 'product-thumbnail.jpg', { type: blob.type || 'image/jpeg' });
+  }
+ }
+ return null;
+};
+
 const ProductsView = () => {
  const confirm = useConfirm();
  const authUser = useAuthStore((s) => s.user);
@@ -550,19 +601,21 @@ const ProductsView = () => {
  }
  };
 
- const handleAiDescribe = async () => {
-   const file = thumbnailFileRef.current;
-   if (!file) {
-     adminToast.error('Upload a main thumbnail first, then run AI describe.');
-     return;
-   }
+const handleAiDescribe = async () => {
    setAiBusy(true);
    try {
+     const file = await getAiImageFile(thumbnailFileRef, formData.thumbnailPreview);
+     if (!file) {
+       adminToast.error('Upload a main thumbnail first, then run AI describe.');
+       return;
+     }
      const res = await adminAiAPI.analyzeImage(file);
      const analysis = res.data?.data;
      if (!analysis || !analysis.name) {
        throw new Error(res.data?.message || 'AI returned no product data');
      }
+     const { parent_category_id: aiParentId, category_id: aiCategoryId } =
+       resolveAiCategory(categories, analysis);
      setFormData((prev) => {
        const colors = analysis.colors && analysis.colors.length ? analysis.colors : ['Original'];
        const nextGroups = colors.slice(0, 4).map((color, i) => {
@@ -575,18 +628,24 @@ const ProductsView = () => {
          };
        });
        return {
-         ...prev,
-         name: analysis.name.toUpperCase(),
-         slug: analysis.slug || analysis.name.toLowerCase().replace(/\s+/g, '-'),
-         description: analysis.description
-           ? analysis.description.toUpperCase()
-           : prev.description,
-         color_groups: nextGroups,
-         sku: prev.sku ? prev.sku : buildProductSku(analysis.name),
+        ...prev,
+        name: analysis.name.toUpperCase(),
+        slug: analysis.slug || analysis.name.toLowerCase().replace(/\s+/g, '-'),
+        description: analysis.description
+          ? analysis.description.toUpperCase()
+          : prev.description,
+        color_groups: nextGroups,
+        sku: prev.sku ? prev.sku : buildProductSku(analysis.name),
+        parent_category_id: aiParentId || prev.parent_category_id,
+        category_id: aiCategoryId || prev.category_id,
+        sizeRows: [],
+        stock_quantity: 0,
        };
      });
      window.dispatchEvent(new Event('inventory:reload'));
-     adminToast.success('AI description applied — review fields, then save.');
+     adminToast.success(aiCategoryId
+       ? 'AI applied name, category, colors and description — add a price, review, then save.'
+       : 'AI description applied — pick a category, add a price, review, then save.');
    } catch (error) {
      console.error('AI describe failed:', error);
      adminToast.error(apiErrorMessage(error, 'AI could not describe this image'));
@@ -1172,9 +1231,9 @@ const ProductsView = () => {
  <Sparkles size={12} />
  {aiBusy ? 'AI describing...' : 'AI Describe Product'}
  </button>
- <p className="text-[8px] text-accent-500/40 tracking-wider mt-1">
- Auto-fills name, slug, colors, description from this photo
- </p>
+<p className="text-[8px] text-accent-500/40 tracking-wider mt-1">
+ Auto-fills name, category, colors and description from this photo — just add the price.
+</p>
  </div>
  )}
  </div>
