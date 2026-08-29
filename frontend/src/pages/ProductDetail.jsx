@@ -8,8 +8,9 @@ import ProductDescription from '../components/product/ProductDescription';
 import { useCartStore } from '../store/useCartStore';
 import { productAPI } from '../services/api';
 import { getPremiumImage } from '../utils/productImages';
-import { getImageSrc } from '../utils/cloudinary';
-import { buildVariantMeta, sortSizes } from '../utils/productDescription';
+import { getImageSrc, parseProductImages } from '../utils/cloudinary';
+import { parseAngleImages, getDefaultAngleImage } from '../utils/angleImages';
+import { buildVariantMeta, buildRichDescription, sortSizes } from '../utils/productDescription';
 import { buildBreadcrumbSchema, buildProductSchema } from '../seo/seoData';
 import { toCartVariantId } from '../utils/ids';
 import { openWhatsAppEnquiry } from '../lib/whatsappEnquiry';
@@ -88,7 +89,7 @@ const ProductDetail = () => {
 
   const touchStartX = useRef(null);
 
-  // Hooks at top level - must be unconditional
+  // All hooks at top level - must be unconditional
   const variantMeta = useMemo(() => {
     if (!product) return { colors: [], variants: [], isShoe: false };
     return buildVariantMeta(product.variants, product.category_name);
@@ -164,7 +165,7 @@ const ProductDetail = () => {
     return () => { cancelled = true; mounted = false; };
   }, [slug]);
 
-  // Early returns - AFTER hooks
+  // Early returns - AFTER all hooks
   if (isLoading) {
     return (
       <Layout>
@@ -216,7 +217,7 @@ const ProductDetail = () => {
     );
   }
 
-  // Product exists - safe to compute
+  // Product exists - safe to compute (all calculations AFTER early returns)
   const isBelt = `${product.category_name || ''} ${product.parent_category_name || ''}`.toLowerCase().includes('belt');
   const currentVariant = (!isBelt && selectedSize && findVariant(selectedColor, selectedSize)) || (selectedColor ? variantMeta.variants.find((v) => v.color === selectedColor) : null) || variantMeta.variants[0];
 
