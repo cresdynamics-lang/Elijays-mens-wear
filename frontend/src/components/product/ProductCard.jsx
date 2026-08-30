@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPremiumImage } from '../../utils/productImages';
 import { openWhatsAppEnquiry } from '../../lib/whatsappEnquiry';
@@ -9,8 +10,11 @@ const formatPrice = (price) => `KSh ${parseFloat(price).toLocaleString()}`;
 /**
  * Product grid card — image, name, price, and two CTAs:
  * Add to Cart (cart store) and WhatsApp Order (enquiry).
+ * Hovering the image cycles through the product's other color variants.
  */
 const ProductCard = ({ product, showSale = true }) => {
+  const [hoverIndex, setHoverIndex] = useState(0);
+  const [hovering, setHovering] = useState(false);
   const listPrice = parseFloat(product.price);
   const salePrice = product.discount_price != null ? parseFloat(product.discount_price) : null;
   const price = salePrice ?? listPrice;
@@ -20,8 +24,31 @@ const ProductCard = ({ product, showSale = true }) => {
       ? listPrice
       : null;
   const onSale = showSale && comparePrice != null && comparePrice > price;
-  const image = product.image_url || product.thumbnail || getPremiumImage(product, { width: 500 });
+  const baseImage = product.image_url || product.thumbnail || getPremiumImage(product, { width: 500 });
+  const colorImages = Array.isArray(product.color_images)
+    ? product.color_images.filter((img) => img && img !== baseImage)
+    : [];
+  const displayImage = hovering && colorImages.length > 0
+    ? colorImages[hoverIndex % colorImages.length]
+    : baseImage;
   const addToCart = useCartStore((s) => s.addToCart);
+
+  const handleHoverEnter = () => {
+    if (colorImages.length === 0) return;
+    setHovering(true);
+    setHoverIndex(0);
+  };
+
+  const handleHoverLeave = () => {
+    setHovering(false);
+    setHoverIndex(0);
+  };
+
+  useEffect(() => {
+    if (!hovering || colorImages.length <= 1) return;
+    const t = setInterval(() => setHoverIndex((i) => (i + 1) % colorImages.length), 900);
+    return () => clearInterval(t);
+  }, [hovering, colorImages.length]);
 
   const handleAddToCart = async () => {
     try {
@@ -29,7 +56,7 @@ const ProductCard = ({ product, showSale = true }) => {
         productId: product.id,
         name: product.name,
         price: product.price,
-        image,
+        image: baseImage,
         slug: product.slug,
         quantity: 1,
       });
@@ -41,10 +68,15 @@ const ProductCard = ({ product, showSale = true }) => {
 
   return (
     <article className="group flex flex-col min-w-0 w-full">
-      <Link to={`/product/${product.slug}`} className="block min-w-0">
+      <Link to={`/product/${product.slug}`} className="block min-w-0"
+        onMouseEnter={handleHoverEnter}
+        onMouseLeave={handleHoverLeave}
+        onFocus={handleHoverEnter}
+        onBlur={handleHoverLeave}
+      >
         <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden mb-3">
           <img
-            src={image}
+            src={displayImage}
             alt={product.name}
             loading="lazy"
             decoding="async"

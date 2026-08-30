@@ -30,6 +30,17 @@ const { isAdminRole, isSellerRole } = require('../utils/posHelpers');
 
 const isStaffUser = (user) => user && (isAdminRole(user) || isSellerRole(user));
 
+const uniqueUris = (list) => {
+    const seen = new Set();
+    const out = [];
+    for (const uri of list || []) {
+        if (!uri || seen.has(uri)) continue;
+        seen.add(uri);
+        out.push(uri);
+    }
+    return out;
+};
+
 const stripPosStockFields = (item) => {
     if (!item || typeof item !== 'object') return item;
     const {
@@ -173,6 +184,30 @@ exports.getProducts = async (req, res, next) => {
         products = await attachPosStock(products, { forStaff: isStaffUser(req.user) });
 
         products = forAudience(products, req);
+
+        if (products.length > 0) {
+            const productIds = products.map((p) => p.id);
+            const vRes = await db.query(
+                `SELECT product_id, color, image_url, image_url2
+                 FROM product_variants
+                 WHERE product_id = ANY($1::uuid[])
+                   AND (image_url IS NOT NULL OR image_url2 IS NOT NULL)
+                 ORDER BY color, size`,
+                [productIds]
+            );
+            const imagesByProduct = new Map();
+            for (const v of vRes.rows) {
+                let list = imagesByProduct.get(v.product_id);
+                if (!list) { list = []; imagesByProduct.set(v.product_id, list); }
+                if (v.image_url) list.push(v.image_url);
+                if (v.image_url2) list.push(v.image_url2);
+            }
+            products = products.map((p) => ({
+                ...p,
+                color_images: uniqueUris(imagesByProduct.get(p.id) || []),
+            }));
+        }
+
         formatResponse(res, 200, true, 'Products fetched successfully', {
             products,
             pagination: {
@@ -192,7 +227,30 @@ exports.getProducts = async (req, res, next) => {
 exports.getFeaturedProducts = async (req, res, next) => {
     try {
         const result = await db.query('SELECT * FROM products WHERE is_featured = true AND is_active = true LIMIT 8');
-        formatResponse(res, 200, true, 'Featured products fetched', result.rows);
+        let products = result.rows;
+        if (products.length > 0) {
+            const productIds = products.map((p) => p.id);
+            const vRes = await db.query(
+                `SELECT product_id, color, image_url, image_url2
+                 FROM product_variants
+                 WHERE product_id = ANY($1::uuid[])
+                   AND (image_url IS NOT NULL OR image_url2 IS NOT NULL)
+                 ORDER BY color, size`,
+                [productIds]
+            );
+            const imagesByProduct = new Map();
+            for (const v of vRes.rows) {
+                let list = imagesByProduct.get(v.product_id);
+                if (!list) { list = []; imagesByProduct.set(v.product_id, list); }
+                if (v.image_url) list.push(v.image_url);
+                if (v.image_url2) list.push(v.image_url2);
+            }
+            products = products.map((p) => ({
+                ...p,
+                color_images: uniqueUris(imagesByProduct.get(p.id) || []),
+            }));
+        }
+        formatResponse(res, 200, true, 'Featured products fetched', forAudience(products, req));
     } catch (error) {
         next(error);
     }

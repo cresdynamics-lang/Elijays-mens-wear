@@ -93,8 +93,6 @@ const ProductDetail = () => {
   const [infoTab, setInfoTab] = useState('description');
   const [imageIndex, setImageIndex] = useState(0);
   const [showVariantMatrix, setShowVariantMatrix] = useState(false);
-  const [hoverColor, setHoverColor] = useState(null);
-  const [hoverImageIndex, setHoverImageIndex] = useState(0);
 
   const touchStartX = useRef(null);
 
@@ -106,14 +104,6 @@ const ProductDetail = () => {
 
   const colorImages = useMemo(() => buildColorImages(variantMeta, product), [variantMeta, product]);
   const currentColorImages = useMemo(() => colorImages[selectedColor] || [], [colorImages, selectedColor]);
-
-  const orderedColors = useMemo(() => {
-    const list = [];
-    for (const { color } of variantMeta.colors) {
-      if ((colorImages[color] || []).length > 0) list.push(color);
-    }
-    return list;
-  }, [variantMeta.colors, colorImages]);
 
   const sizesForColorRef = useRef((color) => []);
   
@@ -280,23 +270,7 @@ const ProductDetail = () => {
     variantValue: variantSummary,
   });
 
-  const hoveredImages = hoverColor ? (colorImages[hoverColor] || []) : [];
-  const currentDisplayImage = hoveredImages.length
-    ? (hoveredImages[hoverImageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product))
-    : (currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product));
-
-  const handleHoverEnter = () => {
-    if (orderedColors.length < 2) return;
-    const idx = orderedColors.indexOf(selectedColor);
-    const next = orderedColors[(idx + 1) % orderedColors.length];
-    setHoverColor(next);
-    setHoverImageIndex(0);
-  };
-
-  const handleHoverLeave = () => {
-    setHoverColor(null);
-    setHoverImageIndex(0);
-  };
+  const currentDisplayImage = currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product);
 
   const handleColorSelect = (color, index = 0) => {
     setSelectedColor(color);
@@ -378,8 +352,6 @@ const ProductDetail = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.35, ease: 'easeOut' }}
                     className="w-full h-full object-contain p-6 md:p-10"
-                    onMouseEnter={handleHoverEnter}
-                    onMouseLeave={handleHoverLeave}
                     onTouchStart={(e) => {
                       touchStartX.current = e.touches[0]?.clientX ?? null;
                     }}
@@ -425,7 +397,7 @@ const ProductDetail = () => {
                       ))}
                     </div>
                     <span className="absolute top-3 left-3 px-3 py-1 rounded-md bg-white/90 text-[10px] font-semibold text-elijays-ink/70 border border-utility-gray/60 shadow-sm">
-                      {hoverColor || selectedColor}
+                      {selectedColor}
                     </span>
                   </>
                 )}
