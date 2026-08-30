@@ -80,6 +80,7 @@ const mapVariantRow = (v, productSku) => {
         stock: v.stock_quantity,
         price_modifier: v.price_modifier,
         image_url: v.image_url,
+        image_url2: v.image_url2,
         angle_images: v.angle_images,
         color: v.color,
         size: v.size,
@@ -294,7 +295,7 @@ exports.createProduct = async (req, res, next) => {
                 const value = `${v.size || ''} / ${v.color || ''}`;
                 const variantSku = generateVariantSku(productSku, v);
                 await db.query(
-                    'INSERT INTO product_variants (product_id, name, value, price_modifier, stock_quantity, image_url, color, size, sku, stock_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+                    'INSERT INTO product_variants (product_id, name, value, price_modifier, stock_quantity, image_url, image_url2, color, size, sku, stock_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
                     [
                         productId,
                         'Variant',
@@ -302,6 +303,7 @@ exports.createProduct = async (req, res, next) => {
                         v.price_override || 0,
                         parseInt(v.stock, 10) || 0,
                         v.image_url || null,
+                        v.image_url2 || null,
                         v.color || null,
                         v.size || null,
                         variantSku,
@@ -396,13 +398,13 @@ exports.updateProduct = async (req, res, next) => {
                 const stockQty = v.id ? (stockById.get(v.id) ?? 0) : 0;
                 if (v.id) {
                     await db.query(
-                        'UPDATE product_variants SET name = $1, value = $2, price_modifier = $3, stock_quantity = $4, image_url = $5, color = $6, size = $7, sku = $8, stock_id = $9 WHERE id = $10',
-                        ['Variant', value, v.price_override || 0, stockQty, v.image_url || null, v.color || null, v.size || null, variantSku, variantSku, v.id]
+                        'UPDATE product_variants SET name = $1, value = $2, price_modifier = $3, stock_quantity = $4, image_url = $5, image_url2 = $6, color = $7, size = $8, sku = $9, stock_id = $10 WHERE id = $11',
+                        ['Variant', value, v.price_override || 0, stockQty, v.image_url || null, v.image_url2 || null, v.color || null, v.size || null, variantSku, variantSku, v.id]
                     );
                 } else {
                     await db.query(
-                        'INSERT INTO product_variants (product_id, name, value, price_modifier, stock_quantity, image_url, color, size, sku, stock_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-                        [id, 'Variant', value, v.price_override || 0, 0, v.image_url || null, v.color || null, v.size || null, variantSku, variantSku]
+                        'INSERT INTO product_variants (product_id, name, value, price_modifier, stock_quantity, image_url, image_url2, color, size, sku, stock_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+                        [id, 'Variant', value, v.price_override || 0, 0, v.image_url || null, v.image_url2 || null, v.color || null, v.size || null, variantSku, variantSku]
                     );
                 }
             }
@@ -639,8 +641,8 @@ exports.adminGetProducts = async (req, res, next) => {
         if (products.length > 0) {
             const productIds = products.map((p) => p.id);
             const variantCols = lite
-                ? 'id, product_id, color, size, stock_quantity, price_modifier, image_url, sku, stock_id'
-                : 'id, product_id, color, size, stock_quantity, price_modifier, image_url, sku, stock_id, angle_images';
+                ? 'id, product_id, color, size, stock_quantity, price_modifier, image_url, image_url2, sku, stock_id'
+                : 'id, product_id, color, size, stock_quantity, price_modifier, image_url, image_url2, sku, stock_id, angle_images';
             const variantsResult = await db.query(
                 `SELECT ${variantCols} FROM product_variants WHERE product_id = ANY($1::uuid[]) ORDER BY color, size`,
                 [productIds]
@@ -656,6 +658,7 @@ exports.adminGetProducts = async (req, res, next) => {
                     stock: v.stock_quantity,
                     price_override: v.price_modifier,
                     image_url: v.image_url,
+                    image_url2: v.image_url2,
                     sku: variantSku,
                     stock_id: variantSku,
                 });

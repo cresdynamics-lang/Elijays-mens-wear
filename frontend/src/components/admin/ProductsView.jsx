@@ -39,6 +39,18 @@ const normToken = (value) => String(value || '')
  .replace(/[^a-z0-9]+/g, ' ')
  .trim();
 
+/** Title Case: "Navy Stripe Long Sleeve Shirt" */
+const toTitleCase = (value) => String(value || '').trim()
+ .replace(/\s+/g, ' ')
+ .split(' ')
+ .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w))
+ .join(' ');
+
+/** Sentence case: capitalize after sentence ends, never ALL CAPS. */
+const toSentenceCase = (value) => String(value || '').trim()
+ .replace(/\b[A-Z]{2,}\b/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+ .replace(/(\.|\?|!)\s*\w/g, (m) => m.toUpperCase());
+
 /**
  * Map Gemini's categoryType/subcategory to real storefront categories.
  * Returns { parent_category_id, category_id } or {} when nothing matches.
@@ -134,7 +146,7 @@ const ProductsView = () => {
 
  const handleInputChange = (e, field) => {
  let value = e.target.value;
- const skipUppercase = ['thumbnail', 'slug', 'description', 'image', 'logo', 'url', 'email', 'phone'];
+ const skipUppercase = ['name', 'thumbnail', 'slug', 'description', 'image', 'logo', 'url', 'email', 'phone'];
  if (typeof value === 'string' && !skipUppercase.some(s => field.toLowerCase().includes(s))) {
  value = value.toUpperCase();
  }
@@ -334,15 +346,16 @@ const ProductsView = () => {
  });
  };
 
- const handleColorImage = async (groupKey, e) => {
+const handleColorImage = async (groupKey, e, slot = 1) => {
  const rawFile = e.target.files?.[0];
  if (!rawFile) return;
  const file = await compressImageFile(rawFile).catch(() => rawFile);
  const localPreview = URL.createObjectURL(file);
+ const previewKey = slot === 2 ? 'imagePreview2' : 'imagePreview';
  setFormData((prev) => ({
  ...prev,
  color_groups: prev.color_groups.map((group) =>
- group._key === groupKey ? { ...group, imagePreview: localPreview } : group
+  group._key === groupKey ? { ...group, [previewKey]: localPreview } : group
  ),
  }));
  const uploadData = new FormData();
@@ -355,13 +368,20 @@ const ProductsView = () => {
  setFormData((prev) => ({
  ...prev,
  color_groups: prev.color_groups.map((group) => {
- if (group._key !== groupKey) return group;
- revokeBlobUrl(group.imagePreview);
- return {
- ...group,
- image_url: url,
- imagePreview: getImageSrc(uploaded, 'thumbnail') || getImageSrc(uploaded),
- };
+  if (group._key !== groupKey) return group;
+  revokeBlobUrl(group[previewKey]);
+  if (slot === 2) {
+   return {
+    ...group,
+    image_url2: url,
+    imagePreview2: getImageSrc(uploaded, 'thumbnail') || getImageSrc(uploaded),
+   };
+  }
+  return {
+   ...group,
+   image_url: url,
+   imagePreview: getImageSrc(uploaded, 'thumbnail') || getImageSrc(uploaded),
+  };
  }),
  }));
  }
@@ -629,10 +649,10 @@ const handleAiDescribe = async () => {
        });
        return {
         ...prev,
-        name: analysis.name.toUpperCase(),
+        name: toTitleCase(analysis.name),
         slug: analysis.slug || analysis.name.toLowerCase().replace(/\s+/g, '-'),
         description: analysis.description
-          ? analysis.description.toUpperCase()
+          ? toSentenceCase(analysis.description)
           : prev.description,
         color_groups: nextGroups,
         sku: prev.sku ? prev.sku : buildProductSku(analysis.name),
@@ -1333,15 +1353,27 @@ const handleAiDescribe = async () => {
  className="w-full bg-primary border border-utility-gray/60 rounded-lg py-2.5 px-3 text-secondary text-sm outline-none focus:border-accent-500/30"
  />
  </div>
- <div className="space-y-1">
- <label className="text-[10px] text-secondary/60 font-black">Color image</label>
+<div className="space-y-1">
+ <label className="text-[10px] text-secondary/60 font-black">Color image (main)</label>
  <div className="flex items-center gap-2">
  {group.imagePreview && (
- <img src={group.imagePreview} alt="" className="w-12 h-12 object-cover rounded border border-utility-gray/60" />
+  <img src={group.imagePreview} alt="" className="w-12 h-12 object-cover rounded border border-utility-gray/60" />
  )}
  <label className="px-3 py-2 border border-utility-gray/60 rounded-lg text-[10px] text-accent cursor-pointer hover:border-accent-500/40">
- Upload
- <input type="file" accept="image/*" className="hidden" onChange={(e) => handleColorImage(group._key, e)} />
+  Upload
+  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleColorImage(group._key, e, 1)} />
+ </label>
+ </div>
+ </div>
+ <div className="space-y-1">
+ <label className="text-[10px] text-secondary/60 font-black">Alt image (2nd view)</label>
+ <div className="flex items-center gap-2">
+ {group.imagePreview2 && (
+  <img src={group.imagePreview2} alt="" className="w-12 h-12 object-cover rounded border border-utility-gray/60" />
+ )}
+ <label className="px-3 py-2 border border-utility-gray/60 rounded-lg text-[10px] text-accent cursor-pointer hover:border-accent-500/40">
+  Upload
+  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleColorImage(group._key, e, 2)} />
  </label>
  </div>
  </div>

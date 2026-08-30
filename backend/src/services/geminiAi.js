@@ -11,6 +11,11 @@ Requirements:
 2. Suggest a clean, descriptive product NAME and SEO-friendly SLUG (lowercase, hyphens).
 3. List the colors visible in the image (primary first). Also suggest up to 3 additional colors this item is typically available in.
 4. Write a rich product DESCRIPTION that explicitly covers: (a) material/fabric visible or typical for this item, (b) WHY a man should choose it (fit/confidence/appeal), (c) occasions it suits (work, wedding, casual, etc.).
+
+Writing style rules (MANDATORY):
+- Use natural sentence case. NEVER write in ALL CAPS.
+- Capitalize only the first letter of each sentence, proper nouns (brands/places), and the first letter of each list line.
+- Keep names/titles in Title Case (e.g., "Navy Stripe Long Sleeve Shirt"), not uppercase.
 5. Provide a QUALITY/CONFIDENCE/AFTA note: confidence when worn, durability expectations, and material quality.
 
 The store catalogue uses these parent categories and allowed subcategories. Pick categoryType from a parent and set subcategory to the closest matching sub (or empty if none fit):

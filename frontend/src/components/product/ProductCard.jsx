@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { getPremiumImage } from '../../utils/productImages';
 import { openWhatsAppEnquiry } from '../../lib/whatsappEnquiry';
 import { useCartStore } from '../../store/useCartStore';
+import { displayName } from '../../utils/productDescription';
 
 const formatPrice = (price) => `KSh ${parseFloat(price).toLocaleString()}`;
 
@@ -56,7 +57,7 @@ const ProductCard = ({ product, showSale = true }) => {
           )}
         </div>
         <h3 className="product-name text-[14px] sm:text-[15px] text-elijays-ink mb-1.5 line-clamp-2 group-hover:text-elijays-gold-dim transition-colors">
-          {product.name}
+          {displayName(product.name)}
         </h3>
       </Link>
 

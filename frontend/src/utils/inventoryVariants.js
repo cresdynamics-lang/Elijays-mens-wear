@@ -20,6 +20,8 @@ export const newColorGroup = (color = '') => ({
   color,
   image_url: '',
   imagePreview: '',
+  image_url2: '',
+  imagePreview2: '',
   sizes: [],
 });
 
@@ -36,6 +38,7 @@ export const flattenColorGroups = (colorGroups = []) => {
   for (const group of colorGroups) {
     const color = group.color?.trim() || null;
     const image = group.image_url || null;
+    const image2 = group.image_url2 || null;
     for (const row of group.sizes || []) {
       if (!row.size?.trim()) continue;
       variants.push({
@@ -47,6 +50,7 @@ export const flattenColorGroups = (colorGroups = []) => {
           ? 0
           : parseFloat(row.price_override) || 0,
         image_url: image,
+        image_url2: image2,
       });
     }
   }
@@ -63,6 +67,8 @@ export const buildColorGroupsFromVariants = (variants = []) => {
         color,
         image_url: variant.image_url || '',
         imagePreview: variant.image_url || '',
+        image_url2: variant.image_url2 || '',
+        imagePreview2: variant.image_url2 || '',
         sizes: [],
       });
     }
@@ -70,6 +76,10 @@ export const buildColorGroupsFromVariants = (variants = []) => {
     if (!group.image_url && variant.image_url) {
       group.image_url = variant.image_url;
       group.imagePreview = variant.image_url;
+    }
+    if (!group.image_url2 && variant.image_url2) {
+      group.image_url2 = variant.image_url2;
+      group.imagePreview2 = variant.image_url2;
     }
     if (!variant.size) continue;
     group.sizes.push({
@@ -90,6 +100,8 @@ export const buildColorGroupsFromDetail = (detail) => {
       color: g.color || '',
       image_url: g.image_url || '',
       imagePreview: g.image_url || '',
+      image_url2: g.image_url2 || '',
+      imagePreview2: g.image_url2 || '',
       sizes: (g.sizes || []).map((s) => ({
         _key: Math.random().toString(36).slice(2),
         id: s.id || null,

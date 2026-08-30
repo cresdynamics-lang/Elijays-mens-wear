@@ -1,6 +1,11 @@
 ﻿import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { parseDescriptionSections } from '../../utils/productDescription';
+import { parseDescriptionSections, looksAllCaps, sentenceCase } from '../../utils/productDescription';
+
+const normText = (value) => {
+  const text = typeof value === 'string' ? value : String(value || '');
+  return looksAllCaps(text) ? sentenceCase(text) : text;
+};
 
 const AccordionPanel = ({ id, title, open, onToggle, children }) => (
   <div className="border-b border-elijays-ink/10">
@@ -55,7 +60,7 @@ const ProductDescription = ({
           )}
           {sections.intro.map((para) => (
             <p key={para.slice(0, 48)} className="text-sm text-[#5c5c5c] font-light leading-relaxed">
-              {para}
+              {normText(para)}
             </p>
           ))}
         </div>
@@ -66,7 +71,7 @@ const ProductDescription = ({
           {featuresToShow.length > 0 ? (
             <ul className="space-y-2">
               {featuresToShow.map((item) => (
-                <li key={item}>• {item}</li>
+                <li key={item}>• {normText(item)}</li>
               ))}
             </ul>
           ) : (
@@ -75,7 +80,7 @@ const ProductDescription = ({
             </p>
           )}
           {colorLines.length > 0 && (
-            <p className="pt-1">Colours: {colorLines.join(', ')}</p>
+            <p className="pt-1">Colours: {colorLines.map(normText).join(', ')}</p>
           )}
         </AccordionPanel>
 
@@ -83,7 +88,7 @@ const ProductDescription = ({
           {sizeLines.length > 0 ? (
             <p>
               Available {isShoe ? 'EU sizes' : 'sizes'}:{' '}
-              {Array.isArray(sizeLines) ? sizeLines.join(', ') : sizeLines}.
+              {Array.isArray(sizeLines) ? sizeLines.map(normText).join(', ') : normText(sizeLines)}.
             </p>
           ) : (
             <p>Select your size above. Unsure? Book a fitting on Muindi Mbingu or enquire on WhatsApp.</p>
@@ -108,7 +113,7 @@ const ProductDescription = ({
                   'Fitting appointments available during store hours — Mon–Sat 9:00 AM – 6:00 PM.',
                 ]
             ).map((line) => (
-              <li key={line}>• {line}</li>
+              <li key={line}>• {normText(line)}</li>
             ))}
           </ul>
         </AccordionPanel>

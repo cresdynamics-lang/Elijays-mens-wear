@@ -10,7 +10,7 @@ import { productAPI } from '../services/api';
 import { getPremiumImage } from '../utils/productImages';
 import { getImageSrc, parseProductImages } from '../utils/cloudinary';
 import { parseAngleImages, getDefaultAngleImage } from '../utils/angleImages';
-import { buildVariantMeta, buildRichDescription, sortSizes } from '../utils/productDescription';
+import { buildVariantMeta, buildRichDescription, displayName, sortSizes } from '../utils/productDescription';
 import { buildBreadcrumbSchema, buildProductSchema } from '../seo/seoData';
 import { toCartVariantId } from '../utils/ids';
 import { openWhatsAppEnquiry } from '../lib/whatsappEnquiry';
@@ -41,8 +41,13 @@ function sizesForCategoryName(name) {
 const getVariantImage = (variant) => (
   variant?.image_url_optimized ||
   getImageSrc(variant?.image_url) ||
-  variant?.image_url ||
-  getImageSrc(variant?.image)
+  variant?.image_url
+);
+
+const getVariantImage2 = (variant) => (
+  variant?.image_url2_optimized ||
+  getImageSrc(variant?.image_url2) ||
+  variant?.image_url2
 );
 
 const getProductBaseImage = (product) => (
@@ -60,6 +65,8 @@ const buildColorImages = (variantMeta, product) => {
     colorVariants.forEach(v => {
       const img = getVariantImage(v) || getDefaultAngleImage(v, product) || getProductBaseImage(product);
       if (img && !images.includes(img)) images.push(img);
+      const img2 = getVariantImage2(v);
+      if (img2 && !images.includes(img2)) images.push(img2);
     });
     if (images.length) {
       colorImages[color] = images;
@@ -86,6 +93,8 @@ const ProductDetail = () => {
   const [infoTab, setInfoTab] = useState('description');
   const [imageIndex, setImageIndex] = useState(0);
   const [showVariantMatrix, setShowVariantMatrix] = useState(false);
+  const [hoverColor, setHoverColor] = useState(null);
+  const [hoverImageIndex, setHoverImageIndex] = useState(0);
 
   const touchStartX = useRef(null);
 
@@ -97,6 +106,14 @@ const ProductDetail = () => {
 
   const colorImages = useMemo(() => buildColorImages(variantMeta, product), [variantMeta, product]);
   const currentColorImages = useMemo(() => colorImages[selectedColor] || [], [colorImages, selectedColor]);
+
+  const orderedColors = useMemo(() => {
+    const list = [];
+    for (const { color } of variantMeta.colors) {
+      if ((colorImages[color] || []).length > 0) list.push(color);
+    }
+    return list;
+  }, [variantMeta.colors, colorImages]);
 
   const sizesForColorRef = useRef((color) => []);
   
@@ -169,22 +186,22 @@ const ProductDetail = () => {
   if (isLoading) {
     return (
       <Layout>
-        <main className="min-h-screen bg-primary">
+        <main className="min-h-screen bg-white">
           <div className="container mx-auto px-5 md:px-8 max-w-7xl pt-6 md:pt-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
               <div className="space-y-6">
-                <div className="aspect-square bg-primary/30 animate-pulse border border-utility-gray/50" />
+                <div className="aspect-square bg-utility-gray animate-pulse border border-utility-gray/50" />
                 {Array.from({length: 5}).map((_, i) => (
-                  <div key={i} className="h-16 bg-primary/30 animate-pulse rounded border border-utility-gray/30" />
+                  <div key={i} className="h-16 bg-utility-gray animate-pulse rounded border border-utility-gray/30" />
                 ))}
               </div>
               <div className="space-y-8">
-                <div className="h-8 bg-primary/30 animate-pulse rounded w-1/2" />
-                <div className="h-10 bg-primary/30 animate-pulse rounded w-1/3" />
-                <div className="h-6 bg-primary/30 animate-pulse rounded w-1/4" />
+                <div className="h-8 bg-utility-gray animate-pulse rounded w-1/2" />
+                <div className="h-10 bg-utility-gray animate-pulse rounded w-1/3" />
+                <div className="h-6 bg-utility-gray animate-pulse rounded w-1/4" />
                 <div className="space-y-4">
-                  <div className="h-8 bg-primary/30 animate-pulse rounded w-1/4" />
-                  <div className="h-8 bg-primary/30 animate-pulse rounded w-1/3" />
+                  <div className="h-8 bg-utility-gray animate-pulse rounded w-1/4" />
+                  <div className="h-8 bg-utility-gray animate-pulse rounded w-1/3" />
                 </div>
               </div>
             </div>
@@ -197,9 +214,9 @@ const ProductDetail = () => {
   if (loadError) {
     return (
       <Layout>
-        <main className="min-h-screen pt-32 text-center text-secondary bg-primary">
-          <p className="text-secondary font-medium text-sm">{loadError}</p>
-          <Link to="/products" className="inline-block mt-4 text-elijays-gold/80 text-[10px] font-semibold tracking-wider hover:text-elijays-gold transition-colors">
+        <main className="min-h-screen pt-32 text-center bg-white">
+          <p className="text-elijays-ink font-medium text-sm">{loadError}</p>
+          <Link to="/products" className="inline-block mt-4 text-elijays-gold text-[10px] font-semibold tracking-wider hover:text-elijays-gold-dim transition-colors">
             Back to products
           </Link>
         </main>
@@ -210,7 +227,7 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <Layout>
-        <main className="min-h-screen pt-32 text-center text-elijays-gold/80 bg-primary text-[10px] tracking-wider font-bold uppercase">
+        <main className="min-h-screen pt-32 text-center text-elijays-ink/60 bg-white text-[10px] tracking-wider font-bold uppercase">
           Product unavailable
         </main>
       </Layout>
@@ -263,7 +280,23 @@ const ProductDetail = () => {
     variantValue: variantSummary,
   });
 
-  const currentDisplayImage = currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product);
+  const hoveredImages = hoverColor ? (colorImages[hoverColor] || []) : [];
+  const currentDisplayImage = hoveredImages.length
+    ? (hoveredImages[hoverImageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product))
+    : (currentColorImages[imageIndex] || selectedImage || getProductBaseImage(product) || getPremiumImage(product));
+
+  const handleHoverEnter = () => {
+    if (orderedColors.length < 2) return;
+    const idx = orderedColors.indexOf(selectedColor);
+    const next = orderedColors[(idx + 1) % orderedColors.length];
+    setHoverColor(next);
+    setHoverImageIndex(0);
+  };
+
+  const handleHoverLeave = () => {
+    setHoverColor(null);
+    setHoverImageIndex(0);
+  };
 
   const handleColorSelect = (color, index = 0) => {
     setSelectedColor(color);
@@ -321,7 +354,7 @@ const ProductDetail = () => {
           buildProductSchema(product, currentDisplayImage, displayPrice),
         ]}
       />
-      <main className="pb-24 bg-primary">
+      <main className="pb-24 bg-white">
         <div className="container mx-auto px-5 md:px-8 max-w-7xl pt-6 md:pt-10">
           <div className="flex items-center space-x-2 mb-8">
             <button type="button" onClick={() => navigate(-1)} className="text-elijays-gold hover:text-elijays-gold-dim transition-colors">
@@ -332,7 +365,7 @@ const ProductDetail = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
             <div className="space-y-6">
-              <div className="relative aspect-square bg-primary overflow-hidden border border-utility-gray/50 group">
+              <div className="relative aspect-square bg-white overflow-hidden border border-utility-gray/50 group">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={currentDisplayImage}
@@ -345,6 +378,8 @@ const ProductDetail = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.35, ease: 'easeOut' }}
                     className="w-full h-full object-contain p-6 md:p-10"
+                    onMouseEnter={handleHoverEnter}
+                    onMouseLeave={handleHoverLeave}
                     onTouchStart={(e) => {
                       touchStartX.current = e.touches[0]?.clientX ?? null;
                     }}
@@ -365,7 +400,7 @@ const ProductDetail = () => {
                       type="button"
                       onClick={handlePrevImage}
                       aria-label="Previous image"
-                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-primary/70 text-secondary/70 border border-utility-gray opacity-0 group-hover:opacity-100 md:opacity-100 transition-all duration-300 hover:bg-primary/90 hover:text-secondary hover:border-white/15"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 text-elijays-ink/60 border border-utility-gray/60 opacity-0 group-hover:opacity-100 md:opacity-100 transition-all duration-300 hover:bg-white hover:text-elijays-ink hover:border-utility-gray shadow-sm"
                     >
                       <ChevronLeft size={18} />
                     </button>
@@ -373,7 +408,7 @@ const ProductDetail = () => {
                       type="button"
                       onClick={handleNextImage}
                       aria-label="Next image"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-primary/70 text-secondary/70 border border-utility-gray opacity-0 group-hover:opacity-100 md:opacity-100 transition-all duration-300 hover:bg-primary/90 hover:text-secondary hover:border-white/15"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 text-elijays-ink/60 border border-utility-gray/60 opacity-0 group-hover:opacity-100 md:opacity-100 transition-all duration-300 hover:bg-white hover:text-elijays-ink hover:border-utility-gray shadow-sm"
                     >
                       <ChevronRight size={18} />
                     </button>
@@ -389,8 +424,8 @@ const ProductDetail = () => {
                         />
                       ))}
                     </div>
-                    <span className="absolute top-3 left-3 px-3 py-1 rounded-md bg-primary/80 text-[10px] font-semibold text-elijays-gold/80 border border-utility-gray">
-                      {selectedColor}
+                    <span className="absolute top-3 left-3 px-3 py-1 rounded-md bg-white/90 text-[10px] font-semibold text-elijays-ink/70 border border-utility-gray/60 shadow-sm">
+                      {hoverColor || selectedColor}
                     </span>
                   </>
                 )}
@@ -416,7 +451,7 @@ const ProductDetail = () => {
                               key={`${color}-${index}`}
                               type="button"
                               onClick={() => handleColorSelect(color, index)}
-                              className={`relative shrink-0 snap-start rounded-md overflow-hidden bg-primary border transition-all duration-300 w-16 h-16 sm:w-20 sm:h-20 ${
+                              className={`relative shrink-0 snap-start rounded-md overflow-hidden bg-white border transition-all duration-300 w-16 h-16 sm:w-20 sm:h-20 ${
                                 isActiveColor && index === imageIndex
                                   ? 'border-elijays-gold/50 shadow-lg shadow-elijays-gold/10'
                                   : 'border-utility-gray/50 hover:border-elijays-gold/25'
@@ -449,7 +484,7 @@ const ProductDetail = () => {
                 {product.brand_name && (
                   <p className="text-[10px] font-bold tracking-[0.28em] text-elijays-gold uppercase">{product.brand_name}</p>
                 )}
-                <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] text-elijays-ink leading-[1.15] font-display">{product.name}</h1>
+                <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] text-elijays-ink leading-[1.15] font-display">{displayName(product.name)}</h1>
 
                 <div className="flex items-baseline gap-3 flex-wrap">
                   {hasListedPrice ? (
@@ -458,7 +493,7 @@ const ProductDetail = () => {
                         KSh {displayPrice.toLocaleString()}
                       </p>
                       {compareAtPrice != null && compareAtPrice > displayPrice && (
-                        <p className="text-xl md:text-2xl text-secondary/60 line-through font-normal">
+                        <p className="text-xl md:text-2xl text-elijays-ink/40 line-through font-normal">
                           KSh {compareAtPrice.toLocaleString()}
                         </p>
                       )}
@@ -471,7 +506,7 @@ const ProductDetail = () => {
                 </div>
 
                 {variantSummary && (
-                  <p className="text-sm text-secondary/80 font-medium tracking-wide">
+                  <p className="text-sm text-elijays-ink/50 font-medium tracking-wide">
                     {variantSummary}
                   </p>
                 )}
@@ -500,14 +535,14 @@ const ProductDetail = () => {
                               ? 'opacity-35 cursor-not-allowed border-utility-gray'
                               : isSelected
                                 ? 'border-elijays-gold bg-elijays-gold/5 shadow-sm shadow-elijays-gold/10'
-                                : 'border-elijays-ink/15 bg-primary hover:border-elijays-gold/50'
+                                : 'border-elijays-ink/15 bg-white hover:border-elijays-gold/50'
                           }`}
                         >
                           <span
                             className={`relative h-12 w-12 rounded-full overflow-hidden ring-2 ring-offset-2 transition-all duration-300 ${
                               isSelected && colorAvailable
-                                ? 'ring-elijays-gold ring-offset-primary'
-                                : 'ring-utility-gray/50 ring-offset-primary group-hover:ring-elijays-gold/40'
+                                ? 'ring-elijays-gold ring-offset-white'
+                                : 'ring-utility-gray/50 ring-offset-white group-hover:ring-elijays-gold/40'
                             }`}
                           >
                             {colorImage ? (
@@ -519,9 +554,11 @@ const ProductDetail = () => {
                                 className="h-full w-full object-cover"
                               />
                             ) : (
-                              <span className="flex h-full w-full items-center justify-center bg-primary text-[13px] font-semibold text-elijays-ink/60 border border-utility-gray/40">
-                                {fallbackInitial}
-                              </span>
+                              <span
+                            className="flex h-full w-full items-center justify-center bg-utility-gray/60 text-[13px] font-semibold text-elijays-ink/60 border border-utility-gray/40"
+                          >
+                            {fallbackInitial}
+                          </span>
                             )}
                           </span>
                           <span
@@ -579,20 +616,20 @@ const ProductDetail = () => {
 
               <div className="space-y-4 pt-1">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center border border-utility-gray px-3 py-2.5 bg-primary rounded-lg">
+                  <div className="flex items-center border border-utility-gray px-3 py-2.5 bg-white rounded-lg">
                     <button
                       type="button"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="p-1 text-secondary/50 hover:text-elijays-gold transition-colors duration-200"
+                      className="p-1 text-elijays-ink/50 hover:text-elijays-gold transition-colors duration-200"
                       aria-label="Decrease quantity"
                     >
                       <Minus size={13} />
                     </button>
-                    <span className="px-5 text-[11px] font-semibold text-secondary w-10 text-center">{quantity}</span>
+                    <span className="px-5 text-[11px] font-semibold text-elijays-ink w-10 text-center">{quantity}</span>
                     <button
                       type="button"
                       onClick={() => setQuantity(quantity + 1)}
-                      className="p-1 text-secondary/50 hover:text-elijays-gold transition-colors duration-200"
+                      className="p-1 text-elijays-ink/50 hover:text-elijays-gold transition-colors duration-200"
                       aria-label="Increase quantity"
                     >
                       <Plus size={13} />
@@ -603,12 +640,16 @@ const ProductDetail = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
-                    onClick={() => openWhatsAppEnquiry(product)}
+                    onClick={handleAddToCart}
                     disabled={shopOutOfStock}
-                    className="flex-1 py-4 px-5 text-[10px] font-semibold tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-2.5 border border-elijays-gold text-elijays-ink bg-primary hover:bg-elijays-gold disabled:opacity-35 disabled:cursor-not-allowed"
+                    className={`flex-1 py-4 px-5 text-[10px] font-semibold tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-2.5 disabled:opacity-35 disabled:cursor-not-allowed ${
+                      addedToCart
+                        ? 'bg-elijays-gold border border-elijays-gold text-elijays-ink'
+                        : 'border border-elijays-ink text-elijays-ink hover:bg-elijays-gold hover:border-elijays-gold'
+                    }`}
                   >
-                    <MessageCircle size={13} />
-                    <span>Enquire on WhatsApp</span>
+                    <ShoppingBag size={13} />
+                    <span>{addedToCart ? 'Saved to bag' : hasListedPrice ? 'Add to bag' : 'Enquire for price'}</span>
                   </motion.button>
                 </div>
 
@@ -616,16 +657,12 @@ const ProductDetail = () => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   type="button"
-                  onClick={handleAddToCart}
+                  onClick={() => openWhatsAppEnquiry(product)}
                   disabled={shopOutOfStock}
-                  className={`w-full py-4 px-6 text-[10px] tracking-[0.18em] disabled:opacity-35 disabled:cursor-not-allowed border transition-all flex items-center justify-center gap-2 ${
-                    addedToCart
-                      ? 'bg-elijays-gold border-elijays-gold text-elijays-ink'
-                      : 'border-elijays-ink/20 text-elijays-ink hover:border-elijays-gold'
-                  }`}
+                  className="w-full py-4 px-6 text-[10px] tracking-[0.18em] disabled:opacity-35 disabled:cursor-not-allowed border transition-all flex items-center justify-center gap-2 border-elijays-gold/60 text-elijays-gold hover:border-elijays-gold hover:bg-elijays-gold/5"
                 >
-                  <ShoppingBag size={13} />
-                  <span>{addedToCart ? 'Saved to bag' : hasListedPrice ? 'Add to bag' : 'Enquire for price'}</span>
+                  <MessageCircle size={13} />
+                  <span>Enquire on WhatsApp</span>
                 </motion.button>
 
                 <p className="text-[11px] text-[#5c5c5c] text-center font-light">
@@ -766,7 +803,7 @@ const ProductDetail = () => {
                             const inStock = stock == null || stock > 0;
                             const variantPrice = displayPrice;
                             return (
-                              <tr key={v.id} className="border-b border-utility-gray/20 hover:bg-primary/30 transition-colors">
+                              <tr key={v.id} className="border-b border-utility-gray/20 hover:bg-utility-gray/50 transition-colors">
                                 <td className="py-3 pr-4 font-medium">{color}</td>
                                 <td className="py-3 pr-4">{v.size || '—'}</td>
                                 <td className="py-3 pr-4">KSh {variantPrice.toLocaleString()}</td>
@@ -805,7 +842,7 @@ const ProductDetail = () => {
                         />
                       </div>
                       <h3 className="text-sm font-medium text-elijays-ink line-clamp-2 group-hover:text-elijays-gold-dim transition-colors">
-                        {p.name}
+                        {displayName(p.name)}
                       </h3>
                       <p className="text-sm text-elijays-gold mt-1">
                         KSh {parseFloat(p.discount_price || p.price).toLocaleString()}

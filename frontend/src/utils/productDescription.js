@@ -12,6 +12,60 @@ const SECTION_HEADERS = [
   { key: 'why', patterns: [/why elijays/i, /why choose/i] },
 ];
 
+/** Title Case for display: "NAVY BLUE SHIRT" -> "Navy Blue Shirt". */
+export const displayName = (name) => {
+  if (typeof name !== 'string') return name;
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((word) => {
+      if (word === word.toUpperCase() && word.length > 1) {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      return word;
+    })
+    .join(' ');
+};
+
+const PROPER_NOUNS = ['nairobi', 'kenya', 'mpesa', 'whatsapp', 'mutondo', 'biashara', 'ligi'];
+const MINOR_WORDS = ['a', 'an', 'the', 'and', 'or', 'but', 'of', 'for', 'in', 'on', 'to', 'with', 'at', 'by'];
+
+/** True when the line is predominantly ALL CAPS (legacy AI output). */
+export const looksAllCaps = (value) => {
+  const text = String(value || '').trim();
+  const words = text.split(/\s+/).filter((w) => /[A-Za-z]/.test(w));
+  if (words.length < 2) return false;
+  const caps = words.filter((w) => w === w.toUpperCase() && w.length > 1);
+  return caps.length / words.length > 0.6;
+};
+
+/** Convert an ALL CAPS line to sentence case, capitalizing proper nouns and first letters. */
+export const sentenceCase = (value) => {
+  const text = String(value || '').trim();
+  if (!text) return value;
+  const words = text.split(/(\s+)/);
+  let capitalizeNext = true;
+  const out = words.map((token) => {
+    if (/^\s+$/.test(token)) return token;
+    const lower = token.toLowerCase();
+    const isProper = PROPER_NOUNS.includes(lower);
+    const isMinor = MINOR_WORDS.includes(lower);
+    const letters = lower.replace(/[^a-z]/g, '');
+    if (letters.length === 0) return token;
+    if (isProper) {
+      capitalizeNext = false;
+      return token.charAt(0).toUpperCase() + lower.slice(1);
+    }
+    if (isMinor && !capitalizeNext) return lower;
+    const first = capitalizeNext || !/^[a-z]/.test(lower)
+      ? lower.charAt(0).toUpperCase()
+      : lower.charAt(0);
+    capitalizeNext = /[.!?]$/.test(token.trim());
+    return first + lower.slice(1);
+  });
+  return out.join('');
+};
+
 const cleanLine = (line) => line.replace(BULLET_RE, '').trim();
 
 export const parseDescriptionSections = (raw = '') => {
