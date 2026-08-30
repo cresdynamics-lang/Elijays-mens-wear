@@ -5,5 +5,7 @@ const { optionalAuth } = require('../middleware/auth');
 
 router.post('/stk-push', optionalAuth, paymentController.stkPush);
 router.post('/verify/:orderId', optionalAuth, paymentController.verifyPayment);
+router.post('/mpesa/callback', paymentController.mpesaCallback);
+router.post('/callback', paymentController.mpesaCallback);
 
 module.exports = router;

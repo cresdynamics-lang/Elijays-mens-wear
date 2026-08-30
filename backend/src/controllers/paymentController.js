@@ -130,3 +130,36 @@ exports.verifyPayment = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Card callback endpoint (Co-op Bank / whitelisted IP).
+ * Co-op Bank posts the payment result here after a user pays by card.
+ * Payload is loosely matched (OrderId / order_id / reference) to keep
+ * integration flexible until the exact Co-op Bank schema is confirmed.
+ */
+exports.mpesaCallback = async (req, res, next) => {
+  try {
+    const body = req.body || {};
+    const ref = String(
+      body?.OrderId || body?.order_id || body?.Reference || body?.reference ||
+      body?.MerchantReference || body?.BillingRefID || body?.extra_info || ''
+    );
+    const orderId = ref.split(':').pop().trim();
+
+    if (!orderId) {
+      return res.status(400).json({ success: false, message: 'Missing order reference' });
+    }
+
+    const orderR = await db.query(`SELECT * FROM orders WHERE id = $1`, [orderId]);
+    if (!orderR.rows.length) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+
+    await markOrderPaid(orderId);
+    console.log('Co-op Bank card callback received:', JSON.stringify(body));
+
+    res.status(200).json({ success: true, message: 'Payment confirmed' });
+  } catch (error) {
+    next(error);
+  }
+};

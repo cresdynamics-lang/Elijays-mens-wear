@@ -4,14 +4,29 @@ const { resolveOrderLines } = require('./orderStock');
 const SHIPPING_FLAT = parseFloat(process.env.ORDER_SHIPPING_FLAT || '0');
 const VAT_RATE = parseFloat(process.env.ORDER_VAT_RATE || '0');
 
-const calcTotals = (lines) => {
+/** Named Nairobi delivery zones → fee (KSh). Fallback for unknown zones = SHIPPING_FLAT. */
+const DELIVERY_ZONE_FEES = {
+  zone_a: 1000,
+  zone_b: 600,
+  zone_c: 450,
+  zone_d: 300,
+  zone_e: 200,
+  parcel: 500,
+};
+
+const calcTotals = (lines, shippingAddress = {}) => {
   let subtotal = 0;
   lines.forEach((item) => {
     const unit = parseFloat(item.price) + parseFloat(item.price_modifier || 0);
     subtotal += unit * item.quantity;
   });
   const tax = Math.round(subtotal * VAT_RATE * 100) / 100;
-  const shipping = SHIPPING_FLAT;
+
+  const method = shippingAddress?.fulfillment_method;
+  const zone = shippingAddress?.delivery_zone;
+  const zoneFee = DELIVERY_ZONE_FEES[zone];
+  const shipping = method === 'pickup' ? 0 : typeof zoneFee === 'number' ? zoneFee : SHIPPING_FLAT;
+
   const total = Math.round((subtotal + tax + shipping) * 100) / 100;
   return { subtotal, tax, shipping, total };
 };
@@ -40,7 +55,7 @@ const createOrderFromItems = async ({
     await client.query('BEGIN');
 
     const lines = await resolveOrderLines(items, client);
-    const { tax, shipping, total } = calcTotals(lines);
+    const { tax, shipping, total } = calcTotals(lines, shipping_address);
 
     const orderResult = await client.query(
       `INSERT INTO orders (user_id, total_amount, tax_amount, shipping_amount, payment_method, shipping_address, billing_address, coupon_id)
@@ -92,6 +107,7 @@ const cartRowsToItems = (rows) =>
 module.exports = {
   SHIPPING_FLAT,
   VAT_RATE,
+  DELIVERY_ZONE_FEES,
   calcTotals,
   createOrderFromItems,
   cartRowsToItems,

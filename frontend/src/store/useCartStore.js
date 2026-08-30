@@ -61,10 +61,9 @@ export const useCartStore = create(
 
       getTotal: () => get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
 
-      getCheckoutTotals: () => {
+      getCheckoutTotals: (deliveryFee = 0, tax = 0) => {
         const subtotal = get().getTotal();
-        const tax = 0;
-        const shipping = 0;
+        const shipping = Math.max(0, Number(deliveryFee) || 0);
         const total = subtotal + tax + shipping;
         return { subtotal, tax, shipping, total };
       },
