@@ -1,7 +1,7 @@
 import { resolveDisplayImageUrl } from '../../utils/cloudinary';
 ﻿import { useEffect, useState } from 'react';
-import { Image as ImageIcon, PencilLine, Plus, Save, Trash2, X } from 'lucide-react';
-import API from '../../services/api';
+import { Image as ImageIcon, PencilLine, Plus, Save, Sparkles, Trash2, X } from 'lucide-react';
+import API, { adminBlogAPI } from '../../services/api';
 
 const emptyForm = {
  title: '',
@@ -24,6 +24,10 @@ export default function BlogsView() {
  const [editingBlog, setEditingBlog] = useState(null);
  const [uploadingImage, setUploadingImage] = useState(false);
  const [formData, setFormData] = useState(emptyForm);
+ const [aiTopic, setAiTopic] = useState('');
+ const [aiScenario, setAiScenario] = useState('');
+ const [aiGenerating, setAiGenerating] = useState(false);
+ const [aiDraft, setAiDraft] = useState(null);
 
  useEffect(() => {
  fetchBlogs();
@@ -152,6 +156,41 @@ export default function BlogsView() {
  setFormData(emptyForm);
  };
 
+ const handleAiGenerate = async (e) => {
+ e.preventDefault();
+ if (!aiTopic || !aiTopic.trim()) return;
+ setAiGenerating(true);
+ setAiDraft(null);
+ try {
+ const draft = await adminBlogAPI.aiGenerate({
+ topic: aiTopic.trim(),
+ scenario: aiScenario.trim(),
+ });
+ setAiDraft(draft);
+ } catch (error) {
+ console.error('AI blog generate error:', error);
+ alert(error?.response?.data?.error || error.message || 'AI could not write this article');
+ } finally {
+ setAiGenerating(false);
+ }
+ };
+
+ const applyAiDraft = () => {
+ if (!aiDraft) return;
+ setFormData({
+ title: aiDraft.title || '',
+ slug: aiDraft.slug || '',
+ excerpt: aiDraft.excerpt || '',
+ content: aiDraft.content || '',
+ category: blogCategories.includes(aiDraft.category) ? aiDraft.category : 'Fashion Tips',
+ author_name: aiDraft.authorName || '',
+ featured_image_url: '',
+ is_published: false,
+ });
+ setEditingBlog(null);
+ setShowForm(true);
+ };
+
  return (
  <div className="space-y-6">
  <div className="flex flex-col gap-4 rounded-2xl border border-utility-gray/60 bg-utility-gray p-5 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between">
@@ -167,6 +206,65 @@ export default function BlogsView() {
  {showForm ? 'Close form' : 'Create post'}
  </button>
  </div>
+
+ <form onSubmit={handleAiGenerate} className="space-y-4 rounded-2xl border border-accent-500/15 bg-utility-gray p-5 backdrop-blur-sm">
+ <div>
+ <h3 className="flex items-center gap-2 font-serif text-lg font-bold text-secondary">
+ <Sparkles size={20} className="text-accent-600" /> AI writer
+ </h3>
+ <p className="mt-1 text-xs text-secondary/60">
+ Give it a topic or a real customer scenario, and it will draft a search-friendly article people find on Google.
+ </p>
+ </div>
+ <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+ <input
+ type="text"
+ value={aiTopic}
+ onChange={(e) => setAiTopic(e.target.value)}
+ placeholder="Topic — e.g. How to wear a navy suit"
+ className="w-full rounded-xl border border-accent-500/15 bg-primary px-4 py-3 text-sm text-secondary outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
+ required
+ />
+ <input
+ type="text"
+ value={aiScenario}
+ onChange={(e) => setAiScenario(e.target.value)}
+ placeholder="Scenario (optional) — e.g. customer has a wedding next weekend"
+ className="w-full rounded-xl border border-accent-500/15 bg-primary px-4 py-3 text-sm text-secondary outline-none placeholder:text-accent-500/25 focus:border-accent-500/40"
+ />
+ </div>
+ <div className="flex items-center gap-3">
+ <button
+ type="submit"
+ disabled={aiGenerating}
+ className="inline-flex items-center gap-2 rounded-xl bg-accent-600 px-5 py-3 text-sm font-bold text-base-950 transition-colors hover:bg-accent-500 disabled:opacity-50"
+ >
+ <Sparkles size={18} /> {aiGenerating ? 'Writing...' : 'Write article'}
+ </button>
+ {aiDraft && (
+ <button
+ type="button"
+ onClick={applyAiDraft}
+ className="inline-flex items-center gap-2 rounded-xl border border-accent-500/15 px-5 py-3 text-sm font-bold text-secondary transition-colors hover:border-accent-500/40"
+ >
+ Use this draft in the form
+ </button>
+ )}
+ </div>
+ {aiDraft && (
+ <div className="space-y-2 rounded-xl border border-accent-500/15 bg-primary p-4 text-sm text-secondary">
+ <div className="flex items-center justify-between gap-3">
+ <p className="font-bold">{aiDraft.title}</p>
+ <span className="shrink-0 rounded-full bg-accent-600/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-600">{aiDraft.category}</span>
+ </div>
+ <p className="text-xs text-secondary/60">Slug: {aiDraft.slug}</p>
+ <p className="text-secondary/80">{aiDraft.excerpt}</p>
+ <p className="text-xs text-secondary/60">
+ Keywords: {aiDraft.meta?.keywords || '—'}
+ </p>
+ </div>
+ )}
+ </form>
 
  {showForm && (
  <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-utility-gray/60 bg-utility-gray p-5 backdrop-blur-sm">

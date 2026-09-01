@@ -151,4 +151,94 @@ const analyzeProductImage = async (imageBase64, { mimeType = 'image/jpeg', retri
   throw lastError;
 };
 
-module.exports = { analyzeProductImage, GEMINI_MODEL };
+const BLOG_SYSTEM_PROMPT = `
+You are the SEO copywriter for ELIJAY'S Men's Wear, a premium menswear store in Nairobi, Kenya.
+You write high-intent blog/journal articles that help the shop get found on Google for what men search.
+
+Rules (MANDATORY):
+1. Write in natural sentence case. NEVER ALL CAPS. Keep headings Title Case.
+2. Plain paragraphs separated by blank lines. Use "## " as the ONLY heading marker (## Heading). No bullet lists: write flowing sentences only.
+3. Naturally weave in the brand and keywords without forcing them.
+4. Make the article useful for a real man's shopping decision (fit, fabric, occasion, care, styling) so it earns search visibility.
+5. Total content: 400-650 words. Keep it skimmable: an intro, 3-5 sections, a closing line.
+6. Title: a headline a man would click (under 70 chars). Slug: lowercase hyphens.
+7. Category: one of Fashion Tips | Trends | Style Guide | Lifestyle | News.
+8. excerpt: 1-2 punchy sentences that read well as a Google snippet (include the main keyword).
+9. meta: "title" = SEO title (under 60 chars), "metaDescription" = under 160 chars, "keywords" = 5-8 comma-separated search phrases.
+10. Only mention products/prices you are sure exist. Never invent phone numbers, links, or discounts.
+
+Return ONLY valid JSON with this EXACT shape:
+{
+  "title": "string",
+  "slug": "string",
+  "excerpt": "string",
+  "content": "string",
+  "category": "Fashion Tips | Trends | Style Guide | Lifestyle | News",
+  "authorName": "ELIJAY'S Men's Wear",
+  "meta": {
+    "title": "string",
+    "metaDescription": "string",
+    "keywords": "string"
+  }
+}
+`;
+
+const generateBlogArticle = async ({ topic, scenario = '', retries = 2 } = {}) => {
+  if (!process.env.GEMINI_API_KEY) {
+    const err = new Error('GEMINI_API_KEY is not configured on the server');
+    err.code = 'GEMINI_NOT_CONFIGURED';
+    throw err;
+  }
+  if (!topic || !String(topic).trim()) throw new Error('A topic is required for AI blog writing');
+
+  const audience = `
+The reader context for this article:
+- Topic: ${String(topic).trim()}
+${scenario ? `- Context/scenario: ${String(scenario).trim()}` : ''}
+`;
+
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+
+  let lastError;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      const result = await model.generateContent({
+        contents: [{ role: 'user', parts: [{ text: BLOG_SYSTEM_PROMPT + audience }] }],
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.95,
+          maxOutputTokens: 2048,
+        },
+      });
+      const text = result.response.text();
+      if (!text || !text.includes('{')) {
+        throw new Error('Gemini returned no blog content');
+      }
+      const parsed = parseJson(text);
+      const title = String(parsed.title || '').trim();
+      if (!title) throw new Error('Gemini returned a blog without a title');
+      return {
+        title,
+        slug: String(parsed.slug || '').trim() || title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        excerpt: String(parsed.excerpt || '').trim(),
+        content: String(parsed.content || '').trim(),
+        category: String(parsed.category || 'Fashion Tips').trim(),
+        authorName: String(parsed.authorName || "ELIJAY'S Men's Wear").trim(),
+        meta: {
+          title: String(parsed.meta?.title || title).slice(0, 60),
+          metaDescription: String(parsed.meta?.metaDescription || '').slice(0, 160),
+          keywords: String(parsed.meta?.keywords || '').slice(0, 300),
+        },
+      };
+    } catch (error) {
+      lastError = error;
+      if (attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, 600 * (attempt + 1)));
+      }
+    }
+  }
+  throw lastError;
+};
+
+module.exports = { analyzeProductImage, generateBlogArticle, GEMINI_MODEL };

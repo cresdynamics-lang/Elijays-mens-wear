@@ -123,7 +123,17 @@ export default function BlogArticle() {
         )}
 
         <div className="text-elijays-ink/85 leading-[1.8] whitespace-pre-wrap text-[15px] font-light">
-          {blog.content}
+          {blog.content
+            .split('\n')
+            .map((line, i) =>
+              line.startsWith('## ') ? (
+                <h2 key={i} className="mt-8 mb-2 font-display text-xl md:text-2xl text-elijays-ink">
+                  {line.slice(3)}
+                </h2>
+              ) : (
+                <p key={i}>{line}</p>
+              )
+            )}
         </div>
 
         <div className="mt-12 pt-8 border-t border-elijays-ink/10 text-center">

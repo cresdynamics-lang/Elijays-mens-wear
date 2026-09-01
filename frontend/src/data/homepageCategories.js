@@ -42,6 +42,13 @@ export const HOMEPAGE_CATEGORY_CARDS = [
     link: '/shirts',
   },
   {
+    title: 'Presidential Shirts',
+    subtitle: 'Boardroom Polish',
+    shortcut: 'Presidential',
+    image: '/Presidential shirts.png',
+    link: '/products?category=formal-wear',
+  },
+  {
     title: 'Polo Shirts',
     subtitle: 'Smart Casual',
     shortcut: 'Polo',
@@ -59,15 +66,22 @@ export const HOMEPAGE_CATEGORY_CARDS = [
     title: 'Jackets',
     subtitle: 'Layer Up',
     shortcut: 'Jackets',
-    image: 'https://loremflickr.com/600/800/mens,jacket?lock=28',
+    image: '/Jackets.jpeg',
     link: '/jackets',
   },
   {
-    title: 'Belts & Ties',
+    title: 'Belts',
     subtitle: 'Finishing Touch',
     shortcut: 'Belts',
-    image: '/belt-001.jpeg',
+    image: '/belsts.jpeg',
     link: '/products?category=belts-ties',
+  },
+  {
+    title: 'Ties',
+    subtitle: 'Sharp Details',
+    shortcut: 'Ties',
+    image: '/Ties.png',
+    link: '/products?category=formal-wear&sub=Ties',
   },
   {
     title: 'Blazers',
@@ -75,5 +89,12 @@ export const HOMEPAGE_CATEGORY_CARDS = [
     shortcut: 'Blazers',
     image: '/blazers.jpg',
     link: '/jackets?sub=Blazers',
+  },
+  {
+    title: 'Socks',
+    subtitle: 'Step in Comfort',
+    shortcut: 'Socks',
+    image: '/socks-placeholder.jpg',
+    link: '/products?category=socks',
   },
 ];

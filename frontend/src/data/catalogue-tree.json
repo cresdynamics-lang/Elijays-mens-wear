@@ -3,36 +3,36 @@
     "name": "Trousers",
     "slug": "trousers",
     "route": "/trousers",
-    "sub": ["Khaki", "Formal", "Official", "Chino"],
-    "match": ["trousers", "khaki", "chino", "official", "formal trouser", "pants"]
+    "sub": ["Khaki", "Formal", "Official", "Chino", "Slim Khaki", "Linen Trousers"],
+    "match": ["trousers", "khaki", "chino", "official", "formal trouser", "pants", "slim khaki", "linen trousers"]
   },
   {
     "name": "Shirts",
     "slug": "shirts",
     "route": "/shirts",
-    "sub": ["Polos", "Cuban", "Boss", "Tommy Hilfiger", "Lacoste"],
-    "match": ["shirts", "polo", "cuban", "boss", "tommy", "hilfiger", "lacoste"]
+    "sub": ["Polos", "Cuban", "Boss", "Tommy Hilfiger", "Lacoste", "Polo T-Shirts", "Jeans Shirts", "Linen Shirts"],
+    "match": ["shirts", "polo", "cuban", "boss", "tommy", "hilfiger", "lacoste", "polo t-shirts", "jeans shirts", "linen shirts"]
   },
   {
     "name": "Suits",
     "slug": "suits",
     "route": "/suits",
-    "sub": ["Two Piece", "Three Piece"],
-    "match": ["suits", "suiting", "two piece", "three piece", "blazer"]
+    "sub": ["Two Piece", "Three Piece", "Vests"],
+    "match": ["suits", "suiting", "two piece", "three piece", "blazer", "vests", "vest"]
   },
   {
     "name": "Jackets",
     "slug": "jackets",
     "route": "/jackets",
-    "sub": ["Jackets", "Half Jackets", "Blazers"],
-    "match": ["jackets", "jacket", "blazers", "half jacket", "outerwear"]
+    "sub": ["Jackets", "Half Jackets", "Blazers", "Khaki Jackets", "Turkey Jackets"],
+    "match": ["jackets", "jacket", "blazers", "half jacket", "outerwear", "khaki jackets", "turkey jackets"]
   },
   {
     "name": "Sweaters",
     "slug": "sweaters",
     "route": "/sweaters",
-    "sub": ["Crew Neck", "V-Neck", "Cardigan"],
-    "match": ["sweaters", "sweater", "knit", "cardigan"]
+    "sub": ["Crew Neck", "V-Neck", "Cardigan", "Sweaters Zipped", "Official Sweaters"],
+    "match": ["sweaters", "sweater", "knit", "cardigan", "zipped", "official sweaters"]
   },
   {
     "name": "Formal Wear",
@@ -45,14 +45,28 @@
     "name": "Casual Wear",
     "slug": "casual-wear",
     "route": "/products?category=casual-wear",
-    "sub": ["T-Shirts", "Sweatshirts", "Linen"],
-    "match": ["casual-wear", "casual wear", "t-shirts", "sweat", "round-neck", "v-neck", "linen"]
+    "sub": ["T-Shirts", "Sweatshirts", "Linen", "Boxers"],
+    "match": ["casual-wear", "casual wear", "t-shirts", "sweat", "round-neck", "v-neck", "linen", "boxers"]
   },
   {
     "name": "Accessories",
     "slug": "accessories",
     "route": "/products?category=accessories",
-    "sub": ["Belts & Ties", "Caps & Hats"],
-    "match": ["accessories", "belts", "ties", "belts-ties", "caps", "hats"]
+    "sub": ["Belts & Ties", "Caps & Hats", "Scafs"],
+    "match": ["accessories", "belts", "ties", "belts-ties", "caps", "hats", "scafs", "scarves"]
+  },
+  {
+    "name": "Jeans",
+    "slug": "jeans",
+    "route": "/products?category=jeans",
+    "sub": ["Jeans Trousers"],
+    "match": ["jeans", "denim", "jeans trousers"]
+  },
+  {
+    "name": "Socks",
+    "slug": "socks",
+    "route": "/products?category=socks",
+    "sub": ["Turkey Socks"],
+    "match": ["socks", "sock", "turkey socks"]
   }
 ]
