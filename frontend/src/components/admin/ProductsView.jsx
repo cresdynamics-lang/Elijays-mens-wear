@@ -87,14 +87,18 @@ const resolveAiCategory = (categories = [], analysis = {}) => {
  * previewed thumbnail fetched as a blob (covers editing existing products).
  */
 const getAiImageFile = async (fileRef, previewUrl) => {
- if (fileRef.current) return fileRef.current;
- if (previewUrl && !String(previewUrl).startsWith('blob:')) {
-  const blob = await fetch(previewUrl).then((r) => r.blob());
-  if (blob && blob.size > 0) {
-   return new File([blob], 'product-thumbnail.jpg', { type: blob.type || 'image/jpeg' });
+  if (fileRef?.current) return fileRef.current;
+  if (previewUrl && !String(previewUrl).startsWith('blob:')) {
+    try {
+      const blob = await fetch(previewUrl).then((r) => r.blob());
+      if (blob && blob.size > 0) {
+        return new File([blob], 'product-thumbnail.jpg', { type: blob.type || 'image/jpeg' });
+      }
+    } catch {
+      /* fetch failed — fall through */
+    }
   }
- }
- return null;
+  return null;
 };
 
 const ProductsView = () => {
@@ -587,9 +591,10 @@ const handleColorImage = async (groupKey, e, slot = 1) => {
  thumbnailPreview: '',
  gallery: []
  });
- }
- setIsModalOpen(true);
- };
+  }
+  thumbnailFileRef.current = null;
+  setIsModalOpen(true);
+  };
 
  const handleDelete = async (id) => {
  const ok = await confirm({

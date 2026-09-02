@@ -1,9 +1,10 @@
 /**
  * Resize/compress images before upload — faster saves and smaller Cloudinary delivery.
+ * Uses WebP where supported with JPEG fallback for maximum quality at minimal size.
  */
 export async function compressImageFile(
   file,
-  { maxWidth = 1200, maxHeight = 1200, quality = 0.78, skipBelowBytes = 250_000 } = {}
+  { maxWidth = 1920, maxHeight = 1920, quality = 0.85, skipBelowBytes = 200_000, targetMaxBytes = 800_000 } = {}
 ) {
   if (!file?.type?.startsWith('image/')) return file;
   if (file.size <= skipBelowBytes) return file;
@@ -24,11 +25,21 @@ export async function compressImageFile(
   ctx.drawImage(bitmap, 0, 0, width, height);
   bitmap.close?.();
 
-  const blob = await new Promise((resolve) => {
-    canvas.toBlob(resolve, 'image/jpeg', quality);
-  });
-  if (!blob || blob.size >= file.size) return file;
+  const formats = ['image/webp', 'image/jpeg'];
+  for (const fmt of formats) {
+    const blob = await new Promise((resolve) => {
+      canvas.toBlob(resolve, fmt, quality);
+    });
+    if (blob && blob.size < file.size) {
+      if (blob.size <= targetMaxBytes) {
+        const baseName = (file.name || 'image').replace(/\.[^.]+$/, '') || 'image';
+        return new File([blob], `${baseName}.${fmt === 'image/webp' ? 'webp' : 'jpg'}`, { type: fmt, lastModified: Date.now() });
+      }
+      // WebP/JPEG under original size but over target — return it anyway since it's still smaller
+      const baseName = (file.name || 'image').replace(/\.[^.]+$/, '') || 'image';
+      return new File([blob], `${baseName}.${fmt === 'image/webp' ? 'webp' : 'jpg'}`, { type: fmt, lastModified: Date.now() });
+    }
+  }
 
-  const baseName = (file.name || 'image').replace(/\.[^.]+$/, '') || 'image';
-  return new File([blob], `${baseName}.jpg`, { type: 'image/jpeg', lastModified: Date.now() });
+  return file;
 }

@@ -43,12 +43,6 @@ function App() {
   );
 
   useEffect(() => {
-    try {
-      localStorage.removeItem('eljays-auth');
-    } catch {
-      /* ignore */
-    }
-
     const done = () => setAuthHydrated(true);
     if (useAuthStore.persist?.hasHydrated?.()) {
       setAuthHydrated(true);

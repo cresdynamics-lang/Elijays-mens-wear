@@ -10,8 +10,8 @@
     "name": "Shirts",
     "slug": "shirts",
     "route": "/shirts",
-    "sub": ["Polos", "Cuban", "Boss", "Tommy Hilfiger", "Lacoste", "Polo T-Shirts", "Jeans Shirts", "Linen Shirts"],
-    "match": ["shirts", "polo", "cuban", "boss", "tommy", "hilfiger", "lacoste", "polo t-shirts", "jeans shirts", "linen shirts"]
+    "sub": ["Polos", "Cuban", "Boss", "Tommy Hilfiger", "Lacoste", "Polo T-Shirts", "Jeans Shirts", "Linen Shirts", "Presidential"],
+    "match": ["shirts", "polo", "cuban", "boss", "tommy", "hilfiger", "lacoste", "polo t-shirts", "jeans shirts", "linen shirts", "presidential"]
   },
   {
     "name": "Suits",

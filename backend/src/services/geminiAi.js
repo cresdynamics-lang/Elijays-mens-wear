@@ -20,7 +20,7 @@ Writing style rules (MANDATORY):
 
 The store catalogue uses these parent categories and allowed subcategories. Pick categoryType from a parent and set subcategory to the closest matching sub (or empty if none fit):
 - Trousers (slug trousers): Khaki, Formal, Official, Chino
-- Shirts (slug shirts): Polos, Cuban, Boss, Tommy Hilfiger, Lacoste
+- Shirts (slug shirts): Polos, Cuban, Boss, Tommy Hilfiger, Lacoste, Polo T-Shirts, Jeans Shirts, Linen Shirts, Presidential
 - Suits (slug suits): Two Piece, Three Piece
 - Jackets (slug jackets): Jackets, Half Jackets, Blazers
 - Sweaters (slug sweaters): Crew Neck, V-Neck, Cardigan
@@ -142,6 +142,14 @@ const analyzeProductImage = async (imageBase64, { mimeType = 'image/jpeg', retri
       return normalize(parseJson(text));
     } catch (error) {
       lastError = error;
+      const msg = (error?.message || '').toLowerCase();
+      // If responseMimeType caused the failure, retry without it on next attempt
+      if (msg.includes('responsemimetype') || msg.includes('schema') || msg.includes('block')) {
+        if (attempt < retries) {
+          await new Promise((resolve) => setTimeout(resolve, 800 * (attempt + 1)));
+          continue;
+        }
+      }
       if (attempt < retries) {
         // Small backoff before retrying transient failures
         await new Promise((resolve) => setTimeout(resolve, 600 * (attempt + 1)));
