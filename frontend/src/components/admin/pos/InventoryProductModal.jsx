@@ -20,6 +20,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
   const isNew = !itemId;
   const [loading, setLoading] = useState(!isNew);
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [source, setSource] = useState('draft');
@@ -130,12 +131,16 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
     const fd = new FormData();
     fd.append('images', file);
     const res = await adminUploadAPI.upload(fd);
-    return getUploadUrl(res.data?.data?.[0] || res.data?.data);
+    const url = getUploadUrl(res.data?.data?.[0] || res.data?.data);
+    if (!res.data?.success || !url) throw new Error('No image returned');
+    return url;
   };
 
   const handleThumbnail = async (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    e.target.value = '';
+    if (!file || uploading) return;
+    setUploading(true);
     const localPreview = URL.createObjectURL(file);
     setForm((f) => {
       revokeBlobUrl(f.thumbnailPreview);
@@ -149,13 +154,21 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
       });
       toast.success('Image uploaded');
     } catch {
-      toast.error('Upload failed');
+      setForm((f) => {
+        revokeBlobUrl(f.thumbnailPreview);
+        return { ...f, thumbnailPreview: f.thumbnail || '' };
+      });
+      toast.error('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
     }
   };
 
   const handleColorImage = async (groupKey, e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    e.target.value = '';
+    if (!file || uploading) return;
+    setUploading(true);
     try {
       const url = await uploadFile(file);
       setForm((f) => ({
@@ -166,7 +179,9 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
       }));
       toast.success('Color image uploaded');
     } catch {
-      toast.error('Upload failed');
+      toast.error('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -184,6 +199,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
   };
 
   const handleSave = async (andPublish = false) => {
+    if (uploading || busy) return;
     if (!form.name || !form.sku || !form.shop_price) {
       toast.error('Name, SKU and retail price are required');
       return;
@@ -269,7 +285,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => { if (!busy && !uploading) onClose(); }}>
       <div
         className="bg-base-900 border border-accent-500/20 rounded-xl w-full max-w-3xl max-h-[92vh] overflow-y-auto custom-scrollbar"
         onClick={(e) => e.stopPropagation()}
@@ -287,7 +303,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
             )}
           </div>
           {websiteLinked && !isNew && (
-            <button type="button" onClick={handleSync} disabled={busy} className="flex items-center gap-1 text-xs text-sky-300 hover:text-sky-200">
+            <button type="button" onClick={handleSync} disabled={busy || uploading} className="flex items-center gap-1 text-xs text-sky-300 hover:text-sky-200">
               <RefreshCw size={14} /> Sync live
             </button>
           )}
@@ -415,8 +431,8 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                     <img src={form.thumbnailPreview} alt="" className="w-20 h-20 object-cover rounded border border-accent-500/20" />
                   )}
                   <label className="flex items-center gap-2 px-3 py-2 border border-accent-500/30 rounded text-xs text-accent-400 cursor-pointer hover:bg-accent-500/5">
-                    <Upload size={14} /> Upload image
-                    <input type="file" accept="image/*" className="hidden" onChange={handleThumbnail} />
+                    <Upload size={14} /> {uploading ? 'Uploading…' : 'Upload image'}
+                    <input type="file" accept="image/*" className="hidden" disabled={busy || uploading} onChange={handleThumbnail} />
                   </label>
                 </div>
               </div>
@@ -462,7 +478,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
                         )}
                         <label className="px-2 py-1.5 border border-accent-500/20 rounded text-[10px] text-accent-500/60 cursor-pointer">
                           Upload
-                          <input type="file" accept="image/*" className="hidden" onChange={(e) => handleColorImage(group._key, e)} />
+                          <input type="file" accept="image/*" className="hidden" disabled={busy || uploading} onChange={(e) => handleColorImage(group._key, e)} />
                         </label>
                       </div>
                     </div>
@@ -591,21 +607,21 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
             </section>
 
             <div className="flex flex-wrap gap-2 pt-2 border-t border-accent-500/10">
-              <button type="button" onClick={onClose} className="px-4 py-2 border border-accent-500/30 text-accent-400 rounded text-sm">
+              <button type="button" onClick={() => { if (!busy && !uploading) onClose(); }} className="px-4 py-2 border border-accent-500/30 text-accent-400 rounded text-sm">
                 Cancel
               </button>
               <button
                 type="button"
-                disabled={busy}
+                disabled={busy || uploading}
                 onClick={() => handleSave(false)}
                 className="px-4 py-2 bg-sky-600 text-white rounded text-sm font-medium disabled:opacity-50"
               >
-                {busy ? 'Saving…' : 'Save details'}
+                {uploading ? 'Uploading…' : busy ? 'Saving…' : 'Save details'}
               </button>
               {!isNew && (
                 <button
                   type="button"
-                  disabled={busy}
+                  disabled={busy || uploading}
                   onClick={() => handleSave(true)}
                   className="px-4 py-2 bg-accent-600 text-base-950 rounded text-sm font-medium disabled:opacity-50"
                 >
@@ -615,7 +631,7 @@ const InventoryProductModal = ({ itemId, defaultCategoryId, onClose, onSaved }) 
               {isNew && (
                 <button
                   type="button"
-                  disabled={busy}
+                  disabled={busy || uploading}
                   onClick={() => handleSave(true)}
                   className="ml-auto px-4 py-2 bg-accent-600 text-base-950 rounded text-sm font-medium disabled:opacity-50"
                 >
