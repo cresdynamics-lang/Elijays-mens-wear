@@ -1,7 +1,7 @@
 // High-quality premium images for ELIJAY'S Men's Wear
 // Sourced from local assets in public folder
 
-import { getImageSrc, optimizeCloudinaryUrl, isCloudinaryUrl, isBlobUrl } from './cloudinary';
+import { getImageSrc, optimizeCloudinaryUrl, isCloudinaryUrl, isBlobUrl, resolveDisplayImageUrl } from './cloudinary';
 
 const LOCAL_IMAGES = [
   '/polo black.jpeg',
@@ -86,7 +86,7 @@ export const getPremiumImage = (product, { width = 400 } = {}) => {
   
   // If product has a custom thumbnail that isn't a placeholder, use it
   const customImage =
-    product.image_url ||
+    getImageSrc(product.image_url, width <= 480 ? 'thumbnail' : 'optimized') ||
     product.thumbnail_optimized ||
     getImageSrc(product.thumbnail, width <= 480 ? 'thumbnail' : 'optimized') ||
     getImageSrc(product.image_url, width <= 480 ? 'thumbnail' : 'optimized') ||
@@ -100,7 +100,7 @@ export const getPremiumImage = (product, { width = 400 } = {}) => {
   ) {
     return isCloudinaryUrl(customImage)
       ? optimizeCloudinaryUrl(customImage, { width })
-      : customImage;
+      : resolveDisplayImageUrl(customImage, { width });
   }
 
   const name = product.name?.toLowerCase() || '';

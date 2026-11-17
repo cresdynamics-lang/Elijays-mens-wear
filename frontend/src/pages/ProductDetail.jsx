@@ -1,3 +1,4 @@
+import ProductImage from '../components/product/ProductImage';
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -331,7 +332,7 @@ const ProductDetail = () => {
       <main className="pb-24 bg-white">
         <div className="container mx-auto px-5 md:px-8 max-w-7xl pt-6 md:pt-10">
           <div className="flex items-center space-x-2 mb-8">
-            <button type="button" onClick={() => navigate(-1)} className="text-elijays-gold hover:text-elijays-gold-dim transition-colors">
+            <button type="button" onClick={() => navigate(-1)} aria-label="Go back" className="text-elijays-gold hover:text-elijays-gold-dim transition-colors">
               <ChevronLeft size={20} />
             </button>
             <span className="text-[12px] text-elijays-ink/50">Back</span>
@@ -341,17 +342,13 @@ const ProductDetail = () => {
             <div className="space-y-6">
               <div className="relative aspect-square bg-white overflow-hidden border border-utility-gray/50 group">
                 <AnimatePresence mode="wait">
-                  <motion.img
+                  <motion.div
                     key={currentDisplayImage}
-                    src={currentDisplayImage}
-                    alt={product.name}
-                    loading="eager"
-                    decoding="async"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.35, ease: 'easeOut' }}
-                    className="w-full h-full object-contain p-6 md:p-10"
+                    className="w-full h-full"
                     onTouchStart={(e) => {
                       touchStartX.current = e.touches[0]?.clientX ?? null;
                     }}
@@ -363,7 +360,10 @@ const ProductDetail = () => {
                       else handlePrevImage();
                       touchStartX.current = null;
                     }}
-                  />
+                  >
+                    <ProductImage src={currentDisplayImage} alt={product.name} loading="eager"
+                      decoding="async" className="w-full h-full object-contain p-6 md:p-10" />
+                  </motion.div>
                 </AnimatePresence>
 
                 {currentColorImages.length > 1 && (
@@ -372,7 +372,7 @@ const ProductDetail = () => {
                       type="button"
                       onClick={handlePrevImage}
                       aria-label="Previous image"
-                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 text-elijays-ink/60 border border-utility-gray/60 opacity-0 group-hover:opacity-100 md:opacity-100 transition-all duration-300 hover:bg-white hover:text-elijays-ink hover:border-utility-gray shadow-sm"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 text-elijays-ink/60 border border-utility-gray/60 opacity-100 transition-all duration-300 hover:bg-white hover:text-elijays-ink hover:border-utility-gray shadow-sm"
                     >
                       <ChevronLeft size={18} />
                     </button>
@@ -380,7 +380,7 @@ const ProductDetail = () => {
                       type="button"
                       onClick={handleNextImage}
                       aria-label="Next image"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 text-elijays-ink/60 border border-utility-gray/60 opacity-0 group-hover:opacity-100 md:opacity-100 transition-all duration-300 hover:bg-white hover:text-elijays-ink hover:border-utility-gray shadow-sm"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/80 text-elijays-ink/60 border border-utility-gray/60 opacity-100 transition-all duration-300 hover:bg-white hover:text-elijays-ink hover:border-utility-gray shadow-sm"
                     >
                       <ChevronRight size={18} />
                     </button>
@@ -390,6 +390,8 @@ const ProductDetail = () => {
                           key={index}
                           type="button"
                           onClick={() => setImageIndex(index)}
+                          aria-label={`Show image ${index + 1}`}
+                          aria-current={index === imageIndex ? 'true' : undefined}
                           className={`h-1.5 rounded-full transition-all duration-500 ${
                             index === imageIndex ? 'w-6 bg-elijays-gold' : 'w-1.5 bg-utility-gray/20 hover:bg-elijays-gold/40'
                           }`}
@@ -429,7 +431,7 @@ const ProductDetail = () => {
                                   : 'border-utility-gray/50 hover:border-elijays-gold/25'
                               }`}
                             >
-                              <img
+                              <ProductImage
                                 src={img}
                                 alt={`${color} view ${index + 1}`}
                                 loading="lazy"
@@ -518,7 +520,7 @@ const ProductDetail = () => {
                             }`}
                           >
                             {colorImage ? (
-                              <img
+                              <ProductImage
                                 src={colorImage}
                                 alt={color}
                                 loading="lazy"
@@ -805,7 +807,7 @@ const ProductDetail = () => {
                   {related.slice(0, 4).map((p) => (
                     <Link to={`/product/${p.slug}`} key={p.id} className="group block">
                       <div className="aspect-square bg-elijays-white overflow-hidden mb-3 border border-elijays-ink/8">
-                        <img
+                        <ProductImage
                           src={getPremiumImage(p)}
                           alt={p.name}
                           loading="lazy"

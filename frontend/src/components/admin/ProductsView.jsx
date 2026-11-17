@@ -178,10 +178,15 @@ const ProductsView = () => {
 
  const revokeFormBlobPreviews = (data) => {
  revokeBlobUrl(data.thumbnailPreview);
+ (data.color_groups || []).forEach((group) => {
+ revokeBlobUrl(group.imagePreview);
+ revokeBlobUrl(group.imagePreview2);
+ });
  (data.gallery || []).forEach((item) => revokeBlobUrl(item.preview));
  };
 
  const closeProductModal = () => {
+ if (uploading || submitting) return;
  revokeFormBlobPreviews(formData);
  setIsModalOpen(false);
  };
@@ -193,6 +198,8 @@ const ProductsView = () => {
 
  const handleThumbnailChange = async (e) => {
  const rawFile = e.target.files[0];
+ e.target.value = '';
+ if (uploading) return;
  if (rawFile) {
  setUploading(true);
  const file = await compressImageFile(rawFile).catch(() => rawFile);
@@ -211,6 +218,7 @@ const ProductsView = () => {
  uploadData.append('images', file);
  try {
  const res = await adminUploadAPI.upload(uploadData);
+ if (!res.data.success || !res.data.data?.length) throw new Error('No image returned');
  if (res.data.success) {
  const uploaded = res.data.data[0];
  const persistUrl = getPersistImageUrl(uploaded) || getUploadUrl(uploaded);
@@ -225,7 +233,11 @@ const ProductsView = () => {
  }
  } catch (error) {
  console.error('Thumbnail upload failed:', error);
- adminToast.info('Image could not be uploaded. You can still save the product â€” add the image later or configure Cloudinary.');
+ setFormData((prev) => {
+ revokeBlobUrl(prev.thumbnailPreview);
+ return { ...prev, thumbnailPreview: getImageSrc(prev.thumbnail, 'thumbnail') };
+ });
+ adminToast.error('Image upload failed. The previous image has been kept. Please try again.');
  } finally {
  setUploading(false);
  }
@@ -234,6 +246,8 @@ const ProductsView = () => {
 
  const handleGalleryChange = async (e) => {
  const rawFiles = Array.from(e.target.files);
+ e.target.value = '';
+ if (uploading) return;
  if (rawFiles.length === 0) return;
 
  setUploading(true);
@@ -258,6 +272,7 @@ const ProductsView = () => {
  files.forEach(file => uploadData.append('images', file));
  try {
  const res = await adminUploadAPI.upload(uploadData);
+ if (!res.data.success || !res.data.data?.length) throw new Error('No image returned');
  if (res.data.success) {
  const uploadedUrls = res.data.data;
  setFormData(prev => {
@@ -352,7 +367,9 @@ const ProductsView = () => {
 
 const handleColorImage = async (groupKey, e, slot = 1) => {
  const rawFile = e.target.files?.[0];
- if (!rawFile) return;
+ e.target.value = '';
+ if (!rawFile || uploading) return;
+ setUploading(true);
  const file = await compressImageFile(rawFile).catch(() => rawFile);
  const localPreview = URL.createObjectURL(file);
  const previewKey = slot === 2 ? 'imagePreview2' : 'imagePreview';
@@ -366,6 +383,7 @@ const handleColorImage = async (groupKey, e, slot = 1) => {
  uploadData.append('images', file);
  try {
  const res = await adminUploadAPI.upload(uploadData);
+ if (!res.data.success || !res.data.data?.length) throw new Error('No image returned');
  if (res.data.success) {
  const uploaded = res.data.data[0];
  const url = getPersistImageUrl(uploaded) || getUploadUrl(uploaded);
@@ -390,7 +408,17 @@ const handleColorImage = async (groupKey, e, slot = 1) => {
  }));
  }
  } catch {
- adminToast.error('Color image upload failed.');
+ setFormData((prev) => ({
+ ...prev,
+ color_groups: prev.color_groups.map((group) => {
+ if (group._key !== groupKey) return group;
+ revokeBlobUrl(group[previewKey]);
+ return { ...group, [previewKey]: getImageSrc(slot === 2 ? group.image_url2 : group.image_url) };
+ }),
+ }));
+ adminToast.error('Color image upload failed. Please try again.');
+ } finally {
+ setUploading(false);
  }
  };
 
@@ -681,6 +709,7 @@ const handleAiDescribe = async () => {
 
  const handleSubmit = async (e) => {
  e.preventDefault();
+ if (uploading || submitting) return;
  if (!formData.category_id) {
  adminToast.error('Please select a category before saving this product.');
  return;
@@ -1210,18 +1239,19 @@ const handleAiDescribe = async () => {
  <div className="absolute inset-0 bg-primary backdrop-blur-[2px] z-20 flex items-center justify-center rounded-2xl">
  <div className="flex flex-col items-center gap-2">
  <div className="w-6 h-6 border-2 border-accent border-t-transparent animate-spin rounded-full" />
- <span className="text-[8px] font-black text-accent-500 ">Uploading to Cloudinary...</span>
+ <span className="text-[8px] font-black text-accent-500 ">Uploading images...</span>
  </div>
  </div>
  )}
  <div className="w-24 h-24 rounded-xl border border-utility-gray/60 overflow-hidden bg-utility-gray flex items-center justify-center relative group">
  {formData.thumbnailPreview ? (
  <>
- <img src={formData.thumbnailPreview} className="w-full h-full object-cover" />
+ <img src={formData.thumbnailPreview} alt="Product thumbnail preview" className="w-full h-full object-cover" />
  <button 
  type="button" 
  onClick={removeThumbnail}
- className="absolute inset-0 bg-red-500/40 text-secondary flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+ aria-label="Remove thumbnail"
+ className="absolute inset-0 bg-red-500/40 text-secondary flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-opacity"
  >
  <Trash2 size={20} />
  </button>
@@ -1243,14 +1273,14 @@ const handleAiDescribe = async () => {
  {formData.thumbnailPreview ? 'Current Thumbnail' : 'Select Thumbnail'}
  </p>
  <p className="text-[9px] text-secondary/60 tracking-wider">
- {formData.thumbnailPreview ? 'Hover to remove and select a different one' : 'Drag and drop or click to upload'}
+ {formData.thumbnailPreview ? 'Remove the image to select a different one' : 'Click to upload an image'}
  </p>
  {formData.thumbnailPreview && (
  <div className="pt-1">
  <button
  type="button"
  onClick={handleAiDescribe}
- disabled={aiBusy}
+ disabled={aiBusy || uploading}
  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent-600/15 border border-accent-500/30 text-accent-300 text-[10px] font-black tracking-wider hover:bg-accent-600/25 transition-all disabled:opacity-50 disabled:cursor-wait"
  >
  <Sparkles size={12} />
@@ -1488,20 +1518,21 @@ const handleAiDescribe = async () => {
  )}
  </div>
 
- <div className="flex gap-4 w-full md:w-auto">
+ <div className="flex flex-wrap gap-3 w-full md:w-auto">
  <button 
  type="button"
  onClick={closeProductModal}
- className="px-8 py-4 bg-utility-gray text-accent/80 rounded-xl font-black tracking-[0.2em] hover:bg-base-700 hover:text-accent-500 transition-all border border-utility-gray/60"
+ disabled={uploading || submitting}
+ className="flex-1 md:flex-none px-4 sm:px-8 py-4 bg-utility-gray text-accent/80 rounded-xl font-black tracking-[0.2em] hover:bg-base-700 hover:text-accent-500 transition-all border border-utility-gray/60"
  >
  Cancel
  </button>
  <button 
  type="submit" 
- disabled={submitting}
- className="px-12 py-4 bg-accent-600 text-base-950 rounded-xl font-black tracking-[0.2em] hover:bg-accent-500 transition-all disabled:opacity-50 shadow-xl shadow-accent-600/20"
+ disabled={submitting || uploading}
+ className="flex-1 md:flex-none px-4 sm:px-12 py-4 bg-accent-600 text-base-950 rounded-xl font-black tracking-[0.2em] hover:bg-accent-500 transition-all disabled:opacity-50 shadow-xl shadow-accent-600/20"
  >
- {submitting ? 'COMMITTING...' : 'SAVE PRODUCT'}
+ {uploading ? 'UPLOADING…' : submitting ? 'SAVING…' : 'SAVE PRODUCT'}
  </button>
  </div>
  </div>

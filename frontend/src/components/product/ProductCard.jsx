@@ -1,3 +1,5 @@
+import ProductImage from './ProductImage';
+import { resolveDisplayImageUrl } from '../../utils/cloudinary';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getPremiumImage } from '../../utils/productImages';
@@ -15,6 +17,7 @@ const formatPrice = (price) => `KSh ${parseFloat(price).toLocaleString()}`;
 const ProductCard = ({ product, showSale = true }) => {
   const [hoverIndex, setHoverIndex] = useState(0);
   const [hovering, setHovering] = useState(false);
+  const [adding, setAdding] = useState(false);
   const listPrice = parseFloat(product.price);
   const salePrice = product.discount_price != null ? parseFloat(product.discount_price) : null;
   const price = salePrice ?? listPrice;
@@ -24,9 +27,9 @@ const ProductCard = ({ product, showSale = true }) => {
       ? listPrice
       : null;
   const onSale = showSale && comparePrice != null && comparePrice > price;
-  const baseImage = product.image_url || product.thumbnail || getPremiumImage(product, { width: 500 });
+  const baseImage = resolveDisplayImageUrl(product.image_url || product.thumbnail, { width: 500 }) || getPremiumImage(product, { width: 500 });
   const colorImages = Array.isArray(product.color_images)
-    ? product.color_images.filter((img) => img && img !== baseImage)
+    ? product.color_images.map((img) => resolveDisplayImageUrl(img, { width: 500 })).filter((img) => img && img !== baseImage)
     : [];
   const displayImage = hovering && colorImages.length > 0
     ? colorImages[hoverIndex % colorImages.length]
@@ -51,6 +54,8 @@ const ProductCard = ({ product, showSale = true }) => {
   }, [hovering, colorImages.length]);
 
   const handleAddToCart = async () => {
+    if (adding) return;
+    setAdding(true);
     try {
       await addToCart({
         productId: product.id,
@@ -63,6 +68,8 @@ const ProductCard = ({ product, showSale = true }) => {
     } catch (err) {
       // Not purchasable (e.g. demo item) — send to the product page.
       window.location.href = `/product/${product.slug}`;
+    } finally {
+      setAdding(false);
     }
   };
 
@@ -75,7 +82,7 @@ const ProductCard = ({ product, showSale = true }) => {
         onBlur={handleHoverLeave}
       >
         <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden mb-3">
-          <img
+          <ProductImage
             src={displayImage}
             alt={product.name}
             loading="lazy"
@@ -108,9 +115,11 @@ const ProductCard = ({ product, showSale = true }) => {
         <button
           type="button"
           onClick={handleAddToCart}
+          disabled={adding}
+          aria-busy={adding}
           className="btn-gold !px-2 !py-2.5 text-[10px] tracking-[0.08em]"
         >
-          Add to Cart
+          {adding ? 'Adding…' : 'Add to Cart'}
         </button>
         <button
           type="button"
